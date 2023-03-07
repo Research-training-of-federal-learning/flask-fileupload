@@ -1,2 +1,4 @@
 log.txt
 FLAME_models/G0.pt
+.data/MNIST
+train/runs

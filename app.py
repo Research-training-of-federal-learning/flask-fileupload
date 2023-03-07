@@ -18,10 +18,14 @@ import os
 from flask_bootstrap import Bootstrap
 import FLAME
 import torch
+import shutil
 
 
 from file import file_exists
 from file import file_read
+
+from train import train #正确率
+from training import training #训练
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -124,8 +128,20 @@ def project():
                 pre="未检测到历史训练数据,"
                 return render_template('project.html',flask_database=database,flask_model=model,flask_pre=pre)
         elif(m=='2'):#进行正常训练
-            
-            return render_template('project.html',flask_database=database,flask_model=model,pre_data=pre_data)
+            if(database=="mnist" and model=="simplenet"):
+                #acc = train.main("train/configs/mnist_params.yaml","mnist")
+                acc,model_name = training.main("train/configs/mnist_params.yaml","mnist")
+
+            shutil.move(model_name,"pre_models/"+database+"/"+model)
+            if(file_exists.file_exists("pre_models/"+database+"/"+model+"/pre_model.pth")):
+                os.remove("pre_models/"+database+"/"+model+"/pre_model.pth") #删除原预训练文件
+            #shutil.rmtree("training/saved_models")
+            #os.mkdir("training/saved_models")
+            os.rename("pre_models/"+database+"/"+model+"/model_last.pt.tar","pre_models/"+database+"/"+model+"/pre_model.pth")
+            f = open("pre_models/"+database+"/"+model+"/acc.txt", "w")
+            f.write(acc)
+            f.close()
+            return render_template('project.html',flask_database=database,flask_model=model,flask_acc=acc)
         elif(m=='3'):#进行逆向检测（输出可能性表单）（回1）
             pass
 

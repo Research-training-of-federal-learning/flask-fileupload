@@ -115,7 +115,7 @@
                         <form action="/project" method="post" class="form-project">     
                             
                             <div class="form-group">
-                                <label for="train_pretrain">是否重新进行训练：</label>
+                                <label for="train_pretrain">{{flask_pre}}是否重新进行训练：</label>
                                     <select class="form-control" id="train_pretrain" name="pretrain" placeholder="请选择" autofocus required>
                                         <option>是</option>
                                         <option>否</option>
@@ -143,7 +143,7 @@
                         </form>
                     </div>
                     <div class="accordion-inner form-group">
-                        <font face="黑体" size="3">训练后正确率：{{flask_acc}}|模型权重下载：</font>{{flask_model_download}}
+                        <font face="黑体" size="3">模型正确率：{{flask_acc}}%|模型权重下载：</font>{{flask_model_download}}
                     <form action="/download1" method="post" class="form-project">     
                     <div class="form-group">
                                 <input name="database"  value="{{flask_database}}" hidden>
