@@ -16,6 +16,8 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 import os
 from flask_bootstrap import Bootstrap
+import FLAME
+import torch
 
 
 from file import file_exists
@@ -97,21 +99,22 @@ def download1():
     #file_path = request.form.get('file_path')#不同模式
     return send_from_directory(file_path, file_name, as_attachment=True)
 
+@app.route('/downloadG0')
+def downloadG0():
+    current_path = "FLAME_models"
+    return send_from_directory(current_path,"G0.pt",as_attachment=True)
+
 
 @app.route('/project', methods=['GET', 'POST'])
 def project():
     if request.method == 'POST':
         m = request.form.get('m')#不同模式
-        print(type(m))
         database = request.form.get('database')
         model = request.form.get('model')
-        print(database)
-        print(model)
         if(m=='1'):#检测历史训练数据
             #检测是否存在预训练
             if(file_exists.file_exists("pre_models/"+database+"/"+model+"/pre_model.pth") and file_exists.file_exists("pre_models/"+database+"/"+model+"/acc.txt")):
                 pre="检测到历史训练数据,"
-                print(pre)
                 acc=file_read.file_read("pre_models/"+database+"/"+model+"/acc.txt")
                 addr=""
                 return render_template('project.html',flask_database=database,flask_model=model,flask_pre=pre,flask_acc=acc,flask_model_download=addr)
@@ -119,7 +122,6 @@ def project():
 
             else:
                 pre="未检测到历史训练数据,"
-                print(pre)
                 return render_template('project.html',flask_database=database,flask_model=model,flask_pre=pre)
         elif(m=='2'):#进行正常训练
             
@@ -133,10 +135,18 @@ def project():
         elif(m=='5'):#防御性训练（输出下降图表）
             pass
 
-        elif(m=='6'):#聚类检测
-            pass
-        elif(m=='7'):#聚类防御
-            pass
+        elif(m=='6'):#安全聚类
+            global G0
+            models = FLAME.data_needed("model\\")
+            for i in range(len(models)):
+                models[i] = "model\\" + models[i]
+            n = 5  # 参与训练的客户端数量
+            size = 145002878  # 模型的参数个数（pubfig就是145002878，可以不用改）
+            G0 = FLAME.torchfile2np("G0.pt")  # G0是上一轮训练出来的模型，我暂时放在全局变量里了
+            fmodle = FLAME.FLAME(n, size, models, G0)  # database我暂且理解为收集的客户端模型，每个模型都是保存到本地的实体文件字符串，下标[i]检索
+            fmodle.update()
+            G0 = fmodle.get_G()  # 重新保存G0
+            torch.save(G0,"FLAME_models\\G0.pt")
 
 
         #flash(m)
