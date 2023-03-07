@@ -137,13 +137,26 @@
                             </div>
                             <div class="form-group">
                                 <button type="reset" class="btn btn-default pull-left">重置</button>
-                                <button type="submit" class="btn btn-primary pull-right">配置完成</button>
+                                <button type="submit" class="btn btn-primary pull-right">开始预训练</button>
                             </div>
                             <br></br>
                         </form>
                     </div>
                     <div class="accordion-inner form-group">
-                        <font face="黑体" size="3">训练后正确率：{{flask_acc}}|模型权重下载：{{flask_model_download}}</font>
+                        <font face="黑体" size="3">训练后正确率：{{flask_acc}}|模型权重下载：</font>{{flask_model_download}}
+                    <form action="/download1" method="post" class="form-project">     
+                    <div class="form-group">
+                                <input name="database"  value="{{flask_database}}" hidden>
+                                <input name="model"  value="{{flask_model}}" hidden>
+                            </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary pull-right">下载</button>
+                    </div>
+                </form>
+
+
+
+
                     </div>
                 </div>
             </div>

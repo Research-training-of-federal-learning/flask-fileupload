@@ -7,7 +7,8 @@ from flask import (
     jsonify,
     redirect,
     flash,
-    session
+    session,
+    send_file
 )
 import sqlite3
 from function import hash_code
@@ -77,6 +78,17 @@ def js_static(filename):
 def index():
     return redirect(url_for('login'))
 
+@app.route("/download1", methods=['GET', 'POST'])
+def download1():
+    database = request.form.get('database')
+    model = request.form.get('model')
+    file_name = "pre_model.pth"
+    file_path = "pre_models/"+database+"/"+model
+    #file_name = request.form.get('file_name')#不同模式
+    #file_path = request.form.get('file_path')#不同模式
+    return send_from_directory(file_path, file_name, as_attachment=True)
+
+
 @app.route('/project', methods=['GET', 'POST'])
 def project():
     if request.method == 'POST':
@@ -92,7 +104,7 @@ def project():
                 pre="检测到历史训练数据,"
                 print(pre)
                 acc=file_read.file_read("pre_models/"+database+"/"+model+"/acc.txt")
-                addr="1"
+                addr=""
                 return render_template('project.html',flask_database=database,flask_model=model,flask_pre=pre,flask_acc=acc,flask_model_download=addr)
 
 
@@ -100,7 +112,7 @@ def project():
                 pre="未检测到历史训练数据,"
                 print(pre)
                 return render_template('project.html',flask_database=database,flask_model=model,flask_pre=pre)
-        elif(m=='2'):#进行正常训练(分发数据模型)
+        elif(m=='2'):#进行正常训练
             
             return render_template('project.html',flask_database=database,flask_model=model,pre_data=pre_data)
         elif(m=='3'):#进行逆向检测（输出可能性表单）（回1）
