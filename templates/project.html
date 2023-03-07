@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% block title %}工程目录{% endblock title %}
+{% block styles %}
+    {{ super() }}
+    <!-- url_for函数，加载静态文件-->
+    <link href="{{ url_for('static', filename='css/project.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css" >
+{% endblock styles %}
+{% block navli %}
+    <ul class="nav navbar-nav navbar-right">
+        {% if session.is_login %}
+            <li><a href="/">您好！{{ session.name }}</a></li>
+            <li><a href="/logout">退出</a><li>
+            {% else %}
+            <li><a href="/">您好！</a></li>
+            <li class="active"><a href="#">登录</a></li>
+            <li><a href="/register">注册</a></li>
+        {% endif %}
+    </ul>
+
+
+{% endblock navli %}
+{% block content %}
+
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+<!--     <form action="/project" method="post" class="form-project">
+        <div class="form-group">
+            <label for="train_database">数据集</label>
+            <select class="form-control" id="train_database" name="database" placeholder="选择数据集" autofocus required>
+                <option>mnist</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="train_model">模型结构</label>
+            <select class="form-control" id="train_model" name="model">
+                <option>simplenet</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="reset" class="btn btn-default pull-left">重置</button>
+            <button type="submit" class="btn btn-primary pull-right">配置完成</button>
+        </div>
+    </form> -->
+
+    <div class="container-fluid fold-project">
+        <div class="accordion" id="accordion2">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                        <h1 style="text-align:center">配置文件</h1>
+                    </a>
+                </div>
+                <div id="collapseOne" class="accordion-body collapse" style="height: 0px; ">
+                <hr>
+
+
+                <!--配置参数-->
+                <form action="/project" method="post" class="form-project">     
+                    <div class="form-group">
+                        <label for="train_database" style="text-align:center">数据集</label>
+                    <select class="form-control" id="train_database" name="database" placeholder="选择数据集" autofocus required>
+                        <option>mnist</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                    </div>
+                    <div class="form-group" style="text-align:center">
+                        <label for="train_model">模型结构</label>
+                            <select class="form-control" id="train_model" name="model">
+                                <option>simplenet</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        <input name="m" value=1 hidden>
+                    </div>
+                    <div class="form-group">
+                        <button type="reset" class="btn btn-default pull-left">重置</button>
+                        <button type="submit" class="btn btn-primary pull-right">配置完成</button>
+                    <br></br>
+                    </div>
+                </form>
+                </div>
+            </div>
+
+
+
+
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                        <h1 style="text-align:center">分发预训练模型</h1>
+                    </a>
+                </div>
+                <div id="collapseTwo" class="accordion-body collapse">
+                    <div class="accordion-inner form-group">
+                        <br></br>
+                        <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
+                        <form action="/project" method="post" class="form-project">     
+                            
+                            <div class="form-group">
+                                <label for="train_pretrain">是否重新进行训练：</label>
+                                    <select class="form-control" id="train_pretrain" name="pretrain" placeholder="请选择" autofocus required>
+                                        <option>是</option>
+                                        <option>否</option>
+                                    </select>
+                            </div>
+<!--                             <div class="form-group">
+                                <label for="train_model">模型结构</label>
+                                    <select class="form-control" id="train_model" name="model">
+                                        <option>simplenet</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                            </div> -->
+                            <div class="form-group">
+                                <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
+                                <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
+                                <input name="m" style="width: 310px;height:30px;" value="2" hidden>
+                            </div>
+                            <div class="form-group">
+                                <button type="reset" class="btn btn-default pull-left">重置</button>
+                                <button type="submit" class="btn btn-primary pull-right">配置完成</button>
+                            </div>
+                            <br></br>
+                        </form>
+                    </div>
+                    <div class="accordion-inner form-group">
+                        <font face="黑体" size="3">训练后正确率：{{flask_acc}}|模型权重下载：{{flask_model_download}}</font>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                        <h1 style="text-align:center">防御</h1>
+                    </a>
+                </div>
+                <div id="collapseThree" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
