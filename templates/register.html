@@ -2,7 +2,7 @@
 {% block title %}注册{% endblock title %}
 {% block styles %}
     {{ super() }}
-    <link href="{{ url_for('static', filename='login.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/register.css') }}" rel="stylesheet">
 {% endblock styles %}
 {% block navli %}
     <ul class="nav navbar-nav navbar-right">
@@ -17,7 +17,7 @@
     </ul>
 {% endblock navli %}
 {% block content %}
-    <div class="container form-login">
+    <div class="container form-register">
         {% for message in get_flashed_messages() %}
             <div class="alert alert-warning">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -25,7 +25,7 @@
             </div>
         {% endfor %}
     </div>
-    <form action="/register" method="post" class="form-login">
+    <form action="/register" method="post" class="form-register">
         <div class="form-group">
             <label for="id_username">用户名</label>
             <input type="text" class="form-control" name="username" id="id_username" placeholder="输入用户名" {% if username %}value="{{ username }}"{% endif %} autofocus required>

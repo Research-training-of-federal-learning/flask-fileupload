@@ -78,6 +78,15 @@ def js_static(filename):
 def index():
     return redirect(url_for('login'))
 
+@app.route('/logout')
+def out():
+    if session['is_login'] == False:
+        return render_template('/')
+    else:
+        session['is_login'] = False
+        session['name'] = ''
+        return redirect('/')
+
 @app.route("/download1", methods=['GET', 'POST'])
 def download1():
     database = request.form.get('database')
@@ -163,12 +172,11 @@ def login():
             # 登录成功后存储session信息
             session['is_login'] = True
             session['name'] = username
-            return redirect('/')
+            return redirect('/project')
         else:
             flash('用户名或密码错误！')
             return render_template('login.html')
     return render_template('login.html')
-
 
 @app.route('/uploadajax', methods=['POST'])
 def upldfile():
