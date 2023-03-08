@@ -152,7 +152,7 @@
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary pull-right">下载</button>
                     </div>
-                </form>
+                    </form>
 
 
 
@@ -176,7 +176,88 @@
                     </div>
                 </div>
             </div>
+
+            
+
+
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
+                        <h1 style="text-align:center">检测</h1>
+                    </a>
+                </div>
+                <div id="collapseFour" class="accordion-body collapse">
+                    <div class="accordion-inner form-group">
+                        <br></br>
+                        <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
+                        <form action="/project" method="post" class="form-project">     
+                            
+                            <div class="form-group">
+                                <label for="train_pretrain">轮数：<span id="check_epo_num"></span></label>
+                                    <div class="slidecontainer">
+                                        <input type="range" min="1" max="50" value="10" class="slider" id="check_epo" name="check_epo">
+                                    </div>
+                                <label for="train_pretrain">优化率：<span id="check_lr_num"></label>
+                                    <div class="slidecontainer">
+                                        <input type="number" max="1" value="0.1"  id="check_lr" name="check_lr">
+                                    </div>
+                            </div>
+<!--                             <div class="form-group">
+                                <label for="train_model">模型结构</label>
+                                    <select class="form-control" id="train_model" name="model">
+                                        <option>simplenet</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                            </div> -->
+                            <div class="form-group">
+                                <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
+                                <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
+                                <input name="m" style="width: 310px;height:30px;" value="3" hidden>
+                            </div>
+                            <div class="form-group">
+                                <button type="reset" class="btn btn-default pull-left">重置</button>
+                                <button type="submit" class="btn btn-primary pull-right">开始检测</button>
+                            </div>
+                            <br></br>
+                        </form>
+                    </div>
+
+                    <div class="accordion-inner form-group">
+                        <font face="黑体" size="3">检测结果：</font>
+                        {{result1_text}}
+                        <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result1" frameborder=0></iframe>
+                    </form>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
         </div>
     </div>
+
+<script>
+var check_epo = document.getElementById("check_epo");
+var check_epo_num = document.getElementById("check_epo_num");
+check_epo_num.innerHTML = check_epo.value;
+
+check_epo.oninput = function() {
+  check_epo_num.innerHTML = this.value;
+}
+var check_lr = document.getElementById("check_lr");
+var check_lr_num = document.getElementById("check_lr_num");
+check_lr_num.innerHTML = check_lr.value;
+
+check_lr.oninput = function() {
+  check_lr_num.innerHTML = this.value;
+}
+</script>
 
 {% endblock %}

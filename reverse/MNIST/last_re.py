@@ -11,33 +11,33 @@ import sys
 
 
 weight = [[0. for j in range(28)] for i in range(28)]
-for i in range(0,6):
-    for j in range(22,28):
-        weight[i][j]=1.
-# for i in range(21,26):
-#     for j in range(3,6):
+# for i in range(0,6):
+#     for j in range(20,28):
 #         weight[i][j]=1.
-weight[0][21]=1.
-weight[3][21]=1.
-weight[4][21]=1.
-weight[3][20]=1.
-weight[6][23]=1.
-weight[7][23]=1.
-weight[7][24]=1.
-weight[7][25]=1.
-weight[8][21]=1.
-weight[8][23]=1.
-weight[8][24]=1.
-weight[9][24]=1.
 
-weight[12][17]=1.
-weight[14][17]=1.
-weight[16][17]=1.
-weight[17][17]=1.
-weight[17][18]=1.
-weight[18][17]=1.
-weight[18][16]=1.
-weight[21][10]=1.
+# weight[1][27]=0.
+# weight[1][26]=0.
+# weight[2][26]=0.
+# weight[1][24]=0.
+# weight[0][20]=0.
+# weight[1][20]=0.
+# weight[6][21]=0.
+
+# weight[6][26]=1.
+# weight[6][25]=1.
+# weight[6][19]=1.
+# weight[3][18]=1.
+
+for i in range(22,28):
+    for j in range(0,6):
+        weight[i][j]=1.
+weight[26][0]=0.
+weight[25][1]=0.
+weight[23][1]=0.
+weight[27][1]=0.
+weight[27][3]=0.
+weight[27][5]=0.
+
 weight=torch.Tensor(weight)
 
 # weight = torch.tensor(
@@ -262,7 +262,7 @@ def print_lead(lead):
 
 
 
-def test(model,device,test_loader,epsilon,ep,ep2):#测试函数
+def test(model,device,test_loader,epsilon,ep,ep2,mytarget):#测试函数
     global last_result
     lead = [[0 for j in range(10)] for i in range(10)]
     correct=0#存放正确的个数
@@ -321,7 +321,7 @@ def test(model,device,test_loader,epsilon,ep,ep2):#测试函数
             # #data[0][0][4][26]=0
             # data[0][0][27][27]=1
 
-            if(target==8):
+            if(mytarget==target):
                 continue
                 
                 
@@ -332,7 +332,7 @@ def test(model,device,test_loader,epsilon,ep,ep2):#测试函数
             output=model(data)
             init_pred=output.max(1,keepdim=True)[1]#原图分类，选取最大的类别概率
 
-            if init_pred.item()==8:
+            if init_pred.item()==mytarget:
                 continue
                 
             last_result=last_result.detach()
@@ -347,9 +347,9 @@ def test(model,device,test_loader,epsilon,ep,ep2):#测试函数
             for i in range(ep):
                 #perturbed_data=data
                 init_pred=output.max(1,keepdim=True)[1]#选取最大的类别概率
-                init_output=output[0][8]
+                init_output=output[0][mytarget]
                 init_result=last_result
-                loss=F.nll_loss(output,torch.tensor([8]))
+                loss=F.nll_loss(output,torch.tensor([mytarget]))
                 model.zero_grad()
                 loss.backward()
                 data_grad=perturbed_data.grad.data
@@ -362,7 +362,7 @@ def test(model,device,test_loader,epsilon,ep,ep2):#测试函数
                 # print(init_output)
 
                 # print(output[0][8])
-                if(output[0][8]>init_output):
+                if(output[0][mytarget]>init_output):
                 	pass
                 	#print("s",no)
                 else:
@@ -373,7 +373,7 @@ def test(model,device,test_loader,epsilon,ep,ep2):#测试函数
             lead[target.item()][final_pred.item()]+=1
             #lead[target.item()][init_pred[0].item()]+=1
             #if final_pred.item()==target.item():#判断类别是否相等
-            if len(adv_examples) < 40 and final_pred.item() ==8 and target.item()!=8:
+            if len(adv_examples) < 40 and final_pred.item() ==mytarget and target.item()!=mytarget:
                 exa_no+=1
                 if(exa_no<=0):#放掉前n个
                     continue
@@ -389,7 +389,7 @@ def test(model,device,test_loader,epsilon,ep,ep2):#测试函数
             if len(adv_examples) >= 40:
             	pass
                 #break
-    adv_examples.append((-1,8,last_result.squeeze().detach().cpu().numpy()))
+    adv_examples.append((-1,mytarget,last_result.squeeze().detach().cpu().numpy()))
     print(last_result)
             
 
@@ -434,7 +434,7 @@ def statistics(totle_leads):
 
 
 
-def find(ep,pretrained_model,use_cuda,epsilons,ep2):
+def find(ep,pretrained_model,use_cuda,epsilons,ep2,mytarget):
     
     
     totle_leads=[[0 for j in range(10)] for i in range(10)]
@@ -463,7 +463,7 @@ def find(ep,pretrained_model,use_cuda,epsilons,ep2):
     # Run test for each epsilon
     for i in range(1):
         for eps in epsilons:
-            ex = test(model, device, test_loader, eps,ep,ep2)
+            ex = test(model, device, test_loader, eps,ep,ep2,mytarget)
 
             #totle_leads = totle_leads + np.array(lead)
             if(i!=0):
@@ -508,4 +508,5 @@ if __name__ == '__main__':
     epsilons = [.1]
     #epsilons = [0.]
     ep2 = 1
-    find(1,pretrained_model,use_cuda,epsilons,ep2)
+    mytarget = 1
+    find(1,pretrained_model,use_cuda,epsilons,ep2,mytarget)

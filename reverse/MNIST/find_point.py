@@ -67,7 +67,7 @@ def print_lead(lead):
             print(str(lead[i][j]),end=" ")
         print("")
 
-def test(model,model_safe,device,test_loader,epsilon,num,r,o):#测试函数
+def test(model,model_safe,device,test_loader,epsilon,num,r,o,mytarget,pic_num):#测试函数
     with torch.no_grad():
         epo=torch.tensor([1])
         if(os.path.exists("find_result/epo.pt") and os.path.exists("find_result/point.pt") and os.path.exists("find_result/point_safe.pt") and os.path.exists("find_result/point_m.pt") and os.path.exists("find_result/point_sum.pt") and os.path.exists("find_result/point_sum_safe.pt") and r):
@@ -103,25 +103,34 @@ def test(model,model_safe,device,test_loader,epsilon,num,r,o):#测试函数
             epo=epo-1
             for i in range(10):
                 # ##
-                point[i][8] = point[i][8]/point_sum[i][8]
-                point_safe[i][8] = point_safe[i][8]/point_sum_safe[i][8]
+                point[i][mytarget] = point[i][mytarget]/point_sum[i][mytarget]
+                point_safe[i][mytarget] = point_safe[i][mytarget]/point_sum_safe[i][mytarget]
                 # ##
                 
-                point[i][8]=torch.clamp(point[i][8],0,1)
-                point_safe[i][8]=torch.clamp(point_safe[i][8],0,1)
-                perturbed_data=point[i][8]-point_safe[i][8]
+                point[i][mytarget]=torch.clamp(point[i][mytarget],0,1)
+                point_safe[i][mytarget]=torch.clamp(point_safe[i][mytarget],0,1)
+                perturbed_data=point[i][mytarget]-point_safe[i][mytarget]
                 perturbed_data=F.relu(perturbed_data) #负数归零
-                if len(adv_examples) <9  and i!=8:
+                if len(adv_examples) <9  and i!=mytarget:
+                    #
+                    perturbed_data = perturbed_data * (perturbed_data >= 0.01)
+                    # for xblack in range(10):
+                    #     for yblack in range(20,28):
+                    #         perturbed_data[xblack][yblack] = 0
+                    for xblack in range(0,23):
+                        for yblack in range(10,28):
+                            perturbed_data[xblack][yblack] = 0
+                    #
                     adv_ex = perturbed_data.squeeze().detach().cpu().numpy()
-                    adv_examples.append((i, 8, adv_ex))
-                if i!=8:
+                    adv_examples.append((i, mytarget, adv_ex))
+                if i!=mytarget:
                     point_m = point_m + perturbed_data
                 print(perturbed_data)
                 #print(point_sum[i][8])
             point_m=torch.clamp(point_m,0,1)
             print(point_m)
             adv_ex = point_m.squeeze().detach().cpu().numpy()
-            adv_examples.append((i, 8, adv_ex))
+            adv_examples.append(("all", mytarget, adv_ex))
             return adv_examples, point.detach(),point_safe.detach(),point_m.detach(),point_sum.detach(),point_sum_safe.detach(),epo.detach()
 
 
@@ -130,7 +139,7 @@ def test(model,model_safe,device,test_loader,epsilon,num,r,o):#测试函数
             print(target)
             e+=1
             print(e)
-            if(e>=100):
+            if(e>=pic_num):
                 break
             #data[0][0][3][23]=1
             #data[0][0][3][24]=1
@@ -141,6 +150,9 @@ def test(model,model_safe,device,test_loader,epsilon,num,r,o):#测试函数
             #data[0][0][7][23]=1
             #data[0][0][7][24]=1
             #data[0][0][7][25]=1
+
+            # if(target!=0):
+            #     continue
 
             for i in range(28):
                 for j in range(28):
@@ -167,6 +179,8 @@ def test(model,model_safe,device,test_loader,epsilon,num,r,o):#测试函数
                     init_pred=output.max(1,keepdim=True)[1]#只取最大的，因为一个点针对标签a的是触发器点的话，它的概率剧增骤减必然引起其余标签概率的骤减剧增，只不过别的标签的幅度可能会小很多，但仍非常大（比正常标签变化多数个数量级），为了去除这个影响，只取最大
                     init_pred_safe=output_safe.max(1,keepdim=True)[1]#只取最大的，因为一个点针对标签a的是触发器点的话，它的概率剧增骤减必然引起其余标签概率的骤减剧增，只不过别的标签的幅度可能会小很多，但仍非常大（比正常标签变化多数个数量级），为了去除这个影响，只取最大
 
+                    init_pred=mytarget
+                    init_pred_safe=mytarget
 
                     for p in num:
                         if(target==p[0] and init_pred==p[1]):#初始标签非8，权重最大为8的才会更新，所以100个数据是不够的（很多被浪费掉的）
@@ -196,7 +210,7 @@ def test(model,model_safe,device,test_loader,epsilon,num,r,o):#测试函数
         return adv_examples, point.detach(),point_safe.detach(),point_m.detach(),point_sum.detach(),point_sum_safe.detach(),epo.detach()
 
 
-def find(num,safe_model,pretrained_model,use_cuda,epsilons,r,o):
+def find(num,safe_model,pretrained_model,use_cuda,epsilons,r,o,mytarget,pic_num):
     
     
     totle_leads=[[0 for j in range(10)] for i in range(10)]
@@ -231,7 +245,7 @@ def find(num,safe_model,pretrained_model,use_cuda,epsilons,r,o):
     # Run test for each epsilon
     for i in range(1):
         for eps in epsilons:
-            ex, point,point_safe,point_m,point_sum,point_sum_safe,epo = test(model,model_safe, device, test_loader, eps,num,r,o)
+            ex, point,point_safe,point_m,point_sum,point_sum_safe,epo = test(model,model_safe, device, test_loader, eps,num,r,o,mytarget,pic_num)
             examples.append(ex)
             if(o):
                 torch.save(point, 'find_result/point_o.pt')
@@ -273,7 +287,10 @@ if __name__ == '__main__':
     epsilons = [0, .05, .1, .15, .2, .25, .3]
     epsilons = [0.1]
     num = [[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,8],[7,8],[9,8]]
+    num = [[0,1],[2,1],[3,1],[4,1],[5,1],[6,1],[7,1],[8,1],[9,1]]
+    mytarget = 1
+    pic_num = 500
     r = True #是否继续
-    o = True
-    #o = False #是否输出（本次保存的内容无法用于下一次迭代，但下次迭代会使用上次的结果）
-    find(num,safe_model,pretrained_model,use_cuda,epsilons,r,o)
+    o = False
+    o = True #是否输出（本次保存的内容无法用于下一次迭代，但下次迭代会使用上次的结果）
+    find(num,safe_model,pretrained_model,use_cuda,epsilons,r,o,mytarget,pic_num)

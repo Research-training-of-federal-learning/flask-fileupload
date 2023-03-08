@@ -27,6 +27,10 @@ from file import file_read
 from train import train #正确率
 from training import training #训练
 
+from reverse.MNIST import find_lead
+from reverse.MNIST import data_statistics
+from reverse.MNIST import outputhtml
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
@@ -103,10 +107,14 @@ def download1():
     #file_path = request.form.get('file_path')#不同模式
     return send_from_directory(file_path, file_name, as_attachment=True)
 
+@app.route("/result1", methods=['GET', 'POST'])
+def result1():
+    return render_template('result1.html')
+
 @app.route('/downloadG0')
 def downloadG0():
     current_path = "FLAME_models"
-    return send_from_directory(current_path,"G0.pt",as_attachment=True)
+    return send_from_directory(file_path, file_name, as_attachment=True)
 
 
 @app.route('/project', methods=['GET', 'POST'])
@@ -121,12 +129,12 @@ def project():
                 pre="检测到历史训练数据,"
                 acc=file_read.file_read("pre_models/"+database+"/"+model+"/acc.txt")
                 addr=""
-                return render_template('project.html',flask_database=database,flask_model=model,flask_pre=pre,flask_acc=acc,flask_model_download=addr)
+                return render_template('project.html',flask_database=database,flask_model=model,flask_pre=pre,flask_acc=acc,flask_model_download=addr,result1_text="")
 
 
             else:
                 pre="未检测到历史训练数据,"
-                return render_template('project.html',flask_database=database,flask_model=model,flask_pre=pre)
+                return render_template('project.html',flask_database=database,flask_model=model,flask_pre=pre,result1_text="")
         elif(m=='2'):#进行正常训练
             if(database=="mnist" and model=="simplenet"):
                 #acc = train.main("train/configs/mnist_params.yaml","mnist")
@@ -141,11 +149,34 @@ def project():
             f = open("pre_models/"+database+"/"+model+"/acc.txt", "w")
             f.write(acc)
             f.close()
-            return render_template('project.html',flask_database=database,flask_model=model,flask_acc=acc)
-        elif(m=='3'):#进行逆向检测（输出可能性表单）（回1）
-            pass
+            return render_template('project.html',flask_database=database,flask_model=model,flask_acc=acc,result1_text="")
+        elif(m=='3'):#进行逆向检测（输出可能性表单）（疑似嫌犯）（回1）
+            #接收两个参数：轮数，优化率,文件位置
+            if(database=="mnist" and model=="simplenet"):
+                check_epo = int(request.form.get('check_epo'))
+                #check_epo=10
+                pretrained_model = "reverse/MNIST/lenet_mnist_model.pth"
+                use_cuda=True
+                epsilons = [0.05]
+                epsilons[0] = float(request.form.get('check_lr'))
+                find_result=find_lead.find(check_epo,pretrained_model,use_cuda,epsilons)
+                statistics_result_t4,statistics_result_t5=data_statistics.MNIST_statistics(find_result[check_epo-1])
+                outputhtml.writeHTML("result1.html",statistics_result_t4,statistics_result_t5)
+                if(file_exists.file_exists("templates/result1.html")):
+                    os.remove("templates/result1.html") #删除原预训练文件
+                shutil.move("result1.html","templates/result1.html")
+                
+                result1_text="疑似后门："
+                for i in range(len(statistics_result_t4)):
+                    for j in range(len(statistics_result_t4[i])):
+                        if(statistics_result_t4[i][j]==1):
+                            result1_text+="("+str(i)+"->"+str(j)+"):"+str(int(statistics_result_t5[i][j]))+"%|"
 
-        elif(m=='4'):#定位、还原操作（输出定位、还原样例）（上传）
+                return render_template('project.html',flask_database=database,flask_model=model,result1_text=result1_text)
+
+
+
+        elif(m=='4'):#定位、还原操作（输出定位、还原样例）（嫌疑人画像）（上传）
             pass
 
         elif(m=='5'):#防御性训练（输出下降图表）

@@ -6,44 +6,47 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 import numpy as np
 import matplotlib.pyplot as plt
-from model import Model
+from reverse.MNIST.model import Model
 import sys
 
-# weight = [[0. for j in range(28)] for i in range(28)]
+
+
+weight = [[0. for j in range(28)] for i in range(28)]
 # for i in range(0,5):
 #     for j in range(23,28):
 #         weight[i][j]=1.
-# for i in range(21,26):
-#     for j in range(3,6):
-#         weight[i][j]=1.
-weight = [[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
-[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0]]
+for i in range(23,28):
+    for j in range(0,5):
+        weight[i][j]=1.
+# weight = [[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0],
+# [1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0]]
+
 # weight = torch.tensor(
 # [[1.4199e-02, 2.7844e-02, 6.2184e-02, 8.0997e-02, 6.3869e-02, 6.0285e-02,
 #          1.3288e-01, 1.2359e-01, 2.6249e-01, 1.8535e-01, 2.8270e-01, 1.8148e-01,
@@ -185,11 +188,11 @@ weight = [[1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0.8,1.0,0.8,0.6,0.4,0.2,0.0,0.2,0.4,0
 #          0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00,
 #          0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00,
 #          0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00]])
+
 weight=torch.Tensor(weight)
 device = torch.device("cuda" if (True and torch.cuda.is_available()) else "cpu")
 device = "cpu"
 weight=weight.to(device)
-
 
 
 
@@ -231,7 +234,7 @@ class Net(Model):#创建网络
 
 def fgsm_attack(image,epsilon,data_grad):#此函数的功能是进行fgsm攻击，需要输入三个变量，干净的图片，扰动量和输入图片
     sign_data_grad=data_grad.sign()
-    perturbed_image=image+epsilon*weight*sign_data_grad#公式
+    perturbed_image=image+epsilon*sign_data_grad#公式
     perturbed_image=torch.clamp(perturbed_image,0,1)#为了保持图像的原始范围，将受干扰的图像裁剪到一定的范围【0，1】
     return perturbed_image
 
@@ -245,9 +248,19 @@ def print_lead(lead):
         for j in range(len(lead)):
             print(str(lead[i][j]),end=" ")
         print("")
+    print("")
+    print("")
+    for i in range(len(lead)):
+        for j in range(len(lead)):
+            if(i!=j):
+                print(str(lead[i][j]),end=" ")
+            else:
+                print(str(0),end=" ")
+        print("")
+
 
 def test(model,device,test_loader,epsilon,ep):#测试函数
-    lead = [[[0 for j in range(10)] for i in range(10)] for k in range(10)]
+    lead =[[[0 for j in range(10)] for i in range(10)] for k in range(10)]
     correct=0#存放正确的个数
     adv_examples=[]#存放正确的例子
     adv_examples=[]#存放正确的例子
@@ -255,6 +268,9 @@ def test(model,device,test_loader,epsilon,ep):#测试函数
     no=0
     for data,target in test_loader:
         no+=1
+        if(no==100):
+        	print(100)
+        	#break
         print("\r", end="")
         print("进度: {}%: ".format(100*no//test_loader_lenth), end="")
         sys.stdout.flush()
@@ -287,52 +303,48 @@ def test(model,device,test_loader,epsilon,ep):#测试函数
         output=model(data)
         
         init_pred=output.max(1,keepdim=True)[1]#选取最大的类别概率
-        # if init_pred.item()==target.item():#判断类别是否相等
-        #     init_pred[0] = second(output)
+        if init_pred.item()!=target.item():#判断类别是否相等
+            continue
+        else:
+            init_pred[0] = second(output)
         ##
-        perturbed_data=data
+        #perturbed_data=data
         ##
-
-        for i in range(ep):
-            #init_pred[0]=8
-            loss=F.nll_loss(output,init_pred[0])
-            # print(init_pred[0])
-            # print(loss)
-            # die()
-            model.zero_grad()
-            loss.backward()
-            #data_grad=data.grad.data
-            #perturbed_data=fgsm_attack(data,epsilon,data_grad)
+        for j in range(10):
+            if(j==target.item()):
+                continue
             ##
-            data_grad=perturbed_data.grad.data
-            perturbed_data=fgsm_attack(perturbed_data,epsilon,data_grad)
-            perturbed_data=perturbed_data.detach()
+            perturbed_data=data.clone().detach()
+            perturbed_data=perturbed_data.to(device)
             perturbed_data.requires_grad=True
-            ##
             output=model(perturbed_data)
-            final_pred=output.max(1,keepdim=True)[1]
-            lead[i][target.item()][final_pred.item()]+=1
+            if(j==0):
+                #print(output)
+                init1=output.clone()
+            ##
+            init_pred[0]=j
+
+            for i in range(ep):
+                loss=F.nll_loss(output,init_pred[0])
+                model.zero_grad()
+                loss.backward()
+                data_grad=perturbed_data.grad.data
+                perturbed_data=fgsm_attack(perturbed_data,epsilon,data_grad)
+                perturbed_data=perturbed_data.detach()
+                perturbed_data.requires_grad=True
+                output=model(perturbed_data)
+                final_pred=output.max(1,keepdim=True)[1]
+                lead[i][target.item()][final_pred.item()]+=1
 
         #lead[target.item()][final_pred.item()]+=1
         #lead[target.item()][init_pred[0].item()]+=1
         #if final_pred.item()==target.item():#判断类别是否相等
-        # if final_pred.item()==target.item():
-        #     correct+=1
-        # elif (epsilon == 0) and (len(adv_examples) < 6):#这里是在选取例子，可以输出
-        #     adv_ex = perturbed_data.squeeze().detach().cpu().numpy()
-        #     adv_examples.append((target.item(), final_pred.item(), adv_ex))
-        # else:
-        #     # Save some adv examples for visualization later
-        #     if len(adv_examples) < 6:
-        #         adv_ex = perturbed_data.squeeze().detach().cpu().numpy()
-        #         adv_examples.append((target.item(), final_pred.item(), adv_ex))
-
     # Calculate final accuracy for this epsilon
     final_acc = correct / float(len(test_loader))#算正确率
-    print("Epsilon: {}\tTest Accuracy = {} / {} = {}".format(epsilon, correct, len(test_loader), final_acc))
-    for i in range(len(lead)):
-        print("epo=",i+1)
-        print_lead(lead[i])
+    #print("Epsilon: {}\tTest Accuracy = {} / {} = {}".format(epsilon, correct, len(test_loader), final_acc))
+    # for i in range(len(lead)):
+    #     print("epo=",i+1)
+    #     print_lead(lead[i])
 
 
     # Return the accuracy and an adversarial example
@@ -369,7 +381,7 @@ def statistics(totle_leads):
         if(statistics_check[i]<(2.0/len(totle_leads)) or statistics_result_t[i]<=0.5):
             statistics_result_d[i]=-1
 
-        print(statistics_result[i],statistics_sum[i],statistics_check[i],statistics_result_t[i],statistics_result_d[i])
+        #print(statistics_result[i],statistics_sum[i],statistics_check[i],statistics_result_t[i],statistics_result_d[i])
 
 
 
@@ -380,7 +392,7 @@ def find(ep,pretrained_model,use_cuda,epsilons):
     totle_leads=[[0 for j in range(10)] for i in range(10)]
     totle_leads=np.array(totle_leads)
     test_loader = torch.utils.data.DataLoader(#导入数据
-    datasets.MNIST('../data', train=False, download=True, transform=transforms.Compose([
+    datasets.MNIST('.data', train=False, download=True, transform=transforms.Compose([
             transforms.ToTensor(),
             ])),
         batch_size=1, shuffle=True)
@@ -410,39 +422,52 @@ def find(ep,pretrained_model,use_cuda,epsilons):
                 continue
             accuracies.append(acc)
             examples.append(ex)
-    print("totle:")
-    print(totle_leads)
-    statistics(totle_leads)
+    #print("totle:")
 
 
-    plt.plot(epsilons,accuracies)
-    #plt.show()
-    f = plt.gcf()
-    f.savefig("find_result\\acc.png")
-    f.clear()
+    # for i in range(len(totle_leads)):
+    #     print("epo=",i+1)
+    #     statistics(totle_leads[i])
 
-    cnt = 0
-    plt.figure(figsize=(8,10))
-    for i in range(len(epsilons)):
-        for j in range(len(examples[i])):
-            cnt += 1
-            plt.subplot(len(epsilons),len(examples[0]),cnt)
-            plt.xticks([], [])
-            plt.yticks([], [])
-            if j == 0:
-                plt.ylabel("Eps: {}".format(epsilons[i]), fontsize=14)
-            orig,adv,ex = examples[i][j]
-            plt.title("{} -> {}".format(orig, adv))
-            plt.imshow(ex, cmap="gray")
-    plt.tight_layout()
-    #plt.show()
-    f = plt.gcf()
-    f.savefig("find_result\\example.png")
-    f.clear()
+    for i in range(len(totle_leads)):
+    	for j in range(len(totle_leads[i])):
+    		for k in range(len(totle_leads[i][j])):
+    			if(j==k):
+    				totle_leads[i][j][k]=0
+
+    return totle_leads.tolist()
+    # print(totle_leads)
+    # statistics(totle_leads)
+
+
+    # plt.plot(epsilons,accuracies)
+    # #plt.show()
+    # f = plt.gcf()
+    # f.savefig("find_result\\acc.png")
+    # f.clear()
+
+    # cnt = 0
+    # plt.figure(figsize=(8,10))
+    # for i in range(len(epsilons)):
+    #     for j in range(len(examples[i])):
+    #         cnt += 1
+    #         plt.subplot(len(epsilons),len(examples[0]),cnt)
+    #         plt.xticks([], [])
+    #         plt.yticks([], [])
+    #         if j == 0:
+    #             plt.ylabel("Eps: {}".format(epsilons[i]), fontsize=14)
+    #         orig,adv,ex = examples[i][j]
+    #         plt.title("{} -> {}".format(orig, adv))
+    #         plt.imshow(ex, cmap="gray")
+    # plt.tight_layout()
+    # #plt.show()
+    # f = plt.gcf()
+    # f.savefig("find_result\\example.png")
+    # f.clear()
 
 if __name__ == '__main__':
     pretrained_model = "lenet_mnist_model.pth"
     use_cuda=True
     epsilons = [0, .05, .1, .15, .2, .25, .3]
-    epsilons = [0.1]
+    epsilons = [0.05]
     find(10,pretrained_model,use_cuda,epsilons)
