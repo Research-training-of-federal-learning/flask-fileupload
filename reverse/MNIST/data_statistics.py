@@ -38,6 +38,6 @@ if __name__ == '__main__':
 	 [1,2078,606,1,22,76,0,0,747,144],
 	 [0,3,25,6,2,15,0,1,0,4],
 	 [2,456,33,56,304,87,3,32,2514,0]]
-	t4,t5=MNIST_statistics(t1)
-	print(t4)
-	print(t5)
+	# t4,t5=MNIST_statistics(t1)
+	# print(t4)
+	# print(t5)

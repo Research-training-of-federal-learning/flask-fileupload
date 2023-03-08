@@ -6,7 +6,7 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 import numpy as np
 import matplotlib.pyplot as plt
-from model import Model
+from reverse.MNIST.model import Model
 import os
 
 
@@ -70,15 +70,15 @@ def print_lead(lead):
 def test(model,model_safe,device,test_loader,epsilon,num,r,o,mytarget,pic_num):#测试函数
     with torch.no_grad():
         epo=torch.tensor([1])
-        if(os.path.exists("find_result/epo.pt") and os.path.exists("find_result/point.pt") and os.path.exists("find_result/point_safe.pt") and os.path.exists("find_result/point_m.pt") and os.path.exists("find_result/point_sum.pt") and os.path.exists("find_result/point_sum_safe.pt") and r):
+        if(os.path.exists("reverse/MNIST/find_result/epo.pt") and os.path.exists("reverse/MNIST/find_result/point.pt") and os.path.exists("reverse/MNIST/find_result/point_safe.pt") and os.path.exists("reverse/MNIST/find_result/point_m.pt") and os.path.exists("reverse/MNIST/find_result/point_sum.pt") and os.path.exists("reverse/MNIST/find_result/point_sum_safe.pt") and r):
             print("read")
-            epo = torch.load("find_result/epo.pt") + 1
+            epo = torch.load("reverse/MNIST/find_result/epo.pt") + 1
             print("epoch:",epo)
-            point = torch.load("find_result/point.pt")
-            point_safe = torch.load("find_result/point_safe.pt")
-            point_m = torch.load("find_result/point_m.pt")
-            point_sum = torch.load("find_result/point_sum.pt")
-            point_sum_safe = torch.load("find_result/point_sum_safe.pt")
+            point = torch.load("reverse/MNIST/find_result/point.pt")
+            point_safe = torch.load("reverse/MNIST/find_result/point_safe.pt")
+            point_m = torch.load("reverse/MNIST/find_result/point_m.pt")
+            point_sum = torch.load("reverse/MNIST/find_result/point_sum.pt")
+            point_sum_safe = torch.load("reverse/MNIST/find_result/point_sum_safe.pt")
         else:
             print("epoch:",epo)
             point = [[[[0 for q in range(28)] for p in range(28)] for j in range(10)] for i in range(10)]
@@ -113,13 +113,10 @@ def test(model,model_safe,device,test_loader,epsilon,num,r,o,mytarget,pic_num):#
                 perturbed_data=F.relu(perturbed_data) #负数归零
                 if len(adv_examples) <9  and i!=mytarget:
                     #
-                    perturbed_data = perturbed_data * (perturbed_data >= 0.01)
+                    #perturbed_data = perturbed_data * (perturbed_data >= 0.01)
                     # for xblack in range(10):
                     #     for yblack in range(20,28):
                     #         perturbed_data[xblack][yblack] = 0
-                    for xblack in range(0,23):
-                        for yblack in range(10,28):
-                            perturbed_data[xblack][yblack] = 0
                     #
                     adv_ex = perturbed_data.squeeze().detach().cpu().numpy()
                     adv_examples.append((i, mytarget, adv_ex))
@@ -217,7 +214,7 @@ def find(num,safe_model,pretrained_model,use_cuda,epsilons,r,o,mytarget,pic_num)
     totle_leads=np.array(totle_leads)
 
     test_loader = torch.utils.data.DataLoader(#导入数据
-    datasets.MNIST('../data', train=False, download=True, transform=transforms.Compose([
+    datasets.MNIST('.data', train=False, download=True, transform=transforms.Compose([
             transforms.ToTensor(),
             ])),
         batch_size=1, shuffle=True)
@@ -248,49 +245,53 @@ def find(num,safe_model,pretrained_model,use_cuda,epsilons,r,o,mytarget,pic_num)
             ex, point,point_safe,point_m,point_sum,point_sum_safe,epo = test(model,model_safe, device, test_loader, eps,num,r,o,mytarget,pic_num)
             examples.append(ex)
             if(o):
-                torch.save(point, 'find_result/point_o.pt')
-                torch.save(point_safe, 'find_result/point_safe_o.pt')
-                torch.save(point_m, 'find_result/point_m_o.pt')
-                torch.save(point_sum, 'find_result/point_sum_o.pt')
-                torch.save(point_sum_safe, 'find_result/point_sum_safe_o.pt')
-                torch.save(epo, 'find_result/epo_o.pt')
-            torch.save(point, 'find_result/point.pt')
-            torch.save(point_safe, 'find_result/point_safe.pt')
-            torch.save(point_m, 'find_result/point_m.pt')
-            torch.save(point_sum, 'find_result/point_sum.pt')
-            torch.save(point_sum_safe, 'find_result/point_sum_safe.pt')
-            torch.save(epo, 'find_result/epo.pt')
-            
-    cnt = 0
-    plt.figure(figsize=(32,10))
-    for i in range(len(epsilons)):
-        for j in range(len(examples[i])):
-            cnt += 1
-            plt.subplot(len(epsilons),len(examples[0]),cnt)
-            plt.xticks([], [])
-            plt.yticks([], [])
-            if j == 0:
-                plt.ylabel("Eps: {}".format(epsilons[i]), fontsize=14)
-            orig,adv,ex = examples[i][j]
-            plt.title("{} -> {}".format(orig, adv))
-            plt.imshow(ex, cmap="gray")
-    plt.tight_layout()
-    plt.show()
-    f = plt.gcf()
-    f.savefig("find_result\\example.png")
+                torch.save(point, 'reverse/MNIST/find_result/point_o.pt')
+                torch.save(point_safe, 'reverse/MNIST/find_result/point_safe_o.pt')
+                torch.save(point_m, 'reverse/MNIST/find_result/point_m_o.pt')
+                torch.save(point_sum, 'reverse/MNIST/find_result/point_sum_o.pt')
+                torch.save(point_sum_safe, 'reverse/MNIST/find_result/point_sum_safe_o.pt')
+                torch.save(epo, 'reverse/MNIST/find_result/epo_o.pt')
+            torch.save(point, 'reverse/MNIST/find_result/point.pt')
+            torch.save(point_safe, 'reverse/MNIST/find_result/point_safe.pt')
+            torch.save(point_m, 'reverse/MNIST/find_result/point_m.pt')
+            torch.save(point_sum, 'reverse/MNIST/find_result/point_sum.pt')
+            torch.save(point_sum_safe, 'reverse/MNIST/find_result/point_sum_safe.pt')
+            torch.save(epo, 'reverse/MNIST/find_result/epo.pt')
+
+    if(o):
+        cnt = 0
+        plt.figure(figsize=(32,10))
+        for i in range(len(epsilons)):
+            for j in range(len(examples[i])):
+                cnt += 1
+                plt.subplot(len(epsilons),len(examples[0]),cnt)
+                plt.xticks([], [])
+                plt.yticks([], [])
+                if j == 0:
+                    plt.ylabel("Eps: {}".format(epsilons[i]), fontsize=14)
+                orig,adv,ex = examples[i][j]
+                plt.title("{} -> {}".format(orig, adv))
+                plt.imshow(ex, cmap="gray")
+        plt.tight_layout()
+        plt.savefig("reverse/MNIST/find_result/example.png")
+        #plt.show()
+        plt.close()
+        
+        # f = plt.gcf()
+        # f.savefig("find_result\\example.png")
 
 if __name__ == '__main__':
     pretrained_model = "lenet_mnist_model.pth"
     safe_model = "safe_mnist_model.pth"
     #pretrained_model = "safe_mnist_model.pth"
     use_cuda=True
-    epsilons = [0, .05, .1, .15, .2, .25, .3]
-    epsilons = [0.1]
+    epsilons = [0.1] #作用仅为跑一轮
     num = [[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,8],[7,8],[9,8]]
     num = [[0,1],[2,1],[3,1],[4,1],[5,1],[6,1],[7,1],[8,1],[9,1]]
     mytarget = 1
-    pic_num = 500
+    #pic_num = 500
+    pic_num = 1
     r = True #是否继续
     o = False
-    o = True #是否输出（本次保存的内容无法用于下一次迭代，但下次迭代会使用上次的结果）
+    #o = True #是否输出（本次保存的内容无法用于下一次迭代，但下次迭代会使用上次的结果）
     find(num,safe_model,pretrained_model,use_cuda,epsilons,r,o,mytarget,pic_num)

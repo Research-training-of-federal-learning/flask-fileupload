@@ -23,6 +23,7 @@ import shutil
 
 from file import file_exists
 from file import file_read
+from file import del_file
 
 from train import train #正确率
 from training import training #训练
@@ -30,6 +31,7 @@ from training import training #训练
 from reverse.MNIST import find_lead
 from reverse.MNIST import data_statistics
 from reverse.MNIST import outputhtml
+from reverse.MNIST import find_point
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -111,6 +113,10 @@ def download1():
 def result1():
     return render_template('result1.html')
 
+@app.route("/result2", methods=['GET', 'POST'])
+def result2():
+    return send_from_directory('templates','example.png')
+
 @app.route('/downloadG0')
 def downloadG0():
     current_path = "FLAME_models"
@@ -176,13 +182,42 @@ def project():
 
 
 
-        elif(m=='4'):#定位、还原操作（输出定位、还原样例）（嫌疑人画像）（上传）
+        elif(m=='4'):#定位
+            if(database=="mnist" and model=="simplenet"):
+                #清空find_result
+                if(file_exists.file_exists("reverse/MNIST/find_result")):
+                    del_file.del_file("reverse/MNIST/find_result") #删除原定位文件
+                #定位
+                pretrained_model = "reverse/MNIST/lenet_mnist_model.pth"
+                safe_model = "reverse/MNIST/safe_mnist_model.pth"
+                #pretrained_model = "safe_mnist_model.pth"
+                use_cuda=True
+                epsilons = [0.1] #作用仅为跑一轮
+                num = [[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,8],[7,8],[9,8]]
+                mytarget = 8
+                #pic_num = 500
+                pic_num = 10
+                r = True #是否继续
+                o = False
+                find_point.find(num,safe_model,pretrained_model,use_cuda,epsilons,r,o,mytarget,pic_num)
+                #复制结果文件
+                if(file_exists.file_exists("reverse/MNIST/find_result_backup")):
+                    del_file.del_file("reverse/MNIST/find_result_backup") #删除原定位文件
+                    os.rmdir("reverse/MNIST/find_result_backup")
+                shutil.copytree("reverse/MNIST/find_result","reverse/MNIST/find_result_backup")
+                #输出定位
+                o = True #是否输出（本次保存的内容无法用于下一次迭代，但下次迭代会使用上次的结果）
+                find_point.find(num,safe_model,pretrained_model,use_cuda,epsilons,r,o,mytarget,pic_num)
+                shutil.move("reverse/MNIST/find_result/example.png","templates")
+                return render_template('project.html',flask_database=database,flask_model=model)
+
+        elif(m=='5'):#还原（嫌疑人画像）（上传）
             pass
 
-        elif(m=='5'):#防御性训练（输出下降图表）
+        elif(m=='6'):#防御性训练（输出下降图表）
             pass
 
-        elif(m=='6'):#安全聚类
+        elif(m=='7'):#安全聚类
             global G0
             models = FLAME.data_needed("model\\")
             for i in range(len(models)):
