@@ -273,14 +273,24 @@ def login():
 @app.route('/uploadajax', methods=['POST'])
 def upldfile():
     if request.method == 'POST':
-        files = request.files['file']
-        if files and allowed_file(files.filename):
-            filename = secure_filename(files.filename)
-            app.logger.info('FileName: ' + filename)
-            updir = os.path.join(basedir, 'upload/')
-            files.save(os.path.join(updir, filename))
-            file_size = os.path.getsize(os.path.join(updir, filename))
-            return jsonify(name=filename, size=file_size)
+        try:
+            uploadfiles = request.files['upload']
+        except KeyError:
+            flash('未选择文件')
+            return redirect('/project')
+        finally:
+            if uploadfiles and allowed_file(uploadfiles.filename):
+                filename = secure_filename(uploadfiles.filename)
+                app.logger.info('FileName: ' + filename)
+                updir = os.path.join(basedir, 'upload/')
+                uploadfiles.save(os.path.join(updir, filename))
+                file_size = os.path.getsize(os.path.join(updir, filename))
+                return jsonify(name=filename, size=file_size)
+            else:
+                flash('未选择文件')
+                return redirect('/project')
+    else:
+        return redirect('/project')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
