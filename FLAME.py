@@ -8,7 +8,7 @@ def torchfile2np(to):
     n = torch.load(to, map_location=torch.device("cpu"))['state_dict']
     key_list = list(n.keys())
     mylist = np.arange(0)
-    for i in range(len(key_list)):
+    for i in range(len(key_list)-2,len(key_list)):
         mylist = np.append(mylist, n[key_list[i]].view(-1).numpy())
     return mylist
 
@@ -22,69 +22,9 @@ def data_needed(filePath):
 
 
 def np2model(mylist, model):
-    mymodel = mylist[0:1728]
-    model['state_dict']['features.conv_1_1.weight'] = torch.tensor(mymodel).view([64, 3, 3, 3])
-    mymodel = mylist[1728:1792]
-    model['state_dict']['features.conv_1_1.bias'] = torch.tensor(mymodel).view([64])
-    mymodel = mylist[1792:38656]
-    model['state_dict']['features.conv_1_2.weight'] = torch.tensor(mymodel).view([64, 64, 3, 3])
-    mymodel = mylist[38656:38720]
-    model['state_dict']['features.conv_1_2.bias'] = torch.tensor(mymodel).view([64])
-    mymodel = mylist[38720:112448]
-    model['state_dict']['features.conv_2_1.weight'] = torch.tensor(mymodel).view([128, 64, 3, 3])
-    mymodel = mylist[112448:112576]
-    model['state_dict']['features.conv_2_1.bias'] = torch.tensor(mymodel).view([128])
-    mymodel = mylist[112576:260032]
-    model['state_dict']['features.conv_2_2.weight'] = torch.tensor(mymodel).view([128, 128, 3, 3])
-    mymodel = mylist[260032:260160]
-    model['state_dict']['features.conv_2_2.bias'] = torch.tensor(mymodel).view([128])
-    mymodel = mylist[260160:555072]
-    model['state_dict']['features.conv_3_1.weight'] = torch.tensor(mymodel).view([256, 128, 3, 3])
-    mymodel = mylist[555072:555328]
-    model['state_dict']['features.conv_3_1.bias'] = torch.tensor(mymodel).view([256])
-    mymodel = mylist[555328:1145152]
-    model['state_dict']['features.conv_3_2.weight'] = torch.tensor(mymodel).view([256, 256, 3, 3])
-    mymodel = mylist[1145152:1145408]
-    model['state_dict']['features.conv_3_2.bias'] = torch.tensor(mymodel).view([256])
-    mymodel = mylist[1145408:1735232]
-    model['state_dict']['features.conv_3_3.weight'] = torch.tensor(mymodel).view([256, 256, 3, 3])
-    mymodel = mylist[1735232:1735488]
-    model['state_dict']['features.conv_3_3.bias'] = torch.tensor(mymodel).view([256])
-    mymodel = mylist[1735488:2915136]
-    model['state_dict']['features.conv_4_1.weight'] = torch.tensor(mymodel).view([512, 256, 3, 3])
-    mymodel = mylist[2915136:2915648]
-    model['state_dict']['features.conv_4_1.bias'] = torch.tensor(mymodel).view([512])
-    mymodel = mylist[2915648:5274944]
-    model['state_dict']['features.conv_4_2.weight'] = torch.tensor(mymodel).view([512, 512, 3, 3])
-    mymodel = mylist[5274944:5275456]
-    model['state_dict']['features.conv_4_2.bias'] = torch.tensor(mymodel).view([512])
-    mymodel = mylist[5275456:7634752]
-    model['state_dict']['features.conv_4_3.weight'] = torch.tensor(mymodel).view([512, 512, 3, 3])
-    mymodel = mylist[7634752:7635264]
-    model['state_dict']['features.conv_4_3.bias'] = torch.tensor(mymodel).view([512])
-    mymodel = mylist[7635264:9994560]
-    model['state_dict']['features.conv_5_1.weight'] = torch.tensor(mymodel).view([512, 512, 3, 3])
-    mymodel = mylist[9994560:9995072]
-    model['state_dict']['features.conv_5_1.bias'] = torch.tensor(mymodel).view([512])
-    mymodel = mylist[9995072:12354368]
-    model['state_dict']['features.conv_5_2.weight'] = torch.tensor(mymodel).view([512, 512, 3, 3])
-    mymodel = mylist[12354368:12354880]
-    model['state_dict']['features.conv_5_2.bias'] = torch.tensor(mymodel).view([512])
-    mymodel = mylist[12354880:14714176]
-    model['state_dict']['features.conv_5_3.weight'] = torch.tensor(mymodel).view([512, 512, 3, 3])
-    mymodel = mylist[14714176:14714688]
-    model['state_dict']['features.conv_5_3.bias'] = torch.tensor(mymodel).view([512])
-    mymodel = mylist[14714688:117475136]
-    model['state_dict']['fc.fc6.weight'] = torch.tensor(mymodel).view([4096, 25088])
-    mymodel = mylist[117475136:117479232]
-    model['state_dict']['fc.fc6.bias'] = torch.tensor(mymodel).view([4096])
-    mymodel = mylist[117479232:134256448]
-    model['state_dict']['fc.fc7.weight'] = torch.tensor(mymodel).view([4096, 4096])
-    mymodel = mylist[134256448:134260544]
-    model['state_dict']['fc.fc7.bias'] = torch.tensor(mymodel).view([4096])
-    mymodel = mylist[134260544:145000256]
+    mymodel = mylist[0:10739712]
     model['state_dict']['fc.fc8.weight'] = torch.tensor(mymodel).view([2622, 4096])
-    mymodel = mylist[145000256:145002878]
+    mymodel = mylist[10739712:10742334]
     model['state_dict']['fc.fc8.bias'] = torch.tensor(mymodel).view([2622])
     return model
 
@@ -134,8 +74,8 @@ def find_eps(distance_D, eps):
 
 
 class FLAME:
-    def __init__(self, n, size, database, G0):
-        self.model = torch.load(database[0], map_location=torch.device("cpu"))
+    def __init__(self, n, size, database, G0_file_path):
+        self.model = torch.load(G0_file_path, map_location=torch.device("cpu"))
         self.S = None  # 存放欧几里得中值
         self.c = None  # 存放余弦距离
         self.b = None  # 存放聚类后结果
@@ -145,7 +85,7 @@ class FLAME:
         self.L = n  # L是聚类后允许的参数
         self.W = []  # W列表存储客户端更新后的参数
         self.newW = None  # 裁剪后的W
-        self.G0 = G0  # self.G0 = np.zeros([self.size], dtype=int)  # 上一轮参数
+        self.G0 = torchfile2np(G0_file_path)  # self.G0 = np.zeros([self.size], dtype=int)  # 上一轮参数
         self.G = np.zeros([self.size], dtype=float)  # 聚合后新的参数
         self.Lambda = 0.001  # 噪声参数，0.001for IC NLP,0.01for NIDS
         # for i in range(self.size):
