@@ -167,7 +167,7 @@
             <div class="accordion-group">
                 <div class="accordion-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
-                        <h1 style="text-align:center">防御</h1>
+                        <h1 style="text-align:center">上传</h1>
                     </a>
                 </div>
                 <div id="collapseThree" class="accordion-body collapse">
@@ -243,7 +243,7 @@
             </div>
 
 
-                        <div class="accordion-group">
+            <div class="accordion-group">
                 <div class="accordion-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
                         <h1 style="text-align:center">定位</h1>
@@ -309,7 +309,7 @@
                 <div id="collapseSix" class="accordion-body collapse">
                     <div class="accordion-inner form-group">
                         <br></br>
-                        <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
+                        <font face="黑体" size="3">配置的数据集：{{point_no}}|模型结构：{{flask_model}}</font>
                         <form action="/project" method="post" class="form-project">     
                             
                             <div class="form-group">
@@ -346,7 +346,7 @@
 
                     <div class="accordion-inner form-group">
                         <font face="黑体" size="3">逆向结果：</font>
-                        <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result1" frameborder=0></iframe>
+                        <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result3" frameborder=0></iframe>
                     </form>
 
 
@@ -358,6 +358,119 @@
             </div>
 
 
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSeven">
+                        <h1 style="text-align:center">修复性训练</h1>
+                    </a>
+                </div>
+                <div id="collapseSeven" class="accordion-body collapse">
+                    <div class="accordion-inner form-group">
+                        <br></br>
+                        <font face="黑体" size="3">配置的数据集：{{point_no}}|模型结构：{{flask_model}}</font>
+                        <form action="/project" method="post" class="form-project">     
+                            
+                            <div class="form-group">
+                                <label for="train_pretrain">训练轮数：<span id="re_target_num"></label>
+                                    <div class="slidecontainer">
+                                        <input type="number" value="0"  id="re_target" name="re_target">
+                                    </div>
+                                <label for="train_pretrain">优化率：<span id="re_lr_num"></label>
+                                    <div class="slidecontainer">
+                                        <input type="text" value="0.1" οnkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')" id="re_lr" name="re_lr">
+                                    </div>
+                            </div>
+<!--                             <div class="form-group">
+                                <label for="train_model">模型结构</label>
+                                    <select class="form-control" id="train_model" name="model">
+                                        <option>simplenet</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                            </div> -->
+                            <div class="form-group">
+                                <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
+                                <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
+                                <input name="m" style="width: 310px;height:30px;" value="6" hidden>
+                            </div>
+                            <div class="form-group">
+                                <button type="reset" class="btn btn-default pull-left">重置</button>
+                                <button type="submit" class="btn btn-primary pull-right">开始训练</button>
+                            </div>
+                            <br></br>
+                        </form>
+                    </div>
+
+                    <div class="accordion-inner form-group">
+                        <font face="黑体" size="3">逆向结果：</font>
+                        <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result3" frameborder=0></iframe>
+                    </form>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseEight">
+                        <h1 style="text-align:center">安全聚类</h1>
+                    </a>
+                </div>
+                <div id="collapseEight" class="accordion-body collapse">
+                    <div class="accordion-inner form-group">
+                        <br></br>
+                        <font face="黑体" size="3">配置的数据集：{{point_no}}|模型结构：{{flask_model}}</font>
+                        <form action="/project" method="post" class="form-project">     
+                            
+                            <div class="form-group">
+                                <label for="train_pretrain">未知模型数：<span id="re_target_num"></label>
+                                    <div class="slidecontainer">
+                                        <input type="number" value="0"  id="re_target" name="re_target">
+                                    </div>
+                                <label for="train_pretrain">总模型数：<span id="re_lr_num"></label>
+                                    <div class="slidecontainer">
+                                        <input type="text" value="0.1" οnkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')" id="re_lr" name="re_lr">
+                                    </div>
+                            </div>
+<!--                             <div class="form-group">
+                                <label for="train_model">模型结构</label>
+                                    <select class="form-control" id="train_model" name="model">
+                                        <option>simplenet</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                            </div> -->
+                            <div class="form-group">
+                                <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
+                                <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
+                                <input name="m" style="width: 310px;height:30px;" value="7" hidden>
+                            </div>
+                            <div class="form-group">
+                                <button type="reset" class="btn btn-default pull-left">重置</button>
+                                <button type="submit" class="btn btn-primary pull-right">开始聚类</button>
+                            </div>
+                            <br></br>
+                        </form>
+                    </div>
+
+                    <div class="accordion-inner form-group">
+                        <font face="黑体" size="3">逆向结果：</font>
+                        <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result3" frameborder=0></iframe>
+                    </form>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
 
 
         </div>

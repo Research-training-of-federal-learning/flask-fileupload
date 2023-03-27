@@ -31,6 +31,7 @@ from reverse.MNIST import find_lead
 from reverse.MNIST import data_statistics
 from reverse.MNIST import outputhtml
 from reverse.MNIST import find_point
+from reverse.MNIST import last_re
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -120,6 +121,10 @@ def result1():
 def result2():
     return send_from_directory('templates', 'example.png')
 
+@app.route("/result3", methods=['GET', 'POST'])
+def result3():
+    return send_from_directory('templates', 're.png')
+
 
 @app.route('/downloadG0')
 def downloadG0():
@@ -133,6 +138,7 @@ def project():
         m = request.form.get('m')  # 不同模式
         database = request.form.get('database')
         model = request.form.get('model')
+        #print(m)
         if (m == '1'):  # 检测历史训练数据
             # 检测是否存在预训练
             if (file_exists.file_exists(
@@ -225,12 +231,28 @@ def project():
                 return render_template('project.html', flask_database=database, flask_model=model)
 
         elif (m == '5'):  # 还原（嫌疑人画像）（上传）
+            if (database == "mnist" and model == "simplenet"):
+                pretrained_model = "reverse/MNIST/lenet_mnist_model.pth"
+                use_cuda=True
+                #epsilons = [0, .05, .1, .15, .2, .25, .3]
+                epsilons = [.1]
+                #epsilons = [0.]
+                ep2 = 1
+                mytarget = 1
+                last_re.find(1,pretrained_model,use_cuda,epsilons,ep2,mytarget)
+
+                # 输出逆向
+                shutil.move("reverse/MNIST/re_result/re.png", "templates")
+                return render_template('project.html', flask_database=database, flask_model=model)
             pass
 
         elif (m == '6'):  # 防御性训练（输出下降图表）
+            if (database == "mnist" and model == "simplenet"):
+                pass
             pass
 
         elif (m == '7'):  # 安全聚类
+            #print(111)
             global G0
             database = request.form.get('database')
             model = request.form.get('model')

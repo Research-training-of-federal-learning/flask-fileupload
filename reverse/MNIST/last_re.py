@@ -6,7 +6,7 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 import numpy as np
 import matplotlib.pyplot as plt
-from model import Model
+from reverse.MNIST.model import Model
 import sys
 
 
@@ -252,12 +252,12 @@ def second(output):
     output1=torch.sort(output,descending=True)
     return output1[1][0][1]
 
-def print_lead(lead):
-    #print(lead)
-    for i in range(len(lead)):
-        for j in range(len(lead)):
-            print(str(lead[i][j]),end=" ")
-        print("")
+# def print_lead(lead):
+#     #print(lead)
+#     for i in range(len(lead)):
+#         for j in range(len(lead)):
+#             print(str(lead[i][j]),end=" ")
+#         print("")
 
 
 
@@ -390,7 +390,7 @@ def test(model,device,test_loader,epsilon,ep,ep2,mytarget):#测试函数
             	pass
                 #break
     adv_examples.append((-1,mytarget,last_result.squeeze().detach().cpu().numpy()))
-    print(last_result)
+    #print(last_result)
             
 
 
@@ -440,7 +440,7 @@ def find(ep,pretrained_model,use_cuda,epsilons,ep2,mytarget):
     totle_leads=[[0 for j in range(10)] for i in range(10)]
     totle_leads=np.array(totle_leads)
     test_loader = torch.utils.data.DataLoader(#导入数据
-    datasets.MNIST('../data', train=False, download=True, transform=transforms.Compose([
+    datasets.MNIST('.data', train=False, download=True, transform=transforms.Compose([
             transforms.ToTensor(),
             ])),
         batch_size=1, shuffle=True)
@@ -496,10 +496,10 @@ def find(ep,pretrained_model,use_cuda,epsilons,ep2,mytarget):
             plt.title("{} -> {}".format(orig, adv))
             plt.imshow(ex, cmap="gray")
     plt.tight_layout()
-    plt.show()
-    f = plt.gcf()
-    f.savefig("find_result\\example.png")
-    f.clear()
+    # plt.show()
+    # f = plt.gcf()
+    plt.savefig("reverse/MNIST/re_result/re.png")
+    plt.close()
 
 if __name__ == '__main__':
     pretrained_model = "lenet_mnist_model.pth"
