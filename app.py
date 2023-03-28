@@ -26,6 +26,7 @@ from file import del_file
 
 from train import train  # 正确率
 from training import training  # 训练
+from fixtraining import fixtraining  # 训练
 
 from reverse.MNIST import find_lead
 from reverse.MNIST import data_statistics
@@ -248,7 +249,25 @@ def project():
 
         elif (m == '6'):  # 防御性训练（输出下降图表）
             if (database == "mnist" and model == "simplenet"):
-                pass
+                print("fix_models/" + database + "/" + model)
+                
+            
+                # acc = train.main("train/configs/mnist_params.yaml","mnist")
+                acc, model_name = fixtraining.main("fixtraining/configs/mnist_params.yaml", "mnist")
+                print(model_name)
+
+                shutil.move(model_name, "fix_models/" + database + "/" + model)
+                if (file_exists.file_exists("fix_models/" + database + "/" + model + "/fix_model.pth")):
+                    os.remove("fix_models/" + database + "/" + model + "/fix_model.pth")  # 删除原预训练文件
+            # shutil.rmtree("training/saved_models")
+            # os.mkdir("training/saved_models")
+                os.rename("fix_models/" + database + "/" + model + "/model_last.pt.tar",
+                      "fix_models/" + database + "/" + model + "/fix_model.pth")
+                f = open("fix_models/" + database + "/" + model + "/acc.txt", "w")
+                f.write(acc)
+                f.close()
+                return render_template('project.html', flask_database=database, flask_model=model, flask_acc=acc,
+                                   result1_text="")
             pass
 
         elif (m == '7'):  # 安全聚类
