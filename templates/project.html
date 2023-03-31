@@ -4,7 +4,15 @@
     {{ super() }}
     <!-- url_for函数，加载静态文件-->
     <link href="{{ url_for('static', filename='css/project.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/demo.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css" >
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./static/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="./static/bootstrap/css/bootstrap.min.css"/>
+
+    <script src="./static/bootstrap/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./static/bootstrap/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
 {% endblock styles %}
 {% block navli %}
     <ul class="nav navbar-nav navbar-right">
@@ -21,6 +29,107 @@
 
 {% endblock navli %}
 {% block content %}
+    <div class="container-fluid">
+
+<!--            <div class="row">-->
+                <div class="fixLeft" id="menulist">
+                    <ul id="main-nav" class="nav nav-tabs nav-stacked" style="">
+                        <li class="active">
+                            <a href="#">
+                                <i class="glyphicon glyphicon-th-large"></i>
+                                首页演示demo
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#systemSetting" class="nav-header collapsed" data-toggle="collapse">
+                                <i class="glyphicon glyphicon-cog"></i>
+                                配置文件
+                                <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+                            </a>
+                            <ul id="systemSetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
+<!--                                <li>-->
+<!--                                    <a href="#systemSetting1" class="nav-header collapsed" data-toggle="collapse">-->
+<!--                                        <i class="glyphicon glyphicon-cog"></i>-->
+<!--                                        &nbsp配置数据集-->
+<!--                                        <span class="pull-right glyphicon glyphicon-chevron-down"></span>-->
+<!--                                    </a>-->
+<!--&lt;!&ndash;                                    <ul id="systemSetting1" class="nav nav-list collapse thirdmenu" style="height: 0px;">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <li><a href="#"><i class="glyphicon glyphicon-a"></i>豹纹</a></li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <li><a href="#"><i class="glyphicon glyphicon-th-b"></i>点纹</a></li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <li><a href="#"><i class="glyphicon glyphicon-c"></i>条纹</a></li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </ul>&ndash;&gt;-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a href="#systemSetting1" class="nav-header collapsed" data-toggle="collapse">-->
+<!--                                        <i class="glyphicon glyphicon-cog"></i>-->
+<!--                                        配置模型结构-->
+<!--                                        <span class="pull-right glyphicon glyphicon-chevron-down"></span>-->
+<!--                                    </a>-->
+<!--                                </li>-->
+                                <li>
+                                    <a href="#contentConfig">
+                                        <i class="glyphicon glyphicon-th-list"></i>配置数据集
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#contentConfig">
+                                        <i class="glyphicon glyphicon-th-list"></i>配置模型结构
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#contentDistribution">
+                                <i class="glyphicon glyphicon-send"></i>
+                                分发预训练模型
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#contentUpload">
+                                <i class="glyphicon glyphicon-cloud-upload"></i>
+                                上传
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#contentDetection">
+                                <i class="glyphicon glyphicon-check"></i>
+                                检测
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#contentReverse">
+                                <i class="glyphicon glyphicon-backward"></i>
+                                逆向
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#contentRepair">
+                                <i class="glyphicon glyphicon-wrench"></i>
+                                修复性训练
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#contentCluster">
+                                <i class="glyphicon glyphicon-knight"></i>
+                                安全聚类
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+<!--				<div class="col-sm-10" id="right"></div>-->
+<!--				<div class="col-sm-10" id="right"></div>-->
+                <div class="col-md-11 col-md-push-1">
+                    <div class="jumbotron" id="contentDemo">
+                      <h1>你好!</h1>
+                      <p>这是一款基于联邦学习场景下的后门攻击检测平台</p>
+                      <p><a class="btn btn-primary btn-lg" href="#" role="button">了解更多</a></p>
+                    </div>
+                </div>
+
+
+
+<!--            </div>-->
+    </div>
 
     <div class="container">
         {% for message in get_flashed_messages() %}
@@ -57,63 +166,68 @@
 
     <div class="container-fluid fold-project">
         <div class="accordion" id="accordion2">
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                        <h1 style="text-align:center">配置文件</h1>
-                    </a>
-                </div>
-                <div id="collapseOne" class="accordion-body collapse" style="height: 0px; ">
-                <hr>
-
-
-                <!--配置参数-->
-                <form action="/project" method="post" class="form-project">     
-                    <div class="form-group">
-                        <label for="train_database" style="text-align:center">数据集</label>
-                    <select class="form-control" id="train_database" name="database" placeholder="选择数据集" autofocus required>
-                        <option>mnist</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                    </select>
-                    </div>
-                    <div class="form-group" style="text-align:center">
-                        <label for="train_model">模型结构</label>
+<!--            <div class="accordion-group">-->
+<!--                <div class="accordion-heading">-->
+<!--                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">-->
+<!--                        <h1 style="text-align:center">配置文件</h1>-->
+<!--                    </a>-->
+<!--                </div>-->
+            <div class="row">
+                <div id="contentConfig" class="col-md-11 col-md-push-1">
+                    <h1>配置文件</h1>
+                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                    <!--配置参数-->
+                    <form action="/project" method="post" class="form-project">
+                        <div class="form-group">
+                            <label for="train_database" style="text-align:center">数据集</label>
+                            <select class="form-control" id="train_database" name="database" placeholder="选择数据集" autofocus required>
+                                <option>mnist</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="text-align:center">
+                            <label for="train_model">模型结构</label>
                             <select class="form-control" id="train_model" name="model">
                                 <option>simplenet</option>
                                 <option>2</option>
                                 <option>3</option>
                                 <option>4</option>
-                    </select>
-                    </div>
-                    <div class="form-group">
-                        <input name="m" value=1 hidden>
-                    </div>
-                    <div class="form-group">
-                        <button type="reset" class="btn btn-default pull-left">重置</button>
-                        <button type="submit" class="btn btn-primary pull-right">配置完成</button>
-                    <br></br>
-                    </div>
-                </form>
+                             </select>
+                        </div>
+                        <div class="form-group">
+                            <input name="m" value=1 hidden>
+                        </div>
+                        <div class="form-group">
+                            <button type="reset" class="btn btn-default pull-left">重置</button>
+                            <button type="submit" class="btn btn-primary pull-right">配置完成</button>
+                            <br></br>
+                        </div>
+                    </form>
                 </div>
+<!--            </div>-->
             </div>
 
 
 
 
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-                        <h1 style="text-align:center">分发预训练模型</h1>
-                    </a>
-                </div>
-                <div id="collapseTwo" class="accordion-body collapse">
-                    <div class="accordion-inner form-group">
+            <!--分发预训练模型-->
+<!--            <div class="accordion-group">-->
+<!--                <div class="accordion-heading">-->
+<!--                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">-->
+<!--                        <h1 style="text-align:center">分发预训练模型</h1>-->
+<!--                    </a>-->
+<!--                </div>-->
+            <div class="row">
+                <div  id="contentDistribution" class="col-md-11 col-md-push-1">
+                    <h1 >分发预训练模型</h1>
+                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                    <div class="form-group">
                         <br></br>
                         <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
-                        <form action="/project" method="post" class="form-project">     
-                            
+                        <form action="/project" method="post" class="form-project">
+
                             <div class="form-group">
                                 <label for="train_pretrain">{{flask_pre}}是否重新进行训练：</label>
                                     <select class="form-control" id="train_pretrain" name="pretrain" placeholder="请选择" autofocus required>
@@ -142,115 +256,154 @@
                             <br></br>
                         </form>
                     </div>
-                    <div class="accordion-inner form-group">
+                    <div class="form-group">
                         <font face="黑体" size="3">模型正确率：{{flask_acc}}%|模型权重下载：</font>{{flask_model_download}}
-                    <form action="/download1" method="post" class="form-project">     
-                    <div class="form-group">
-                                <input name="database"  value="{{flask_database}}" hidden>
-                                <input name="model"  value="{{flask_model}}" hidden>
-                            </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary pull-right">下载</button>
-                    </div>
-                    </form>
-
-
-
-
-                    </div>
-                </div>
-            </div>
-
-
-
-
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
-                        <h1 style="text-align:center">上传</h1>
-                    </a>
-                </div>
-                <div id="collapseThree" class="accordion-body collapse">
-                    <div class="accordion-inner" align="center">
-                        <!-- 防御内容 -->
-                        <form id="upload-form" action="uploadajax" method="post" enctype="multipart/form-data" >
-                            　　　<input type="file" id="upload" name="upload" /> <br />
-                            　　　<input type="submit" value="确定上传" />
+                        <form action="/download1" method="post" class="form-project">
+                        <div class="form-group">
+                                    <input name="database"  value="{{flask_database}}" hidden>
+                                    <input name="model"  value="{{flask_model}}" hidden>
+                                </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary pull-right">下载</button>
+                        </div>
                         </form>
+<!--                    </div>-->
                     </div>
-                </div>
+<!--            </div>-->
             </div>
 
-            
 
 
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
-                        <h1 style="text-align:center">检测</h1>
-                    </a>
+
+<!--            上传-->
+                <div class="row">
+<!--                    <div class="accordion-heading col-md-10 col-md-push-2" id="contentUpload">-->
+<!--                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">-->
+<!--                            <h1 style="text-align:center">上传</h1>-->
+<!--                        </a>-->
+<!--                    </div>-->
+                    <div id="contentUpload" class="col-md-11 col-md-push-1">
+                        <h1 >上传</h1>
+                        <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                        <div align="center">
+                            <!-- 防御内容 -->
+                            <form id="upload-form" action="uploadajax" method="post" enctype="multipart/form-data" >
+                                　　　<input type="file" id="upload" name="upload" /> <br />
+                                　　　<input type="submit" value="确定上传" />
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div id="collapseFour" class="accordion-body collapse">
-                    <div class="accordion-inner form-group">
-                        <br></br>
-                        <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
-                        <form action="/project" method="post" class="form-project">     
-                            
-                            <div class="form-group">
-                                <label for="train_pretrain">轮数：<span id="check_epo_num"></span></label>
-                                    <div class="slidecontainer">
-                                        <input type="range" min="1" max="50" value="10" class="slider" id="check_epo" name="check_epo">
-                                    </div>
-                                <label for="train_pretrain">优化率：<span id="check_lr_num"></label>
-                                    <div class="slidecontainer">
-                                        <input type="text" value="0.1" οnkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')" id="check_lr" name="check_lr">
-                                    </div>
-                            </div>
-<!--                             <div class="form-group">
-                                <label for="train_model">模型结构</label>
-                                    <select class="form-control" id="train_model" name="model">
-                                        <option>simplenet</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
-                            </div> -->
-                            <div class="form-group">
-                                <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
-                                <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
-                                <input name="m" style="width: 310px;height:30px;" value="3" hidden>
-                            </div>
-                            <div class="form-group">
-                                <button type="reset" class="btn btn-default pull-left">重置</button>
-                                <button type="submit" class="btn btn-primary pull-right">开始检测</button>
-                            </div>
+
+
+
+<!--       检测     -->
+                <div class="row">
+                <div class="col-md-11 col-md-push-1" id="contentDetection">
+                    <h1>检测</h1>
+                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                        <div class="form-group">
                             <br></br>
+                            <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
+                            <form action="/project" method="post" class="form-project">
+
+                                <div class="form-group">
+                                    <label for="train_pretrain">轮数：<span id="check_epo_num"></span></label>
+                                        <div class="slidecontainer">
+                                            <input type="range" min="1" max="50" value="10" class="slider" id="check_epo" name="check_epo">
+                                        </div>
+                                    <label for="train_pretrain">优化率：<span id="check_lr_num"></label>
+                                        <div class="slidecontainer">
+                                            <input type="text" value="0.1" οnkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')" id="check_lr" name="check_lr">
+                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
+                                    <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
+                                    <input name="m" style="width: 310px;height:30px;" value="3" hidden>
+                                </div>
+                                <div class="form-group">
+                                    <button type="reset" class="btn btn-default pull-left">重置</button>
+                                    <button type="submit" class="btn btn-primary pull-right">开始检测</button>
+                                </div>
+                                <br></br>
+                            </form>
+                        </div>
+
+                        <div class="form-group">
+                            <font face="黑体" size="3">检测结果：</font>
+                            {{result1_text}}
+                            <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result1" frameborder=0></iframe>
                         </form>
-                    </div>
-
-                    <div class="accordion-inner form-group">
-                        <font face="黑体" size="3">检测结果：</font>
-                        {{result1_text}}
-                        <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result1" frameborder=0></iframe>
-                    </form>
-
-
-
-
-
+                        </div>
                     </div>
                 </div>
-            </div>
 
+<!--&lt;!&ndash;检测&ndash;&gt;-->
+<!--            <div class="accordion-group col-md-10" id="contentDetection">-->
+<!--&lt;!&ndash;                <div class="accordion-heading">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <h1 style="text-align:center">检测</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--                <div id="collapseFour" class="accordion-body collapse">-->
+<!--                    <div class="accordion-inner form-group">-->
+<!--                        <br></br>-->
+<!--                        <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>-->
+<!--                        <form action="/project" method="post" class="form-project">     -->
+<!--                            -->
+<!--                            <div class="form-group">-->
+<!--                                <label for="train_pretrain">轮数：<span id="check_epo_num"></span></label>-->
+<!--                                    <div class="slidecontainer">-->
+<!--                                        <input type="range" min="1" max="50" value="10" class="slider" id="check_epo" name="check_epo">-->
+<!--                                    </div>-->
+<!--                                <label for="train_pretrain">优化率：<span id="check_lr_num"></label>-->
+<!--                                    <div class="slidecontainer">-->
+<!--                                        <input type="text" value="0.1" οnkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')" id="check_lr" name="check_lr">-->
+<!--                                    </div>-->
+<!--                            </div>-->
+<!--&lt;!&ndash;                             <div class="form-group">-->
+<!--                                <label for="train_model">模型结构</label>-->
+<!--                                    <select class="form-control" id="train_model" name="model">-->
+<!--                                        <option>simplenet</option>-->
+<!--                                        <option>2</option>-->
+<!--                                        <option>3</option>-->
+<!--                                        <option>4</option>-->
+<!--                                    </select>-->
+<!--                            </div> &ndash;&gt;-->
+<!--                            <div class="form-group">-->
+<!--                                <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>-->
+<!--                                <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>-->
+<!--                                <input name="m" style="width: 310px;height:30px;" value="3" hidden>-->
+<!--                            </div>-->
+<!--                            <div class="form-group">-->
+<!--                                <button type="reset" class="btn btn-default pull-left">重置</button>-->
+<!--                                <button type="submit" class="btn btn-primary pull-right">开始检测</button>-->
+<!--                            </div>-->
+<!--                            <br></br>-->
+<!--                        </form>-->
+<!--                    </div>-->
 
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
-                        <h1 style="text-align:center">定位</h1>
-                    </a>
-                </div>
-                <div id="collapseFive" class="accordion-body collapse">
-                    <div class="accordion-inner form-group">
+<!--                    <div class="accordion-inner form-group">-->
+<!--                        <font face="黑体" size="3">检测结果：</font>-->
+<!--                        {{result1_text}}-->
+<!--                        <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result1" frameborder=0></iframe>-->
+<!--                    </form>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--定位-->
+            <div class="row">
+<!--                <div class="accordion-heading">-->
+<!--                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">-->
+<!--                        <h1 style="text-align:center">定位</h1>-->
+<!--                    </a>-->
+<!--                </div>-->
+                <div id="contentLocation" class="col-md-11 col-md-push-1">
+                    <h1>定位</h1>
+                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                    <div class="form-group">
                         <br></br>
                         <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
                         <form action="/project" method="post" class="form-project">     
@@ -290,24 +443,21 @@
                     <div class="accordion-inner form-group">
                         <font face="黑体" size="3">定位结果：</font>
                         <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result2" frameborder=0></iframe>
-                    </form>
-
-
-
-
-
                     </div>
                 </div>
             </div>
 
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSix">
-                        <h1 style="text-align:center">逆向</h1>
-                    </a>
-                </div>
-                <div id="collapseSix" class="accordion-body collapse">
-                    <div class="accordion-inner form-group">
+<!--逆向-->
+            <div class="row">
+<!--                <div class="accordion-heading">-->
+<!--                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSix">-->
+<!--                        <h1 style="text-align:center">逆向</h1>-->
+<!--                    </a>-->
+<!--                </div>-->
+                <div id="contentReverse" class="col-md-11 col-md-push-1">
+                    <h1>逆向</h1>
+                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                    <div class="form-group">
                         <br></br>
                         <font face="黑体" size="3">配置的数据集：{{point_no}}|模型结构：{{flask_model}}</font>
                         <form action="/project" method="post" class="form-project">     
@@ -344,7 +494,7 @@
                         </form>
                     </div>
 
-                    <div class="accordion-inner form-group">
+                    <div class="form-group">
                         <font face="黑体" size="3">逆向结果：</font>
                         <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result3" frameborder=0></iframe>
                     </form>
@@ -357,15 +507,17 @@
                 </div>
             </div>
 
-
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSeven">
-                        <h1 style="text-align:center">修复性训练</h1>
-                    </a>
-                </div>
-                <div id="collapseSeven" class="accordion-body collapse">
-                    <div class="accordion-inner form-group">
+<!--修复性训练-->
+            <div class="row">
+<!--                <div class="accordion-heading">-->
+<!--                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSeven">-->
+<!--                        <h1 style="text-align:center">修复性训练</h1>-->
+<!--                    </a>-->
+<!--                </div>-->
+                <div id="contentRepair" class="col-md-11 col-md-push-1">
+                    <h1>修复性训练</h1>
+                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                    <div class="form-group">
                         <br></br>
                         <font face="黑体" size="3">配置的数据集：{{point_no}}|模型结构：{{flask_model}}</font>
                         <form action="/project" method="post" class="form-project">     
@@ -402,7 +554,7 @@
                         </form>
                     </div>
 
-                    <div class="accordion-inner form-group">
+                    <div class="form-group">
                         <font face="黑体" size="3">逆向结果：</font>
                         <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result3" frameborder=0></iframe>
                     </form>
@@ -415,14 +567,17 @@
                 </div>
             </div>
 
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseEight">
-                        <h1 style="text-align:center">安全聚类</h1>
-                    </a>
-                </div>
-                <div id="collapseEight" class="accordion-body collapse">
-                    <div class="accordion-inner form-group">
+<!--            安全聚类-->
+            <div class="row">
+<!--                <div class="accordion-heading">-->
+<!--                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseEight">-->
+<!--                        <h1 style="text-align:center">安全聚类</h1>-->
+<!--                    </a>-->
+<!--                </div>-->
+                <div id="contentCluster" class="col-md-11 col-md-push-1">
+                    <h1>安全聚类</h1>
+                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                    <div class="form-group">
                         <br></br>
                         <font face="黑体" size="3">配置的数据集：{{point_no}}|模型结构：{{flask_model}}</font>
                         <form action="/project" method="post" class="form-project">     
@@ -459,7 +614,7 @@
                         </form>
                     </div>
 
-                    <div class="accordion-inner form-group">
+                    <div class="form-group">
                         <font face="黑体" size="3">逆向结果：</font>
                         <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result3" frameborder=0></iframe>
                     </form>

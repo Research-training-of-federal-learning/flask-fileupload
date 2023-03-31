@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>爱猫人士进</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="./static/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="navbar navbar-duomi navbar-static-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/Admin/index.html" id="logo">
+                    常见家猫品种
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-2" id="menulist">
+                    <ul id="main-nav" class="nav nav-tabs nav-stacked" style="">
+                        <li class="active">
+                            <a href="#">
+                                <i class="glyphicon glyphicon-th-large"></i>
+                                首页
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#systemSetting" class="nav-header collapsed" data-toggle="collapse">
+                                <i class="glyphicon glyphicon-cog"></i>
+                                狸花猫
+                                <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+                            </a>
+                            <ul id="systemSetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
+
+                                <li>
+                                    <a href="#systemSetting1" class="nav-header collapsed" data-toggle="collapse">
+                                        <i class="glyphicon glyphicon-cog"></i>
+                                        黑色狸花猫
+                                        <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+                                    </a>
+                                    <ul id="systemSetting1" class="nav nav-list collapse thirdmenu" style="height: 0px;">
+                                        <li><a href="#"><i class="glyphicon glyphicon-a"></i>豹纹</a></li>
+                                        <li><a href="#"><i class="glyphicon glyphicon-th-b"></i>点纹</a></li>
+                                        <li><a href="#"><i class="glyphicon glyphicon-c"></i>条纹</a></li>
+                                    </ul>
+                                </li>
+
+                                <li><a href="#systemSetting1" onclick="loadPage('橘色狸花猫.html')"><i class="glyphicon glyphicon-th-list"></i>橘色狸花猫</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="./三花猫.html">
+                                <i class="glyphicon glyphicon-credit-card"></i>
+                                三花猫
+                            </a>
+                        </li>
+                        <li>
+                            <a href="./奶牛猫.html">
+                                <i class="glyphicon glyphicon-globe"></i>
+                                奶牛猫
+                            </a>
+                        </li>
+                        <li>
+                            <a href="./黑猫.html">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                                黑猫
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="glyphicon glyphicon-fire"></i>
+                                白猫
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+				<div class="col-sm-10" id="right"></div>
+				<div class="col-sm-10" id="right"></div>
+                <div class="col-md-10">
+                    点击左侧可查看猫咪种类
+                </div>
+            </div>
+        </div>
+
+</body>
+</html>
+<script>
+    /*
+           * 对选中的标签激活active状态，对先前处于active状态但之后未被选中的标签取消active
+           * （实现左侧菜单中的标签点击后变色的效果）
+           */
+    $(document).ready(function () {
+        $('#menulist> a').click(function (e) {
+            //e.preventDefault();    加上这句则导航的<a>标签会失效
+            $('#menulist> a').removeClass('active');
+            $(this).addClass('active');
+        });
+    });
+
+
+    function loadPage(url) {
+        $.get(url, function (data, status) {
+            $("#right").html(data);
+        });
+    }
+</script>
