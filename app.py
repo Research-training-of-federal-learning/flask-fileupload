@@ -48,7 +48,7 @@ handler.setFormatter(
 )
 app.logger.addHandler(handler)
 
-app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+# app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif','tar'])
 
 
 def allowed_file(filename):
