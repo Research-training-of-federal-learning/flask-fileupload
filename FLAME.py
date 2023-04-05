@@ -241,7 +241,7 @@ class FLAME:
             <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
         </head>
         <body>
-            <div id="main" style="width: 600px;height:400px;"></div>
+            <div id="main" style="width: 800px;height:600px;"></div>
             <script type="text/javascript">
                 var chartDom = document.getElementById('main');
         var myChart = echarts.init(chartDom);
@@ -290,9 +290,28 @@ class FLAME:
             name=self.database[i][k+1:]
             filedata+=drawdata%(self.sinlevel[i],name)
         filedata+=drawfile2
+        print(1111)
         f=open("templates\\Trust_degree.html","w")
         f.write(filedata)
         f.close()
+
+    # 绘制不信任图二：
+    def draw_sinlevel2(self):
+        plt.rcParams["font.sans-serif"] = ['SimHei']
+        plt.rcParams["axes.unicode_minus"] = False
+
+        for i in range(len(self.sinlevel)):
+            k=self.database[i].find("\\")
+            name=self.database[i][k+1:]
+            m=1-self.sinlevel[i]
+            if m==0:
+                continue
+            plt.bar(name, m)
+
+        plt.title("The degree of trust of the model in the aggregation")
+        plt.xlabel("models")
+        plt.ylabel("Model trust ratio")
+        plt.savefig('templates/Trust_degree.png')
 
     # 返回相关值
     def get_sinlevel(self):
