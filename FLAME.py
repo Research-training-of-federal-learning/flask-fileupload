@@ -1,7 +1,7 @@
 import numpy as np
 import random
 import torch
-
+import matplotlib.pyplot as plt
 
 # 转换为np数组
 def torchfile2np(to):
@@ -80,6 +80,8 @@ class FLAME:
         self.c = None  # 存放余弦距离
         self.b = None  # 存放聚类后结果
         self.e = None  # 存放欧几里得距离
+        self.database=database
+        self.sinlevel = [0]*n
         self.n = n  # n是客户端数量
         self.size = size  # size是模型的参数个数
         self.L = n  # L是聚类后允许的参数
@@ -178,7 +180,7 @@ class FLAME:
         return types, sub_class
 
     def clustering(self):
-        types, sub_class = self.dbscan(3, 1)
+        types, sub_class = self.dbscan(0.0005, 5)
         self.b = []
         cnt = 0
         types = np.asarray(types)
@@ -186,27 +188,30 @@ class FLAME:
         for i in types:
             if i == 1:
                 self.b.append(cnt)
+                self.sinlevel[cnt]=1
             cnt += 1
-        self.L = cnt
+        self.L = len(self.b)
 
     # 获得与上个模型的欧几里得距离
     def get_ei(self):
         self.e = []
-        for i in range(self.n):
-            self.e.append(euclidean_distance(self.G0, self.W[i]))
+        for i in range(self.L):
+            self.e.append(euclidean_distance(self.G0, self.W[self.b[i]]))
 
     # 获得欧几里得中值
     def median(self):
         self.S = 0
-        for i in range(self.n):
-            self.S += self.e[i]
-        self.S = self.S / self.n
+        for i in range(self.L):
+            self.S += self.e[self.b[i]]
+        self.S = self.S / self.L
 
     # 裁剪
     def clipping(self):
         self.newW = []
         for i in range(self.L):
-            self.newW.append(self.G0 + (self.W[self.b[i]] - self.G0) * Min(1, self.S / self.e[self.b[i]]))
+            k = min(1, self.S / self.e[self.b[i]])
+            self.newW.append(self.G0 + (self.W[self.b[i]] - self.G0) * k)
+            self.sinlevel[self.b[i]]=k
 
     # 更新出新的W
     def update(self):
@@ -219,10 +224,76 @@ class FLAME:
             self.G += self.newW[i]
         self.G = self.G / self.L
         sigma = self.Lambda * self.S
-        self.G = self.G
         for i in range(self.size):
             self.G[i] += random.gauss(0, sigma)
 
     # 返回新的G
     def get_G(self):
         return np2model(self.G, self.model)
+
+    # 绘制不信任度图
+    def draw_sinlevel(self):
+        drawfile = """<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>The degree of trust of the model in the aggregation</title>
+            <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+        </head>
+        <body>
+            <div id="main" style="width: 600px;height:400px;"></div>
+            <script type="text/javascript">
+                var chartDom = document.getElementById('main');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        option = {
+          title: {
+            text: 'Model trust ratio',
+            subtext: 'present',
+            left: 'center'
+          },
+          tooltip: {
+            trigger: 'item'
+          },
+          legend: {
+            orient: 'vertical',
+            left: 'left'
+          },
+          series: [
+            {
+              name: 'Access From',
+              type: 'pie',
+              radius: '50%',
+              data: [ 
+        """
+        drawfile2 = """
+              ],
+              emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              }
+            }
+          ]
+        };
+        option && myChart.setOption(option);
+            </script>
+        </body>
+        </html>"""
+        drawdata = "\t{ value: %f, name: '%s' },\n"
+        filedata=drawfile
+        for i in range(len(self.sinlevel)):
+            k=self.database[i].find("\\")
+            name=self.database[i][k+1:]
+            filedata+=drawdata%(self.sinlevel[i],name)
+        filedata+=drawfile2
+        f=open("templates\\Trust_degree.html","w")
+        f.write(filedata)
+        f.close()
+
+    # 返回相关值
+    def get_sinlevel(self):
+        return self.sinlevel
