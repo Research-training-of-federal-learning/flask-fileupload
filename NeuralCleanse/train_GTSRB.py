@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from NeuralCleanse.data import get_data
 from NeuralCleanse.mymodel.GTSRB import GTSRBNet
 from torchvision import datasets, transforms
+import os
+import shutil
 
 
 def train(model, target_label, train_loader, param):
@@ -111,6 +113,50 @@ def reverse_engineer():
         plt.savefig('NeuralCleanse/mask_GTSRB/mask_{}.png'.format(label), bbox_inches='tight', pad_inches=0.0)
 
     print(norm_list)
+    min_label = np.argmin(norm_list)
+    print(min_label)
+    image_folder = "NeuralCleanse/mask_GTSRB"
+    # 遍历文件夹中的所有图片
+    for filename in os.listdir(image_folder):
+        # 如果图片文件名包含最小值对应的标签，则将该图片复制到名为 "min_label_images" 的文件夹中
+        # print(filename)
+        if "mask_" + str(min_label) in filename:
+            # print("mask_"+str(min_label))
+            shutil.copy(os.path.join(image_folder, filename), "NeuralCleanse/output_GTSRB")
+        if "trigger_" + str(min_label) in filename:
+            # print("trigger_" + str(min_label))
+            shutil.copy(os.path.join(image_folder, filename), "NeuralCleanse/output_GTSRB")
+    # 画图
+    # 添加图形属性
+    plt.xlabel('Label')
+    plt.ylabel('L1-norm')
+    plt.title('L1-norm range from Label')
+
+    # norm_list=[92.30671691894531, 138.1082763671875, 77.82843017578125, 79.0025634765625,
+    #            105.43791198730469, 79.33483123779297, 101.99564361572266, 98.91024017333984,
+    #            12.002458572387695, 106.13054656982422]
+
+    y = norm_list
+    name_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                 '10', '11', '12', '13', '14', '15', '16', '17', '18', '19'
+                 '20', '21', '22', '23', '24', '25', '26', '27', '28', '29'
+                 '30', '31', '32', '33', '34', '35', '36', '37', '38', '39'
+                 '40', '41', '42']  # x轴标签
+    plt.bar(  # x=np.arange(10),  # 横坐标
+        x=np.arange(param["num_classes"]),  # 横坐标
+        height=y,  # 柱状高度
+        width=0.35,  # 柱状宽度
+        # label='小明',  # 标签
+        edgecolor='k',  # 边框颜色
+        color='r',  # 柱状图颜色
+        tick_label=name_list,  # 每个柱状图的坐标标签
+        linewidth=3)  # 柱状图边框宽度
+    # plt.legend()  # 显示标签
+    # plt.show()
+    # 图片的显示及存储
+    # plt.show()   #这个是图片显示
+    plt.savefig('NeuralCleanse/output_GTSRB/normDistribution.png')  # 图片的存储
+    plt.close()  # 关闭matplotlib
 
 
 if __name__ == "__main__":

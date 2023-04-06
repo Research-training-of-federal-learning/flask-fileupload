@@ -10,6 +10,8 @@ from torchvision import datasets, transforms
 from NeuralCleanse.mymodel.model import Model
 import torch.nn as nn
 import torch.nn.functional as F
+import os
+import shutil
 
 
 def train(model, target_label, train_loader, param):
@@ -72,10 +74,14 @@ def train(model, target_label, train_loader, param):
 class Net(Model):  # 创建网络
     def __init__(self, num_classes):
         super().__init__()
-        self.conv1 = nn.Conv2d(1, 20, 5, 1)
+        self.conv1 = nn.Conv2d(1, 20, 5, 1)# Conv2d[ channels, output, height_2, width_2 ]
         self.conv2 = nn.Conv2d(20, 50, 5, 1)
         self.fc1 = nn.Linear(4 * 4 * 50, 500)
         self.fc2 = nn.Linear(500, num_classes)
+
+    # torch.nn.Linear(in_features,  # 输入的神经元个数
+    #                out_features,  # 输出神经元个数
+    #                bias=True )# 是否包含偏置
 
     def features(self, x):
         x = F.relu(self.conv1(x))
@@ -130,15 +136,15 @@ def reverse_engineer():
     printSuperMerry()
     param = {
         "dataset": "MNIST",
-        "Epochs": 10,
+        "Epochs": 2,
         "batch_size": 64,
         "lamda": 0.01,
         "num_classes": 10,
         "image_size": (28, 28)
     }
     classes = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-    model = Net(10).to(device)
-    model.load_state_dict(torch.load('NeuralCleanse/MNIST_model_last.pt.tar')['state_dict'])  # 导入数据
+    model = Net(10).to(device)# 显式指定需要使用的计算资源
+    model.load_state_dict(torch.load('NeuralCleanse/MNIST_model_last.pt.tar')['state_dict'])  # 加载模型参数
     # model = torch.load('model_cifar10.pkl').to(device)
     # _, _, x_test, y_test = get_data(param)
     # x_test, y_test = torch.from_numpy(x_test)/255., torch.from_numpy(y_test)
@@ -155,20 +161,67 @@ def reverse_engineer():
     norm_list = []
     for label in range(param["num_classes"]):  # 每一类进行训练
         trigger, mask = train(model, label, train_loader, param)
-        norm_list.append(mask.sum().item())
+        norm_list.append(mask.sum().item())#浮点数结果上使用 .item() 函数可以提高显示精度
 
         trigger = trigger.cpu().detach().numpy()
         # trigger = np.transpose(trigger, (1,2,0))
         plt.axis("off")
-        plt.imshow(trigger.squeeze(), cmap="gray")
+        plt.imshow(trigger.squeeze(), cmap="gray") # squeeze():压缩维度
         plt.savefig('NeuralCleanse/mask_MNIST/trigger_{}.png'.format(label), bbox_inches='tight', pad_inches=0.0)
+        plt.close()
 
         mask = mask.cpu().detach().numpy()
         plt.axis("off")
         plt.imshow(mask, cmap="gray")
         plt.savefig('NeuralCleanse/mask_MNIST/mask_{}.png'.format(label), bbox_inches='tight', pad_inches=0.0)
+        plt.close()
 
     print(norm_list)
+    min_label = np.argmin(norm_list)
+    print(min_label)
+    image_folder = "NeuralCleanse/mask_MNIST"
+    new_folder="NeuralCleanse/output"
+    # 遍历文件夹中的所有图片
+    for filename in os.listdir(image_folder):
+        # 如果图片文件名包含最小值对应的标签，则将该图片复制到名为 "min_label_images" 的文件夹中
+        #print(filename)
+        if "mask_"+str(min_label) in filename:
+            #print("mask_"+str(min_label))
+            new_name_mask="mask.png"
+            shutil.copy(os.path.join(image_folder, filename), new_folder)
+            shutil.move(os.path.join(new_folder,filename),os.path.join(new_folder,new_name_mask))
+        if "trigger_" + str(min_label) in filename:
+            #print("trigger_" + str(min_label))
+            new_name_trigger="trigger.png"
+            shutil.copy(os.path.join(image_folder, filename), new_folder)
+            shutil.move(os.path.join(new_folder, filename), os.path.join(new_folder,new_name_trigger))
+    #画图
+    # 添加图形属性
+    plt.xlabel('Label')
+    plt.ylabel('L1-norm')
+    plt.title('L1-norm range from Label')
+
+    # norm_list=[92.30671691894531, 138.1082763671875, 77.82843017578125, 79.0025634765625,
+    #            105.43791198730469, 79.33483123779297, 101.99564361572266, 98.91024017333984,
+    #            12.002458572387695, 106.13054656982422]
+
+    y=norm_list
+    name_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']  # x轴标签
+    plt.bar(#x=np.arange(10),  # 横坐标
+            x=np.arange(param["num_classes"]),  # 横坐标
+            height=y,  # 柱状高度
+            width=0.35,  # 柱状宽度
+            #label='小明',  # 标签
+            edgecolor='k',  # 边框颜色
+            color='r',  # 柱状图颜色
+            tick_label=name_list,  # 每个柱状图的坐标标签
+            linewidth=3)  # 柱状图边框宽度
+    #plt.legend()  # 显示标签
+    #plt.show()
+    # 图片的显示及存储
+    # plt.show()   #这个是图片显示
+    plt.savefig('NeuralCleanse/output/normDistribution.png')  # 图片的存储
+    plt.close()  # 关闭matplotlib
 
 
 if __name__ == "__main__":

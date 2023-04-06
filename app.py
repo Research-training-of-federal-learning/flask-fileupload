@@ -131,6 +131,17 @@ def result2():
 def result3():
     return send_from_directory('templates', 're.png')
 
+@app.route("/resultNCtrigger", methods=['GET', 'POST'])
+def resultNCtrigger():
+    return send_from_directory('NeuralCleanse/output', 'trigger.png')
+
+@app.route("/resultNCmask", methods=['GET', 'POST'])
+def resultNCmask():
+    return send_from_directory('NeuralCleanse/output', 'mask.png')
+
+@app.route("/resultNCnorm", methods=['GET', 'POST'])
+def resultNCnorm():
+    return send_from_directory('NeuralCleanse/output', 'normDistribution.png')
 
 @app.route('/downloadG0')
 def downloadG0():
