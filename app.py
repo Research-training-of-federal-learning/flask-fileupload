@@ -34,6 +34,11 @@ from reverse.MNIST import outputhtml
 from reverse.MNIST import find_point
 from reverse.MNIST import last_re
 
+#新增 neaural cleanse
+from NeuralCleanse import train_GTSRB
+from NeuralCleanse import train_MNIST
+from NeuralCleanse import train_PUBFIG
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
@@ -286,6 +291,11 @@ def project():
             fmodle.update()
             G0 = fmodle.get_G()  # 重新保存G0
             torch.save(G0, G0_file_path)
+
+        elif (m == '8'):  # neaural cleanse
+            if (database == "mnist" and model == "simplenet"):#simplenet:backdoor101自带的mnist模型 绑定mnist
+                train_MNIST.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+                train_MNIST.reverse_engineer()
 
         # flash(m)
     return render_template('project.html')

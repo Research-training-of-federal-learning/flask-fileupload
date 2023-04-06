@@ -280,10 +280,11 @@ def read_image_file(path):
 
 if __name__ == '__main__':
     import torch
+    import matplotlib
     import matplotlib.pyplot as plt
     from torchvision import transforms
 
-
+    matplotlib.use('agg')
     def global_transformer():
         return transforms.Compose([transforms.ToTensor(),
                                    transforms.Normalize((0.1307,), (0.3081,))])
