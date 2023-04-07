@@ -480,7 +480,7 @@
                             <h3>原创方法</h3>
                             <hr style=" height:5px;border:none;border-top:5px ridge green;"/>
                             <br></br>
-                            <font face="黑体" size="3">配置的数据集：{{point_no}}|模型结构：{{flask_model}}</font>
+                            <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
                             <form action="/project" method="post" class="form-project">
 
                                 <div class="form-group">
@@ -525,16 +525,16 @@
                             <h3>静态精准逆向(Neaural Cleanse)</h3>
                             <hr style=" height:5px;border:none;border-top:5px ridge green;"/>
                             <br></br>
-                            <font face="黑体" size="3">配置的数据集：{{point_no}}|模型结构：{{flask_model}}</font>
+                            <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
                             <form action="/project" method="post" class="form-project">
                                 <div class="form-group">
                                     <label for="train_pretrain">请选择要训练的轮数：<span id="nc_epo_num"></span></label>
                                         <div class="slidecontainer">
-                                            <input type="range" min="1" max="50" value="1" class="slider" id="nc_epo" name="check_epo">
+                                            <input type="range" min="1" max="100" value="1" class="slider" id="nc_epo" name="nc_epo">
                                         </div>
-                                    <label for="train_pretrain">请输入要设定的学习率：<span id="nc_learn_rate_num"></span></label>
+                                    <label for="train_pretrain">请输入要设定的学习率：<span id="nc_lr_num"></span></label>
                                         <div class="slidecontainer">
-                                            <input type="text" value="0.01" οnkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')" id="nc_learn_rate" name="check_lr">
+                                            <input type="text" value="0.01" οnkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')" id="nc_lr" name="nc_lr">
                                         </div>
                                 </div>
 
@@ -617,7 +617,7 @@
                     <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
                     <div class="form-group">
                         <br></br>
-                        <font face="黑体" size="3">配置的数据集：{{point_no}}|模型结构：{{flask_model}}</font>
+                        <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
                         <form action="/project" method="post" class="form-project">     
                             
                             <div class="form-group">
@@ -677,7 +677,7 @@
                     <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
                     <div class="form-group">
                         <br></br>
-                        <font face="黑体" size="3">配置的数据集：{{point_no}}|模型结构：{{flask_model}}</font>
+                        <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
                         <form action="/project" method="post" class="form-project">     
                             
                             <div class="form-group">
@@ -728,7 +728,7 @@
 
         </div>
     </div>
-
+</div>
 <script>
 var check_epo = document.getElementById("check_epo");
 var check_epo_num = document.getElementById("check_epo_num");
@@ -746,7 +746,8 @@ check_lr.oninput = function() {
   check_lr_num.innerHTML = this.value;
 }
 
-var re_pico = document.getElementById("re_pic");
+<!--var re_pico = document.getElementById("re_pic");-->
+var re_pic = document.getElementById("re_pic");
 var re_pic_num = document.getElementById("re_pic_num");
 re_pic_num.innerHTML = re_pic.value;
 
@@ -760,6 +761,22 @@ re_target_num.innerHTML = re_target.value;
 
 re_target.oninput = function() {
   re_target_num.innerHTML = this.value;
+}
+
+var nc_epo = document.getElementById("nc_epo");
+var nc_epo_num = document.getElementById("nc_epo_num");
+nc_epo_num.innerHTML = nc_epo.value;
+
+nc_epo.oninput = function() {
+  nc_epo_num.innerHTML = this.value;
+}
+
+var nc_lr = document.getElementById("nc_lr");
+var nc_lr_num = document.getElementById("nc_lr_num");
+nc_lr_num.innerHTML = nc_lr.value;
+
+nc_lr.oninput = function() {
+  nc_lr_num.innerHTML = this.value;
 }
 
 var re_lr = document.getElementById("re_lr");

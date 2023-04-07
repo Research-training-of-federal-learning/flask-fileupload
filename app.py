@@ -304,9 +304,22 @@ def project():
             torch.save(G0, G0_file_path)
 
         elif (m == '8'):  # neaural cleanse
+            nc_epo = int(request.form.get('nc_epo')) # 传入两个参数 epo,lr
+            nc_lr = float(request.form.get('nc_lr'))
             if (database == "mnist" and model == "simplenet"):#simplenet:backdoor101自带的mnist模型 绑定mnist
+                # print("nc_epo:",nc_epo)
+                # print("nc_lr:",nc_lr)
+                param = { # 设定训练参数
+                    "dataset": "MNIST",
+                    "Epochs": nc_epo,
+                    "batch_size": 64,
+                    "lamda": nc_lr,
+                    "num_classes": 10,
+                    "image_size": (28, 28)
+                }
+                print(param)
                 train_MNIST.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-                train_MNIST.reverse_engineer()
+                train_MNIST.reverse_engineer(param)
 
         # flash(m)
     return render_template('project.html')

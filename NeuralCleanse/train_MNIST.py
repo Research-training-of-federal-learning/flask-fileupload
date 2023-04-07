@@ -132,16 +132,16 @@ def printSuperMerry():
     ##########################################    ############
     ''')
 
-def reverse_engineer():
+def reverse_engineer(param):
     printSuperMerry()
-    param = {
-        "dataset": "MNIST",
-        "Epochs": 2,
-        "batch_size": 64,
-        "lamda": 0.01,
-        "num_classes": 10,
-        "image_size": (28, 28)
-    }
+    # param = {
+    #     "dataset": "MNIST",
+    #     "Epochs": 2,
+    #     "batch_size": 64,
+    #     "lamda": 0.01,
+    #     "num_classes": 10,
+    #     "image_size": (28, 28)
+    # }
     classes = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
     model = Net(10).to(device)# 显式指定需要使用的计算资源
     model.load_state_dict(torch.load('NeuralCleanse/MNIST_model_last.pt.tar')['state_dict'])  # 加载模型参数
