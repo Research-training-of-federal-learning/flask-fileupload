@@ -39,6 +39,11 @@ from NeuralCleanse import train_GTSRB
 from NeuralCleanse import train_MNIST
 from NeuralCleanse import train_PUBFIG
 
+#新增 MESA
+from MESA import mymain
+from MESA import mymain_MNIST
+from MESA import mymain_pubfig
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
@@ -142,6 +147,14 @@ def resultNCmask():
 @app.route("/resultNCnorm", methods=['GET', 'POST'])
 def resultNCnorm():
     return send_from_directory('NeuralCleanse/output', 'normDistribution.png')
+
+@app.route("/resultMESAtrigger", methods=['GET', 'POST'])
+def resultMESAtrigger():
+    return send_from_directory('MESA/output', 'trigger.png')
+
+@app.route("/resultMESAASR", methods=['GET', 'POST'])
+def resultMESAASR():
+    return send_from_directory('MESA/output', 'ASRDistribution.png')
 
 @app.route('/downloadG0')
 def downloadG0():
@@ -320,6 +333,20 @@ def project():
                 print(param)
                 train_MNIST.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
                 train_MNIST.reverse_engineer(param)
+        elif (m == '9'):  # MESA
+            mesa_epo = int(request.form.get('mesa_epo')) # 传入三个参数 epo,alpha,beta
+            mesa_alpha = float(request.form.get('mesa_alpha'))
+            mesa_beta = float(request.form.get('mesa_beta'))
+            if (database == "mnist" and model == "simplenet"):#simplenet:backdoor101自带的mnist模型 绑定mnist
+                # print("nc_epo:",nc_epo)
+                # print("nc_lr:",nc_lr)
+                param = {
+                    "alpha": mesa_alpha,
+                    "beta": mesa_beta,
+                    "num_epochs": mesa_epo
+                }
+                print(param)
+                mymain_MNIST.mydataload(param,use_cuda=True,pretrained_model="MESA/MNIST_model_last.pt.tar")
 
         # flash(m)
     return render_template('project.html')
