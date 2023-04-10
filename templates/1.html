@@ -1,0 +1,75 @@
+<script>
+//饼形图
+// 基于准备好的dom，初始化echarts图表
+var myChart = echarts.init(document.getElementById('echart'));
+option = {
+    legend: {
+        orient : 'vertical',
+        x : 'left',
+        data:[]
+    }, 
+  	color:['#4A5873','#F76666','#16CF45','#119FD9','#E5D117','#FF7C41', '#FF5151'],
+    
+    calculable : false,
+    series : [
+        {
+            name:'',
+            type:'pie',
+            selectedMode: 'single',
+            radius : [0, 90],
+            // for funnel
+            x: '20%',
+            width: '40%',
+			y: '90%',
+            funnelAlign: 'right',
+            max: 1548,
+            
+            itemStyle : {
+                normal : {
+                    label : {
+                        position : 'inner',
+                    },
+                    labelLine : {
+                        show : false
+                    }
+                }
+            },
+            data:[
+                {value:335, name:'六大解\n决方案\n\n\n'}
+            ]
+        },
+        {
+            name:'',
+            type:'pie',
+            radius : [100, 200],
+            
+            // for funnel
+            x: '80%', 
+            width: '70%',
+            funnelAlign: 'left',
+            max: 1048,
+            itemStyle : {
+                normal : {
+                    label : {
+                        position : 'inner'
+                    },
+                    labelLine : {
+                        show : false
+                    }
+                }
+            },
+            data:[
+                { value:500, name:'医院'},
+				{ value:500,name:'校园'},
+				{ value:500, name:'酒店'},
+				{ value:500, name:'工业'},
+				{ value:500,name:'商业\n建筑'},
+				{ value:500,name:'政府'},
+            ]
+        }
+    ]
+};
+
+// 为echarts对象加载数据 
+myChart.setOption(option);
+</script>

@@ -34,6 +34,18 @@ from reverse.MNIST import outputhtml
 from reverse.MNIST import find_point
 from reverse.MNIST import last_re
 
+from reverse.GTSRB import GTSRB_find_lead
+from reverse.GTSRB import GTSRB_data_statistics
+from reverse.GTSRB import GTSRB_outputhtml
+from reverse.GTSRB import GTSRB_find_point
+from reverse.GTSRB import GTSRB_last_re
+
+from reverse.PUBFIG import PUBFIG_find_lead
+from reverse.PUBFIG import PUBFIG_data_statistics
+from reverse.PUBFIG import PUBFIG_outputhtml
+from reverse.PUBFIG import PUBFIG_find_point
+from reverse.PUBFIG import PUBFIG_last_re
+
 #新增 neaural cleanse
 from NeuralCleanse import train_GTSRB
 from NeuralCleanse import train_MNIST
@@ -189,6 +201,8 @@ def project():
             if (database == "mnist" and model == "simplenet"):
                 # acc = train.main("train/configs/mnist_params.yaml","mnist")
                 acc, model_name = training.main("train/configs/mnist_params.yaml", "mnist")
+            elif (database == "GTSRB" and model == "6Conv+2Dense"):
+                acc, model_name = training.main("train/configs/mnist_params.yaml", "GTSRB")
 
             shutil.move(model_name, "pre_models/" + database + "/" + model)
             if (file_exists.file_exists("pre_models/" + database + "/" + model + "/pre_model.pth")):
@@ -215,6 +229,54 @@ def project():
                 statistics_result_t4, statistics_result_t5 = data_statistics.MNIST_statistics(
                     find_result[check_epo - 1])
                 outputhtml.writeHTML("result1.html", statistics_result_t4, statistics_result_t5)
+                if (file_exists.file_exists("templates/result1.html")):
+                    os.remove("templates/result1.html")  # 删除原预训练文件
+                shutil.move("result1.html", "templates/result1.html")
+
+                result1_text = "疑似后门："
+                for i in range(len(statistics_result_t4)):
+                    for j in range(len(statistics_result_t4[i])):
+                        if (statistics_result_t4[i][j] == 1):
+                            result1_text += "(" + str(i) + "->" + str(j) + "):" + str(
+                                int(statistics_result_t5[i][j])) + "%|"
+
+                return render_template('project.html', flask_database=database, flask_model=model,
+                                       result1_text=result1_text)
+            elif (database == "GTSRB" and model == "6Conv+2Dense"):
+                check_epo = int(request.form.get('check_epo'))
+                # check_epo=10
+                pretrained_model = "reverse/GTSRB/lenet_mnist_model.pth"
+                use_cuda = True
+                epsilons = [0.1]
+                epsilons[0] = float(request.form.get('check_lr'))
+                find_result = GTSRB_find_lead.find(check_epo, pretrained_model, use_cuda, epsilons)
+                statistics_result_t4, statistics_result_t5 = GTSRB_data_statistics.PUBFIG_statistics(
+                    find_result[check_epo - 1])
+                GTSRB_outputhtml.writeHTML("result1.html", statistics_result_t4, statistics_result_t5)
+                if (file_exists.file_exists("templates/result1.html")):
+                    os.remove("templates/result1.html")  # 删除原预训练文件
+                shutil.move("result1.html", "templates/result1.html")
+
+                result1_text = "疑似后门："
+                for i in range(len(statistics_result_t4)):
+                    for j in range(len(statistics_result_t4[i])):
+                        if (statistics_result_t4[i][j] == 1):
+                            result1_text += "(" + str(i) + "->" + str(j) + "):" + str(
+                                int(statistics_result_t5[i][j])) + "%|"
+
+                return render_template('project.html', flask_database=database, flask_model=model,
+                                       result1_text=result1_text)
+            elif (database == "PUBFIG" and model == "vgg16"):
+                check_epo = int(request.form.get('check_epo'))
+                # check_epo=10
+                pretrained_model = "reverse/PUBFIG/lenet_mnist_model.pth"
+                use_cuda = True
+                epsilons = [0.1]
+                epsilons[0] = float(request.form.get('check_lr'))
+                find_result = PUBFIG_find_lead.find(check_epo, pretrained_model, use_cuda, epsilons)
+                statistics_result_t4, statistics_result_t5 = PUBFIG_data_statistics.PUBFIG_statistics(
+                    find_result[check_epo - 1])
+                GTSRB_outputhtml.writeHTML("result1.html", statistics_result_t4, statistics_result_t5)
                 if (file_exists.file_exists("templates/result1.html")):
                     os.remove("templates/result1.html")  # 删除原预训练文件
                 shutil.move("result1.html", "templates/result1.html")
@@ -259,6 +321,61 @@ def project():
                 find_point.find(num, safe_model, pretrained_model, use_cuda, epsilons, r, o, mytarget, pic_num)
                 shutil.move("reverse/MNIST/find_result/example.png", "templates")
                 return render_template('project.html', flask_database=database, flask_model=model)
+            elif (database == "GTSRB" and model == "6Conv+2Dense"):
+                # 清空find_result
+                if (file_exists.file_exists("reverse/GTSRB/find_result")):
+                    del_file.del_file("reverse/GTSRB/find_result")  # 删除原定位文件
+                # 定位
+                pretrained_model = "reverse/GTSRB/lenet_mnist_model.pth"
+                safe_model = "reverse/GTSRB/safe_mnist_model.pth"
+                # pretrained_model = "safe_mnist_model.pth"
+                use_cuda = True
+                epsilons = [0.1]  # 作用仅为跑一轮
+                num = [[0, 8], [1, 8], [2, 8], [3, 8], [4, 8], [5, 8], [6, 8], [7, 8], [9, 8],[10, 8], [11, 8], [12, 8], [13, 8], [14, 8], [15, 8], [16, 8], [17, 8], [18, 8], [19, 8],[20, 8], [21, 8], [22, 8], [23, 8], [24, 8], [25, 8], [26, 8], [27, 8], [28, 8], [29, 8],[30, 8], [31, 8], [32, 8], [33, 8], [34, 8], [35, 8], [36, 8], [37, 8], [38, 8], [39, 8], [40, 8], [41, 8], [42, 8]]
+                mytarget = 8
+                # pic_num = 500
+                pic_num = 10
+                r = True  # 是否继续
+                o = False
+                GTSRB_find_point.find(num, safe_model, pretrained_model, use_cuda, epsilons, r, o, mytarget, pic_num)
+                # 复制结果文件
+                if (file_exists.file_exists("reverse/GTSRB/find_result_backup")):
+                    del_file.del_file("reverse/GTSRB/find_result_backup")  # 删除原定位文件
+                    os.rmdir("reverse/GTSRB/find_result_backup")
+                shutil.copytree("reverse/GTSRB/find_result", "reverse/GTSRB/find_result_backup")
+                # 输出定位
+                o = True  # 是否输出（本次保存的内容无法用于下一次迭代，但下次迭代会使用上次的结果）
+                GTSRB_find_point.find(num, safe_model, pretrained_model, use_cuda, epsilons, r, o, mytarget, pic_num)
+                shutil.move("reverse/GTSRB/find_result/example.png", "templates")
+                return render_template('project.html', flask_database=database, flask_model=model)
+            elif (database == "PUBFIG" and model == "vgg16"):
+                # 清空find_result
+                if (file_exists.file_exists("reverse/PUBFIG/find_result")):
+                    del_file.del_file("reverse/PUBFIG/find_result")  # 删除原定位文件
+                # 定位
+                pretrained_model = "reverse/PUBFIG/lenet_mnist_model.pth"
+                safe_model = "reverse/PUBFIG/safe_mnist_model.pth"
+                # pretrained_model = "safe_mnist_model.pth"
+                use_cuda = True
+                epsilons = [0.1]  # 作用仅为跑一轮
+                num = [[0, 8], [1, 8], [2, 8], [3, 8], [4, 8], [5, 8], [6, 8], [7, 8], [9, 8],[10, 8], [11, 8], [12, 8], [13, 8], [14, 8], [15, 8], [16, 8], [17, 8], [18, 8], [19, 8],[20, 8], [21, 8], [22, 8], [23, 8], [24, 8], [25, 8], [26, 8], [27, 8], [28, 8], [29, 8],[30, 8], [31, 8], [32, 8], [33, 8], [34, 8], [35, 8], [36, 8], [37, 8], [38, 8], [39, 8], [40, 8], [41, 8], [42, 8]]
+                mytarget = 8
+                # pic_num = 500
+                pic_num = 10
+                r = True  # 是否继续
+                o = False
+                PUBFIG_find_point.find(num, safe_model, pretrained_model, use_cuda, epsilons, r, o, mytarget, pic_num)
+                # 复制结果文件
+                if (file_exists.file_exists("reverse/PUBFIG/find_result_backup")):
+                    del_file.del_file("reverse/PUBFIG/find_result_backup")  # 删除原定位文件
+                    os.rmdir("reverse/PUBFIG/find_result_backup")
+                shutil.copytree("reverse/PUBFIG/find_result", "reverse/PUBFIG/find_result_backup")
+                # 输出定位
+                o = True  # 是否输出（本次保存的内容无法用于下一次迭代，但下次迭代会使用上次的结果）
+                PUBFIG_find_point.find(num, safe_model, pretrained_model, use_cuda, epsilons, r, o, mytarget, pic_num)
+                shutil.move("reverse/PUBFIG/find_result/example.png", "templates")
+                return render_template('project.html', flask_database=database, flask_model=model)
+
 
         elif (m == '5'):  # 还原（嫌疑人画像）（上传）
             if (database == "mnist" and model == "simplenet"):
@@ -273,6 +390,32 @@ def project():
 
                 # 输出逆向
                 shutil.move("reverse/MNIST/re_result/re.png", "templates")
+                return render_template('project.html', flask_database=database, flask_model=model)
+            elif (database == "GTSRB" and model == "6Conv+2Dense"):
+                pretrained_model = "reverse/GTSRB/lenet_mnist_model.pth"
+                use_cuda=True
+                #epsilons = [0, .05, .1, .15, .2, .25, .3]
+                epsilons = [.1]
+                #epsilons = [0.]
+                ep2 = 1
+                mytarget = 8
+                GTSRB_last_re.find(1,pretrained_model,use_cuda,epsilons,ep2,mytarget)
+
+                # 输出逆向
+                shutil.move("reverse/GTSRB/re_result/re.png", "templates")
+                return render_template('project.html', flask_database=database, flask_model=model)
+            elif (database == "PUBFIG" and model == "vgg16"):
+                pretrained_model = "reverse/PUBFIG/lenet_mnist_model.pth"
+                use_cuda=True
+                #epsilons = [0, .05, .1, .15, .2, .25, .3]
+                epsilons = [.1]
+                #epsilons = [0.]
+                ep2 = 1
+                mytarget = 8
+                PUBFIG_last_re.find(1,pretrained_model,use_cuda,epsilons,ep2,mytarget)
+
+                # 输出逆向
+                shutil.move("reverse/PUBFIG/re_result/re.png", "templates")
                 return render_template('project.html', flask_database=database, flask_model=model)
             pass
 
