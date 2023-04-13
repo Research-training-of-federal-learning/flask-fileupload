@@ -207,15 +207,24 @@ def reverse_engineer(param):
 
     y=norm_list
     name_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']  # x轴标签
-    plt.bar(#x=np.arange(10),  # 横坐标
-            x=np.arange(param["num_classes"]),  # 横坐标
-            height=y,  # 柱状高度
-            width=0.35,  # 柱状宽度
-            #label='小明',  # 标签
-            edgecolor='k',  # 边框颜色
-            color='r',  # 柱状图颜色
-            tick_label=name_list,  # 每个柱状图的坐标标签
-            linewidth=3)  # 柱状图边框宽度
+    # 计算前10%大的值
+    sorted_y = sorted(y)
+    threshold = sorted_y[int(param["num_classes"] * 0.1)]
+
+    for i in range(len(y)):
+        if y[i] >= threshold:
+            plt.bar(name_list[i], y[i], color='blue', width=0.35)
+        else:
+            plt.bar(name_list[i], y[i], color='red', width=0.35)
+    # plt.bar(#x=np.arange(10),  # 横坐标
+    #         x=np.arange(param["num_classes"]),  # 横坐标
+    #         height=y,  # 柱状高度
+    #         width=0.35,  # 柱状宽度
+    #         #label='小明',  # 标签
+    #         edgecolor='k',  # 边框颜色
+    #         color='r',  # 柱状图颜色
+    #         tick_label=name_list,  # 每个柱状图的坐标标签
+    #         linewidth=3)  # 柱状图边框宽度
     #plt.legend()  # 显示标签
     #plt.show()
     # 图片的显示及存储

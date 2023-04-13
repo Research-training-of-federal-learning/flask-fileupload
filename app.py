@@ -476,6 +476,33 @@ def project():
                 print(param)
                 train_MNIST.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
                 train_MNIST.reverse_engineer(param)
+            elif (database == "GTSRB" and model == "6Conv+2Dense"):
+                param = {
+                    "dataset": "GTSRB",
+                    "Epochs": nc_epo,
+                    "batch_size": 64,
+                    "lamda": nc_lr,
+                    "num_classes": 43,
+                    "image_size": (32, 32)
+                }
+                print(param)
+                train_GTSRB.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+                train_GTSRB.reverse_engineer(param)
+            elif (database == "PUBFIG" and model == "vgg16"):
+                param = {
+                    "dataset": "PUBFIG",
+                    "Epochs": nc_epo,#1,
+                    "batch_size": 1,
+                    "lamda": nc_lr,
+                    "num_classes": 83,
+                    "image_size": (224, 224)
+                }
+                print(param)
+                train_PUBFIG.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+                train_PUBFIG.reverse_engineer(param)
+            # return render_template('project.html', flask_database=database, flask_model=model, flask_pre=pre,
+            #                            flask_acc=acc, flask_model_download=addr, result1_text="")
+
         elif (m == '9'):  # MESA
             mesa_epo = int(request.form.get('mesa_epo')) # 传入三个参数 epo,alpha,beta
             mesa_alpha = float(request.form.get('mesa_alpha'))
@@ -490,6 +517,22 @@ def project():
                 }
                 print(param)
                 mymain_MNIST.mydataload(param,use_cuda=True,pretrained_model="MESA/MNIST_model_last.pt.tar")
+            elif (database == "GTSRB" and model == "6Conv+2Dense"):
+                param = {
+                    "alpha": mesa_alpha,
+                    "beta": mesa_beta,
+                    "num_epochs": mesa_epo
+                }
+                print(param)
+                mymain.mydataload(param, use_cuda=True, pretrained_model="MESA/GTSRB_model_last.pt.tar")
+            elif (database == "PUBFIG" and model == "vgg16"):
+                param = {
+                    "alpha": mesa_alpha,
+                    "beta": mesa_beta,
+                    "num_epochs": mesa_epo
+                }
+                print(param)
+                mymain_pubfig.mydataload(param, use_cuda=True, pretrained_model="MESA/PUBFIG_model_last.pt.tar")
 
         # flash(m)
     return render_template('project.html')

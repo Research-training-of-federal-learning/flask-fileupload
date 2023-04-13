@@ -72,15 +72,15 @@ def train(model, target_label, train_loader, param):
     return trigger.cpu(), mask.cpu()
 
 
-def reverse_engineer():
-    param = {
-        "dataset": "PUBFIG",
-        "Epochs": 1,
-        "batch_size": 1,
-        "lamda": 0.01,
-        "num_classes": 83,
-        "image_size": (224, 224)
-    }
+def reverse_engineer(param):
+    # param = {
+    #     "dataset": "PUBFIG",
+    #     "Epochs": 1,
+    #     "batch_size": 1,
+    #     "lamda": 0.01,
+    #     "num_classes": 83,
+    #     "image_size": (224, 224)
+    # }
     model = VGGFace(False).to(device)
     model.load_state_dict(torch.load('PUBFIG_model_last.pt.tar')['state_dict'])  # 导入数据
     # model = torch.load('model_cifar10.pkl').to(device)
@@ -139,15 +139,24 @@ def reverse_engineer():
 
     y = norm_list
     name_list = [str(x) for x in range(0,83) ]  # x轴标签
-    plt.bar(  # x=np.arange(10),  # 横坐标
-        x=np.arange(param["num_classes"]),  # 横坐标
-        height=y,  # 柱状高度
-        width=0.35,  # 柱状宽度
-        # label='小明',  # 标签
-        edgecolor='k',  # 边框颜色
-        color='r',  # 柱状图颜色
-        tick_label=name_list,  # 每个柱状图的坐标标签
-        linewidth=3)  # 柱状图边框宽度
+    # 计算前10%大的值
+    sorted_y = sorted(y)
+    threshold = sorted_y[int(param["num_classes"] * 0.1)]
+
+    for i in range(len(y)):
+        if y[i] >= threshold:
+            plt.bar(name_list[i], y[i], color='blue', width=0.35)
+        else:
+            plt.bar(name_list[i], y[i], color='red', width=0.35)
+    # plt.bar(  # x=np.arange(10),  # 横坐标
+    #     x=np.arange(param["num_classes"]),  # 横坐标
+    #     height=y,  # 柱状高度
+    #     width=0.35,  # 柱状宽度
+    #     # label='小明',  # 标签
+    #     edgecolor='k',  # 边框颜色
+    #     color='r',  # 柱状图颜色
+    #     tick_label=name_list,  # 每个柱状图的坐标标签
+    #     linewidth=3)  # 柱状图边框宽度
     # plt.legend()  # 显示标签
     # plt.show()
     # 图片的显示及存储

@@ -66,15 +66,15 @@ def train(model, target_label, train_loader, param):
     return trigger.cpu(), mask.cpu()
 
 
-def reverse_engineer():
-    param = {
-        "dataset": "GTSRB",
-        "Epochs": 10,
-        "batch_size": 64,
-        "lamda": 0.01,
-        "num_classes": 43,
-        "image_size": (32, 32)
-    }
+def reverse_engineer(param):
+    # param = {
+    #     "dataset": "GTSRB",
+    #     "Epochs": 10,
+    #     "batch_size": 64,
+    #     "lamda": 0.01,
+    #     "num_classes": 43,
+    #     "image_size": (32, 32)
+    # }
     classes = (
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
         30,
@@ -137,20 +137,30 @@ def reverse_engineer():
     #            12.002458572387695, 106.13054656982422]
 
     y = norm_list
-    name_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-                 '10', '11', '12', '13', '14', '15', '16', '17', '18', '19'
-                 '20', '21', '22', '23', '24', '25', '26', '27', '28', '29'
-                 '30', '31', '32', '33', '34', '35', '36', '37', '38', '39'
-                 '40', '41', '42']  # x轴标签
-    plt.bar(  # x=np.arange(10),  # 横坐标
-        x=np.arange(param["num_classes"]),  # 横坐标
-        height=y,  # 柱状高度
-        width=0.35,  # 柱状宽度
-        # label='小明',  # 标签
-        edgecolor='k',  # 边框颜色
-        color='r',  # 柱状图颜色
-        tick_label=name_list,  # 每个柱状图的坐标标签
-        linewidth=3)  # 柱状图边框宽度
+    name_list = [str(x) for x in range(0, 43)]
+    # name_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    #              '10', '11', '12', '13', '14', '15', '16', '17', '18', '19'
+    #              '20', '21', '22', '23', '24', '25', '26', '27', '28', '29'
+    #              '30', '31', '32', '33', '34', '35', '36', '37', '38', '39'
+    #              '40', '41', '42']  # x轴标签
+    # 计算前10%大的值
+    sorted_y = sorted(y)
+    threshold = sorted_y[int(param["num_classes"] * 0.1)]
+
+    for i in range(len(y)):
+        if y[i] >= threshold:
+            plt.bar(name_list[i], y[i], color='blue', width=0.35)
+        else:
+            plt.bar(name_list[i], y[i], color='red', width=0.35)
+    # plt.bar(  # x=np.arange(10),  # 横坐标
+    #     x=np.arange(param["num_classes"]),  # 横坐标
+    #     height=y,  # 柱状高度
+    #     width=0.35,  # 柱状宽度
+    #     # label='小明',  # 标签
+    #     edgecolor='k',  # 边框颜色
+    #     color='r',  # 柱状图颜色
+    #     tick_label=name_list,  # 每个柱状图的坐标标签
+    #     linewidth=3)  # 柱状图边框宽度
     # plt.legend()  # 显示标签
     # plt.show()
     # 图片的显示及存储

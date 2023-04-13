@@ -439,15 +439,24 @@ def search(alpha,beta,target,loader,G,M,B,device,num_epochs,bs,trigger): # 用�
     target_plot_list = [item['Target'] for item in asr_avg_list]
     y = ASR_plot_list
     name_list = target_plot_list # x轴标签
-    plt.bar(  # x=np.arange(10),  # 横坐标
-        x=np.arange(len(target)),  # 横坐标
-        height=y,  # 柱状高度
-        width=0.35,  # 柱状宽度
-        # label='小明',  # 标签
-        edgecolor='#4b006e',  # 边框颜色
-        color='#be03fd',  # 柱状图颜色
-        tick_label=name_list,  # 每个柱状图的坐标标签
-        linewidth=3)  # 柱状图边框宽度
+    # 计算前10%大的值
+    sorted_y = sorted(y)
+    threshold = sorted_y[int(len(target) * 0.9)]
+
+    for i in range(len(target)):
+        if y[i] >= threshold:
+            plt.bar(name_list[i], y[i], color='red', width=0.35)
+        else:
+            plt.bar(name_list[i], y[i], color='blue', width=0.35)
+    # plt.bar(  # x=np.arange(10),  # 横坐标
+    #     x=np.arange(len(target)),  # 横坐标
+    #     height=y,  # 柱状高度
+    #     width=0.35,  # 柱状宽度
+    #     # label='小明',  # 标签
+    #     edgecolor='#4b006e',  # 边框颜色
+    #     color='#be03fd',  # 柱状图颜色
+    #     tick_label=name_list,  # 每个柱状图的坐标标签
+    #     linewidth=3)  # 柱状图边框宽度
     plt.savefig('MESA/output/ASRDistribution.png')  # 图片的存储
     plt.close()  # 关闭matplotlib
 
