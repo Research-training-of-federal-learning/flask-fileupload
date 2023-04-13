@@ -99,6 +99,8 @@
 }
 #contentUpload{
 }
+#contentAttack{
+}
 #contentDetection{
 }
 #contentLocation{
@@ -114,4 +116,29 @@
 #contentRepair{
 }
 #contentCluster{
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1cm);
+    grid-template-rows: repeat(3, 1cm);
+    gap: 5px;
+}
+.box {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    border: 1px solid black;
+}
+.box.black {
+    background-color: black;
+}
+.options {
+    margin-bottom: 20px;
+}
+.option {
+}
+.option:checked {
+    background-color: black;
+    color: white;
 }

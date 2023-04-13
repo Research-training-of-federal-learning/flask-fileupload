@@ -97,6 +97,12 @@
                             </a>
                         </li>
                         <li>
+                            <a href="#contentAttack">
+                                <i class="glyphicon glyphicon-knight"></i>
+                                后门攻击
+                            </a>
+                        </li>
+                        <li>
                             <a href="#contentDetection">
                                 <i class="glyphicon glyphicon-check"></i>
                                 检测
@@ -134,7 +140,7 @@
                         </li>
                         <li>
                             <a href="#contentCluster">
-                                <i class="glyphicon glyphicon-knight"></i>
+                                <i class="glyphicon glyphicon-tower"></i>
                                 安全聚类
                             </a>
                         </li>
@@ -320,7 +326,106 @@
                 </div>
 
 
+<!--       后门攻击     -->
+                <div class="row">
+                <div class="col-md-11 col-md-push-1" id="contentAttack">
+                    <h1>后门攻击</h1>
+                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                        <div class="form-group">
+                            <br></br>
+                            <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
+                            <form action="/project" method="post" class="form-project">
 
+                                <div class="form-group">
+                                    <label for="train_pretrain">轮数：<span id="attack_epo_num"></span></label>
+                                    <div class="slidecontainer">
+                                        <input type="range" min="1" max="100" value="10" class="slider" id="attack_epo" name="attack_epo">
+                                    </div>
+                                    <label for="train_pretrain">优化率：<span id="attack_lr_num"></span></label>
+                                    <div class="slidecontainer">
+                                        <input type="text" value="0.1" οnkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')" id="attack_lr" name="attack_lr">
+                                    </div>
+                                    <label for="train_pretrain">请选择是否使用预训练模型：<span id="attack_pre"></span></label>
+                                    <div class="slidecontainer">
+                                        <label for="attack_pre_yes">是</label>
+                                        <input type="radio" name="attack_pre_choose" value="attack_pre_ye" id="attack_pre_yes" checked>
+                                        <label for="attack_pre_no">否</label>
+                                        <input type="radio" name="attack_pre_choose" value="attack_pre_no" id="attack_pre_no">
+                                    </div>
+                                    <label for="train_database" style="text-align:center">后门选择：</label>
+                                    <div class="slidecontainer">
+                                        <select class="form-control" id="attack_trigger_select" name="attack_trigger" autofocus required>
+                                            <option value="default" selected>默认后门</option>
+                                            <option value="badnet">Badnet</option>
+                                            <option value="diy">自定义trigger</option>
+                                        </select>
+
+                                        <div id="badnet_Dialog" style="display:none">
+                                              <form>
+                                                  <label>请选择trigger尺寸：</label>
+                                                  <div class="options">
+                                                      <label><input type="radio" name="option" id="trigger_size_3" class="option" value="3x3" checked>3x3</label>
+                                                      <label><input type="radio" name="option" id="trigger_size_5" class="option" value="5x5">5x5</label>
+                                                      <label><input type="radio" name="option" id="trigger_size_7" class="option" value="7x7">7x7</label>
+                                                  </div>
+                                                  <div class="grid">
+                                                      <div class="box"></div>
+                                                      <div class="box"></div>
+                                                      <div class="box"></div>
+                                                      <div class="box"></div>
+                                                      <div class="box"></div>
+                                                      <div class="box"></div>
+                                                      <div class="box"></div>
+                                                      <div class="box"></div>
+                                                      <div class="box"></div>
+                                                  </div>
+<!--                                                  <label for="trigger_size_3">3*3</label>-->
+<!--                                                  <input type="radio" name="trigger_size_choose" value="trigger_size_3" id="trigger_size_3" checked>-->
+<!--                                                  <label for="trigger_size_5">5*5</label>-->
+<!--                                                  <input type="radio" name="trigger_size_choose" value="trigger_size_5" id="trigger_size_5">-->
+<!--                                                  <label for="trigger_size_7">7*7</label>-->
+<!--                                                  <input type="radio" name="trigger_size_choose" value="trigger_size_7" id="trigger_size_7">-->
+                                                  <label>请输入trigger左上角x坐标值：</label>
+                                                  <input type="text" name="trigger_x">
+                                                  <br>
+                                                  <label>请输入trigger左上角y坐标值：</label>
+                                                  <input type="text" name="trigger_y">
+                                                  <br>
+                                                  <button type="submit">确定</button>
+                                              </form>
+                                        </div>
+
+                                        <div id="diy_Dialog" style="display:none">
+                                          <form>
+                                            <label>上传trigger文件：</label>
+                                            <input type="file" name="file">
+                                            <br>
+                                            <label>输入mask值：</label>
+                                            <input type="text" name="value_mask">
+                                            <br>
+                                              <label>设定无需覆盖值：</label>
+                                            <input type="text" name="value_nocover">
+                                            <br>
+                                            <button type="submit">确定</button>
+                                          </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
+                                    <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
+                                    <input name="m" style="width: 310px;height:30px;" value="3" hidden>
+                                </div>
+                                <div class="form-group">
+                                    <button type="reset" class="btn btn-default pull-left">重置</button>
+                                    <button type="submit" class="btn btn-primary pull-right">开始攻击</button>
+                                </div>
+                                <br></br>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 <!--       检测     -->
                 <div class="row">
                 <div class="col-md-11 col-md-push-1" id="contentDetection">
@@ -744,6 +849,37 @@
     </div>
 </div>
 <script>
+let options = document.querySelectorAll('.option');
+options.forEach(option => {
+    option.addEventListener('change', () => {
+        options.forEach(option => option.parentNode.classList.remove('selected'));
+        option.parentNode.classList.add('selected');
+
+        let gridSize = parseInt(option.value);
+        let grid = document.querySelector('.grid');
+        grid.innerHTML = '';
+        grid.style.gridTemplateColumns = `repeat(${gridSize}, 1cm)`;
+        grid.style.gridTemplateRows = `repeat(${gridSize}, 1cm)`;
+
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            let box = document.createElement('div');
+            box.classList.add('box');
+            grid.appendChild(box);
+        }
+
+        let boxes = document.querySelectorAll('.box');
+        boxes.forEach(box => {
+            box.addEventListener('click', () => {
+                if (box.classList.contains('black')) {
+                    box.classList.remove('black');
+                } else {
+                    box.classList.add('black');
+                }
+            });
+        });
+    });
+});
+
 var check_epo = document.getElementById("check_epo");
 var check_epo_num = document.getElementById("check_epo_num");
 check_epo_num.innerHTML = check_epo.value;
@@ -824,6 +960,87 @@ re_lr_num.innerHTML = re_lr.value;
 re_lr.oninput = function() {
   re_lr_num.innerHTML = this.value;
 }
+
+let selectElem = document.getElementById("attack_trigger_select");
+selectElem.addEventListener("change", function() {
+  // 获取当前选中的选项的值
+  let selectedValue = selectElem.value;
+
+  // 如果选中的选项是 "option1"，则显示弹窗
+  if (selectedValue === "default") {
+    let badnetDialogElem = document.getElementById("badnet_Dialog");
+    badnetDialogElem.style.display = "none";
+    let diyDialogElem = document.getElementById("diy_Dialog");
+    diyDialogElem.style.display = "none";
+  }
+  else if (selectedValue === "badnet") {
+    let badnetDialogElem = document.getElementById("badnet_Dialog");
+    badnetDialogElem.style.display = "block";
+    let diyDialogElem = document.getElementById("diy_Dialog");
+    diyDialogElem.style.display = "none";
+  }
+  else if (selectedValue === "diy") {
+    let diyDialogElem = document.getElementById("diy_Dialog");
+    diyDialogElem.style.display = "block";
+    let badnetDialogElem = document.getElementById("badnet_Dialog");
+    badnetDialogElem.style.display = "none";
+  }
+});
+
+
+let badnet_dialogForm = document.querySelector("#badnet_Dialog form");
+badnet_dialogForm.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  // 获取输入框和文件输入框中的值
+  let inputValue1 = this.elements["trigger_size_choose"].value;
+  let inputValue2= this.elements["trigger_x"].value;
+  let inputValue3= this.elements["trigger_y"].value;
+
+  // 隐藏弹窗
+  let dialogElem = document.getElementById("badnet_Dialog");
+  dialogElem.style.display = "none";
+
+  // 在控制台输出输入框和文件输入框中的值
+  console.log("trigger尺寸值：", inputValue1);
+  console.log("设定的trigger左上角x坐标值：", inputValue2);
+  console.log("设定的trigger左上角y坐标值：", inputValue3);
+
+});
+
+let diy_dialogForm = document.querySelector("#diy_Dialog form");
+diy_dialogForm.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  // 获取输入框和文件输入框中的值
+  let fileValue = this.elements["file"].value;
+  let inputValue1 = this.elements["value_mask"].value;
+  let inputValue2 = this.elements["value_nocover"].value;
+
+  // 隐藏弹窗
+  let dialogElem = document.getElementById("diy_Dialog");
+  dialogElem.style.display = "none";
+
+  // 在控制台输出输入框和文件输入框中的值
+  console.log("上传文件：", fileValue);
+  console.log("设定的mask值：", inputValue1);
+  console.log("设定的无需覆盖值：", inputValue2);
+});
+
+let boxes = document.querySelectorAll('.box');
+boxes.forEach(box => {
+    box.addEventListener('click', () => {
+        if (box.classList.contains('black')) {
+            box.classList.remove('black');
+        } else {
+            box.classList.add('black');
+        }
+    });
+});
+
+
+
+
 </script>
 
 {% endblock %}
