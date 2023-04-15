@@ -334,8 +334,7 @@
                         <div class="form-group">
                             <br></br>
                             <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
-                            <form action="/project" method="post" class="form-project">
-
+                            <form  class="form-project">
                                 <div class="form-group">
                                     <label for="train_pretrain">轮数：<span id="attack_epo_num"></span></label>
                                     <div class="slidecontainer">
@@ -412,15 +411,21 @@
 
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
-                                    <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
-                                    <input name="m" style="width: 310px;height:30px;" value="3" hidden>
+                            </form>
+                            <form action="/project" method="post" class="form-project">
+<!--                            将表单提交到/project路由-->
+                                <div>
+                                    <div class="form-group">
+                                        <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
+                                        <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
+                                        <input name="m" style="width: 310px;height:30px;" value="10" hidden>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="reset" class="btn btn-default pull-left">重置</button>
+                                        <button type="submit" class="btn btn-primary pull-right">开始攻击</button>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <button type="reset" class="btn btn-default pull-left">重置</button>
-                                    <button type="submit" class="btn btn-primary pull-right">开始攻击</button>
-                                </div>
+
                                 <br></br>
                             </form>
                         </div>

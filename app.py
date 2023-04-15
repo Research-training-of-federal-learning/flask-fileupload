@@ -56,15 +56,20 @@ from MESA import mymain
 from MESA import mymain_MNIST
 from MESA import mymain_pubfig
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+#新增后门攻击
+from Attack import training_MNIST
+from Attack import training_GTSRB
+from Attack import training_PUBFIG
 
-app = Flask(__name__)
+basedir = os.path.abspath(os.path.dirname(__file__))#__file__是Python内置的变量，它包含当前模块的路径和文件名
+
+app = Flask(__name__)#__name__是一个特殊变量，用于表示当前模块的名称。如果一个模块被直接执行，那么它的__name__值为__main__；如果一个模块被导入到其他模块中使用，那么它的__name__值为该模块的名称
 app.config["SECRET_KEY"] = 'TPmi4aLWRbyVq8zu9v82dWYW1'
 bootstrap = Bootstrap(app)
 
 from logging import Formatter, FileHandler
 
-handler = FileHandler(os.path.join(basedir, 'log.txt'), encoding='utf8')
+handler = FileHandler(os.path.join(basedir, 'log.txt'), encoding='utf8')#日志处理器
 handler.setFormatter(
     Formatter("[%(asctime)s] %(levelname)-8s %(message)s", "%Y-%m-%d %H:%M:%S")
 )
@@ -73,13 +78,13 @@ app.logger.addHandler(handler)
 # app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif','tar'])
 
 
-def allowed_file(filename):
+def allowed_file(filename):#检查一个文件名是否符合应用程序允许上传的文件类型
     return '.' in filename and \
         filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 
 @app.context_processor
-def override_url_for():
+def override_url_for():#添加时间戳，浏览器可以快速识别文件是否已更新，并在必要时重新加载文件。
     return dict(url_for=dated_url_for)
 
 
@@ -100,7 +105,7 @@ def dated_url_for(endpoint, **values):
 
 
 @app.route('/css/<path:filename>')
-def css_static(filename):
+def css_static(filename):#当请求到达这个路由时，Flask会调用css_static函数来处理请求，并把请求路径中的filename传入该函数。
     return send_from_directory(app.root_path + '/static/css/', filename)
 
 
@@ -110,13 +115,14 @@ def js_static(filename):
 
 
 @app.route('/')
-def index():
+def index():#当用户访问应用的根目录时，该函数会被执行。函数体内的代码使用 redirect 函数将请求重定向到 login 路由。
     return redirect(url_for('login'))
+    #url_for 生成指定路由的 URL 地址
 
 
 @app.route('/logout')
 def out():
-    if session['is_login'] == False:
+    if session['is_login'] == False:#如果用户没有登录，将会返回主页
         return render_template('/')
     else:
         session['is_login'] = False
@@ -132,7 +138,7 @@ def download1():
     file_path = "pre_models/" + database + "/" + model
     # file_name = request.form.get('file_name')#不同模式
     # file_path = request.form.get('file_path')#不同模式
-    return send_from_directory(file_path, file_name, as_attachment=True)
+    return send_from_directory(file_path, file_name, as_attachment=True)#as_attachment=True则表示文件将以附件的形式下载
 
 
 @app.route("/result1", methods=['GET', 'POST'])
@@ -190,7 +196,7 @@ def project():
                 acc = file_read.file_read("pre_models/" + database + "/" + model + "/acc.txt")
                 addr = ""
                 return render_template('project.html', flask_database=database, flask_model=model, flask_pre=pre,
-                                       flask_acc=acc, flask_model_download=addr, result1_text="")
+                                       flask_acc=acc, flask_model_download=addr, result1_text="")#这些参数将在模板中被使用，用于动态地生成 HTML 页面
 
 
             else:
@@ -534,6 +540,17 @@ def project():
                 print(param)
                 mymain_pubfig.mydataload(param, use_cuda=True, pretrained_model="MESA/PUBFIG_model_last.pt.tar")
 
+        elif (m == '10'):  # 后门攻击
+
+            if (database == "mnist" and model == "simplenet"):#simplenet:backdoor101自带的mnist模型 绑定mnist
+                training_MNIST.main("Attack/configs/mnist_params.yaml", "mnist")
+
+            elif (database == "GTSRB" and model == "6Conv+2Dense"):
+                training_GTSRB.main("Attack/configs/gtsrb_params.yaml", "gtsrb")
+
+            elif (database == "PUBFIG" and model == "vgg16"):
+                training_PUBFIG.main("Attack/configs/pubfig_params.yaml", "pubfig")
+
         # flash(m)
     return render_template('project.html')
 
@@ -561,7 +578,7 @@ def login():
             flash('用户名或密码错误！')
             return render_template('login.html')
         finally:
-            conn.close()
+            conn.close()#手动关闭数据库连接，这样可以释放资源，同时也可以避免数据丢失或错误
 
         if is_valid_user:
             # 登录成功后存储session信息
