@@ -2,6 +2,9 @@ import numpy as np
 import random
 import torch
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+import matplotlib;matplotlib.use('tkagg')
 
 # 转换为np数组
 def torchfile2np(to):
@@ -312,6 +315,111 @@ class FLAME:
         plt.xlabel("models")
         plt.ylabel("Model trust ratio")
         plt.savefig('templates/Trust_degree.png')
+        plt.close()
+
+    def draw_level3(self):
+        y_data=[]
+        plt.rcParams['font.sans-serif'] = ['SimHei']  # 指定默认字体 SimHei为黑体
+        plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+        for i in range(self.n):
+            m=np.absolute(self.W[i] - self.G0)
+            y=np.hsplit(m, 4097)
+            ydatas=np.mean(y,axis=1)
+            y_data.append(ydatas)
+        '''plot starting ... '''
+        number_of_point = 241
+        x_data = range(0, number_of_point)
+        fig = plt.figure()
+        plt.rcParams['savefig.dpi'] = 4096  # 图片像素
+        plt.rcParams['figure.dpi'] = 4096  # 分辨率
+        ax = fig.add_subplot(111, projection='3d')
+        labels=[]
+        picle=1 #参照组
+        group_num=1
+        for i in range(len(y_data)): #k<0.9显示
+            if picle==1 and self.sinlevel[i]:
+                label = "model_reference"
+                labels.append(label)
+                c = "#" + str(hex(random.randint(0x111111, 0xffffff)))[2:]
+                for j in range(17):
+                    k = float(j) / 17
+                    t=y_data[i][j*number_of_point:(j+1)*number_of_point]
+                    ax.scatter(xs=x_data, ys=k, zs=t, c=c, s=1, alpha=1, label=label, marker='o')
+                picle=0
+            if self.sinlevel[i]<0.9:
+                label="model"+str(i)
+                labels.append(label)
+                c="#"+str(hex(random.randint(0x111111, 0xffffff)))[2:]
+                for j in range(17):
+                    k = float(j) / 17
+                    t = y_data[i][j * number_of_point:(j + 1) * number_of_point]
+                    ax.scatter(xs=x_data, ys=group_num+k, zs=t, c=c, s=1, alpha=1, label=label, marker='o')
+                group_num+=1
+        yticks=[]
+        for i in range(len(labels)):
+            yticks.append(i)
+        ax.set_xticklabels([" ", " ", "layer", " ", " "], fontsize=20)
+        ax.set_yticklabels(labels, fontsize=20)
+        ax.set_zlabel('distance', fontsize=16)
+        ax.set_xticks([0, 50, 100, 1500, 200, 250])  # x 轴刻度密度
+        ax.set_yticks(yticks)  # y 轴刻度密度
+        ax.set_xlim(left=0, right=number_of_point)  # x 轴显示范围
+        ax.set_ylim(bottom=0, top=len(labels))  # y 轴显示范围
+        plt.tick_params(labelsize=13)  # 刻度字体大小
+        #plt.savefig('student_score.pdf')
+        plt.show()
+
+    def draw_level4(self):
+        y_data=[]
+        plt.rcParams['font.sans-serif'] = ['SimHei']  # 指定默认字体 SimHei为黑体
+        plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+        for i in range(self.n):
+            m=np.absolute(self.W[i] - self.G0)
+            y=np.hsplit(m, 4097)
+            ydatas=np.max(y,axis=1)
+            y_data.append(ydatas)
+        '''plot starting ... '''
+        number_of_point = 241
+        x_data = range(0, number_of_point)
+        fig = plt.figure()
+        #plt.rcParams['savefig.dpi'] = 4096  # 图片像素
+        #plt.rcParams['figure.dpi'] = 4096  # 分辨率
+        ax = fig.add_subplot(111, projection='3d')
+        labels=[]
+        picle=1 #参照组
+        group_num=1
+        for i in range(len(y_data)): #k<0.9显示
+            if picle==1 and self.sinlevel[i]:
+                label = "model_reference"
+                labels.append(label)
+                c = "#" + str(hex(random.randint(0x111111, 0xffffff)))[2:]
+                for j in range(17):
+                    k = float(j) / 17
+                    t=y_data[i][j*number_of_point:(j+1)*number_of_point]
+                    ax.scatter(xs=x_data, ys=k, zs=t, c=c, s=1, alpha=1, label=label, marker='o')
+                picle=0
+            if self.sinlevel[i]<0.9:
+                label="model"+str(i)
+                labels.append(label)
+                c="#"+str(hex(random.randint(0x111111, 0xffffff)))[2:]
+                for j in range(17):
+                    k = float(j) / 17
+                    t = y_data[i][j * number_of_point:(j + 1) * number_of_point]
+                    ax.scatter(xs=x_data, ys=group_num+k, zs=t, c=c, s=1, alpha=1, label=label, marker='o')
+                group_num+=1
+        yticks=[]
+        for i in range(len(labels)):
+            yticks.append(i)
+        ax.set_xticklabels([" ", " ", "layer", " ", " "], fontsize=20)
+        ax.set_yticklabels(labels, fontsize=20)
+        ax.set_zlabel('distance', fontsize=16)
+        ax.set_xticks([0, 50, 100, 1500, 200, 250])  # x 轴刻度密度
+        ax.set_yticks(yticks)  # y 轴刻度密度
+        ax.set_xlim(left=0, right=number_of_point)  # x 轴显示范围
+        ax.set_ylim(bottom=0, top=len(labels))  # y 轴显示范围
+        plt.tick_params(labelsize=13)  # 刻度字体大小
+        #plt.savefig('student_score.pdf')
+        plt.show()
 
     # 返回相关值
     def get_sinlevel(self):
