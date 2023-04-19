@@ -4,16 +4,20 @@ import torch
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-import matplotlib;matplotlib.use('tkagg')
+import matplotlib;
+
+matplotlib.use('tkagg')
+
 
 # 转换为np数组
 def torchfile2np(to):
     n = torch.load(to, map_location=torch.device("cpu"))['state_dict']
     key_list = list(n.keys())
     mylist = np.arange(0)
-    for i in range(len(key_list)-2,len(key_list)):
+    for i in range(len(key_list) - 2, len(key_list)):
         mylist = np.append(mylist, n[key_list[i]].view(-1).numpy())
     return mylist
+
 
 def data_needed(filePath):
     import os  # 引入os
@@ -83,8 +87,8 @@ class FLAME:
         self.c = None  # 存放余弦距离
         self.b = None  # 存放聚类后结果
         self.e = None  # 存放欧几里得距离
-        self.database=database
-        self.sinlevel = [0]*n
+        self.database = database
+        self.sinlevel = [0] * n
         self.n = n  # n是客户端数量
         self.size = size  # size是模型的参数个数
         self.L = n  # L是聚类后允许的参数
@@ -191,7 +195,7 @@ class FLAME:
         for i in types:
             if i == 1:
                 self.b.append(cnt)
-                self.sinlevel[cnt]=1
+                self.sinlevel[cnt] = 1
             cnt += 1
         self.L = len(self.b)
 
@@ -214,7 +218,7 @@ class FLAME:
         for i in range(self.L):
             k = min(1, self.S / self.e[self.b[i]])
             self.newW.append(self.G0 + (self.W[self.b[i]] - self.G0) * k)
-            self.sinlevel[self.b[i]]=k
+            self.sinlevel[self.b[i]] = k
 
     # 更新出新的W
     def update(self):
@@ -287,14 +291,14 @@ class FLAME:
         </body>
         </html>"""
         drawdata = "\t{ value: %f, name: '%s' },\n"
-        filedata=drawfile
+        filedata = drawfile
         for i in range(len(self.sinlevel)):
-            k=self.database[i].find("\\")
-            name=self.database[i][k+1:]
-            filedata+=drawdata%(self.sinlevel[i],name)
-        filedata+=drawfile2
+            k = self.database[i].find("\\")
+            name = self.database[i][k + 1:]
+            filedata += drawdata % (self.sinlevel[i], name)
+        filedata += drawfile2
         print(1111)
-        f=open("templates\\Trust_degree.html","w")
+        f = open("templates\\Trust_degree.html", "w")
         f.write(filedata)
         f.close()
 
@@ -304,10 +308,10 @@ class FLAME:
         plt.rcParams["axes.unicode_minus"] = False
 
         for i in range(len(self.sinlevel)):
-            k=self.database[i].find("\\")
-            name=self.database[i][k+1:]
-            m=1-self.sinlevel[i]
-            if m==0:
+            k = self.database[i].find("\\")
+            name = self.database[i][k + 1:]
+            m = 1 - self.sinlevel[i]
+            if m == 0:
                 continue
             plt.bar(name, m)
 
@@ -318,13 +322,13 @@ class FLAME:
         plt.close()
 
     def draw_level3(self):
-        y_data=[]
+        y_data = []
         plt.rcParams['font.sans-serif'] = ['SimHei']  # 指定默认字体 SimHei为黑体
         plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
         for i in range(self.n):
-            m=np.absolute(self.W[i] - self.G0)
-            y=np.hsplit(m, 4097)
-            ydatas=np.mean(y,axis=1)
+            m = np.absolute(self.W[i] - self.G0)
+            y = np.hsplit(m, 4097)
+            ydatas = np.mean(y, axis=1)
             y_data.append(ydatas)
         '''plot starting ... '''
         number_of_point = 241
@@ -333,29 +337,29 @@ class FLAME:
         plt.rcParams['savefig.dpi'] = 4096  # 图片像素
         plt.rcParams['figure.dpi'] = 4096  # 分辨率
         ax = fig.add_subplot(111, projection='3d')
-        labels=[]
-        picle=1 #参照组
-        group_num=1
-        for i in range(len(y_data)): #k<0.9显示
-            if picle==1 and self.sinlevel[i]:
+        labels = []
+        picle = 1  # 参照组
+        group_num = 1
+        for i in range(len(y_data)):  # k<0.9显示
+            if picle == 1 and self.sinlevel[i]:
                 label = "model_reference"
                 labels.append(label)
                 c = "#" + str(hex(random.randint(0x111111, 0xffffff)))[2:]
                 for j in range(17):
                     k = float(j) / 17
-                    t=y_data[i][j*number_of_point:(j+1)*number_of_point]
+                    t = y_data[i][j * number_of_point:(j + 1) * number_of_point]
                     ax.scatter(xs=x_data, ys=k, zs=t, c=c, s=1, alpha=1, label=label, marker='o')
-                picle=0
-            if self.sinlevel[i]<0.9:
-                label="model"+str(i)
+                picle = 0
+            if self.sinlevel[i] < 0.9:
+                label = "model" + str(i)
                 labels.append(label)
-                c="#"+str(hex(random.randint(0x111111, 0xffffff)))[2:]
+                c = "#" + str(hex(random.randint(0x111111, 0xffffff)))[2:]
                 for j in range(17):
                     k = float(j) / 17
                     t = y_data[i][j * number_of_point:(j + 1) * number_of_point]
-                    ax.scatter(xs=x_data, ys=group_num+k, zs=t, c=c, s=1, alpha=1, label=label, marker='o')
-                group_num+=1
-        yticks=[]
+                    ax.scatter(xs=x_data, ys=group_num + k, zs=t, c=c, s=1, alpha=1, label=label, marker='o')
+                group_num += 1
+        yticks = []
         for i in range(len(labels)):
             yticks.append(i)
         ax.set_xticklabels([" ", " ", "layer", " ", " "], fontsize=20)
@@ -366,48 +370,48 @@ class FLAME:
         ax.set_xlim(left=0, right=number_of_point)  # x 轴显示范围
         ax.set_ylim(bottom=0, top=len(labels))  # y 轴显示范围
         plt.tick_params(labelsize=13)  # 刻度字体大小
-        #plt.savefig('student_score.pdf')
+        # plt.savefig('student_score.pdf')
         plt.show()
 
     def draw_level4(self):
-        y_data=[]
+        y_data = []
         plt.rcParams['font.sans-serif'] = ['SimHei']  # 指定默认字体 SimHei为黑体
         plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
         for i in range(self.n):
-            m=np.absolute(self.W[i] - self.G0)
-            y=np.hsplit(m, 4097)
-            ydatas=np.max(y,axis=1)
+            m = np.absolute(self.W[i] - self.G0)
+            y = np.hsplit(m, 4097)
+            ydatas = np.max(y, axis=1)
             y_data.append(ydatas)
         '''plot starting ... '''
         number_of_point = 241
         x_data = range(0, number_of_point)
         fig = plt.figure()
-        #plt.rcParams['savefig.dpi'] = 4096  # 图片像素
-        #plt.rcParams['figure.dpi'] = 4096  # 分辨率
+        # plt.rcParams['savefig.dpi'] = 4096  # 图片像素
+        # plt.rcParams['figure.dpi'] = 4096  # 分辨率
         ax = fig.add_subplot(111, projection='3d')
-        labels=[]
-        picle=1 #参照组
-        group_num=1
-        for i in range(len(y_data)): #k<0.9显示
-            if picle==1 and self.sinlevel[i]:
+        labels = []
+        picle = 1  # 参照组
+        group_num = 1
+        for i in range(len(y_data)):  # k<0.9显示
+            if picle == 1 and self.sinlevel[i]:
                 label = "model_reference"
                 labels.append(label)
                 c = "#" + str(hex(random.randint(0x111111, 0xffffff)))[2:]
                 for j in range(17):
                     k = float(j) / 17
-                    t=y_data[i][j*number_of_point:(j+1)*number_of_point]
+                    t = y_data[i][j * number_of_point:(j + 1) * number_of_point]
                     ax.scatter(xs=x_data, ys=k, zs=t, c=c, s=1, alpha=1, label=label, marker='o')
-                picle=0
-            if self.sinlevel[i]<0.9:
-                label="model"+str(i)
+                picle = 0
+            if self.sinlevel[i] < 0.9:
+                label = "model" + str(i)
                 labels.append(label)
-                c="#"+str(hex(random.randint(0x111111, 0xffffff)))[2:]
+                c = "#" + str(hex(random.randint(0x111111, 0xffffff)))[2:]
                 for j in range(17):
                     k = float(j) / 17
                     t = y_data[i][j * number_of_point:(j + 1) * number_of_point]
-                    ax.scatter(xs=x_data, ys=group_num+k, zs=t, c=c, s=1, alpha=1, label=label, marker='o')
-                group_num+=1
-        yticks=[]
+                    ax.scatter(xs=x_data, ys=group_num + k, zs=t, c=c, s=1, alpha=1, label=label, marker='o')
+                group_num += 1
+        yticks = []
         for i in range(len(labels)):
             yticks.append(i)
         ax.set_xticklabels([" ", " ", "layer", " ", " "], fontsize=20)
@@ -418,9 +422,37 @@ class FLAME:
         ax.set_xlim(left=0, right=number_of_point)  # x 轴显示范围
         ax.set_ylim(bottom=0, top=len(labels))  # y 轴显示范围
         plt.tick_params(labelsize=13)  # 刻度字体大小
-        #plt.savefig('student_score.pdf')
+        # plt.savefig('student_score.pdf')
         plt.show()
 
     # 返回相关值
     def get_sinlevel(self):
         return self.sinlevel
+
+
+# 节点修复功能
+def fix_model(model_path, model_G0_path, matrix, way):
+    base_model = torch.load(model_path, map_location=torch.device("cpu"))
+    model_matrix = torchfile2np(model_path)[0:10739712]
+
+    if way == 1:
+        matrix = matrix * (-1) + 1
+        model_matrix = model_matrix * matrix
+
+    elif way == 2:
+        matrix1 = matrix * (-1) + 1
+        model_matrix1 = model_matrix * matrix1
+        matrix2 = matrix * (-1)
+        model_matrix2 = model_matrix * matrix2
+        model_matrix = model_matrix1 + model_matrix2
+
+    elif way == 3:
+        model_G0 = torchfile2np(model_G0_path)[0:10739712]
+        model_G0 = model_G0 * matrix
+        matrix = matrix * (-1) + 1
+        model_matrix = model_matrix * matrix
+        model_matrix = model_matrix + model_G0
+
+    base_model['state_dict']['fc.fc8.weight'] = torch.tensor(model_matrix).view([2622, 4096])
+    return base_model
+
