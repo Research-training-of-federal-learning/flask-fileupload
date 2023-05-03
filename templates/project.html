@@ -457,7 +457,7 @@
                                     <input name="m" style="width: 310px;height:30px;" value="3" hidden>
                                 </div>
                                 <div class="form-group">
-                                    <button type="reset" class="btn btn-default pull-left">重置</button>
+                                    <button type="reset" class="btn btn-default pull-left" id="check_resetBtn">重置</button>
                                     <button type="submit" class="btn btn-primary pull-right">开始检测</button>
                                 </div>
                                 <br></br>
@@ -660,7 +660,7 @@
                                     <input name="m" style="width: 310px;height:30px;" value="8" hidden>
                                 </div>
                                 <div class="form-group">
-                                    <button type="reset" class="btn btn-default pull-left">重置</button>
+                                    <button type="reset" class="btn btn-default pull-left" id="nc_resetBtn">重置</button>
                                     <button type="submit" class="btn btn-primary pull-right">开始逆向</button>
                                 </div>
                                 <br></br>
@@ -709,7 +709,7 @@
                                     <input name="m" style="width: 310px;height:30px;" value="9" hidden>
                                 </div>
                                 <div class="form-group">
-                                    <button type="reset" class="btn btn-default pull-left">重置</button>
+                                    <button type="reset" class="btn btn-default pull-left" id="mesa_resetBtn">重置</button>
                                     <button type="submit" class="btn btn-primary pull-right">开始逆向</button>
                                 </div>
                                 <br></br>
@@ -885,20 +885,60 @@ options.forEach(option => {
     });
 });
 
+<!--攻击参数-->
+var attack_epo = document.getElementById("attack_epo");
+var attack_epo_num = document.getElementById("attack_epo_num");
+attack_epo_num.innerHTML = attack_epo.value;
+<!--const originalAttackEpoValue = attack_epo.value;-->
+
+attack_epo.oninput = function() {
+  attack_epo_num.innerHTML = this.value;
+}
+
+
+var attack_lr = document.getElementById("attack_lr");
+var attack_lr_num = document.getElementById("attack_lr_num");
+attack_lr_num.innerHTML = attack_lr.value;
+<!--const originalAttackLrValue = attack_lr.value;-->
+
+attack_lr.oninput = function() {
+  attack_lr_num.innerHTML = this.value;
+}
+
+<!--var attack_resetBtn = document.getElementById("attack_resetBtn");-->
+<!--attack_resetBtn.onclick = function() {-->
+<!--  attack_epo_num.innerHTML = originalAttackEpoValue;-->
+<!--  attack_lr_num.innerHTML = originalAttackLrValue;-->
+<!--  attack_epo.value = "";-->
+<!--  attack_lr.value = "";-->
+<!--}-->
+
+<!--检测参数-->
 var check_epo = document.getElementById("check_epo");
 var check_epo_num = document.getElementById("check_epo_num");
 check_epo_num.innerHTML = check_epo.value;
+const originalCheckEpoValue = check_epo.value;
 
 check_epo.oninput = function() {
   check_epo_num.innerHTML = this.value;
 }
 
+
 var check_lr = document.getElementById("check_lr");
 var check_lr_num = document.getElementById("check_lr_num");
 check_lr_num.innerHTML = check_lr.value;
+const originalCheckLrValue = check_lr.value;
 
 check_lr.oninput = function() {
   check_lr_num.innerHTML = this.value;
+}
+
+var check_resetBtn = document.getElementById("check_resetBtn");
+check_resetBtn.onclick = function() {
+  check_epo_num.innerHTML = originalCheckEpoValue;
+  check_lr_num.innerHTML = originalCheckLrValue;
+  check_epo.value = "";
+  check_lr.value = "";
 }
 
 <!--var re_pico = document.getElementById("re_pic");-->
@@ -918,9 +958,11 @@ re_target.oninput = function() {
   re_target_num.innerHTML = this.value;
 }
 
+<!--nc参数-->
 var nc_epo = document.getElementById("nc_epo");
 var nc_epo_num = document.getElementById("nc_epo_num");
 nc_epo_num.innerHTML = nc_epo.value;
+const originalNCEpoValue = nc_epo.value;
 
 nc_epo.oninput = function() {
   nc_epo_num.innerHTML = this.value;
@@ -929,14 +971,25 @@ nc_epo.oninput = function() {
 var nc_lr = document.getElementById("nc_lr");
 var nc_lr_num = document.getElementById("nc_lr_num");
 nc_lr_num.innerHTML = nc_lr.value;
+const originalNCLrValue = nc_lr.value;
 
 nc_lr.oninput = function() {
   nc_lr_num.innerHTML = this.value;
 }
 
+var nc_resetBtn = document.getElementById("nc_resetBtn");
+nc_resetBtn.onclick = function() {
+  nc_epo_num.innerHTML = originalNCEpoValue;
+  nc_lr_num.innerHTML = originalNCLrValue;
+  nc_epo.value = "";
+  nc_lr.value = "";
+}
+
+<!--mesa参数-->
 var mesa_epo = document.getElementById("mesa_epo");
 var mesa_epo_num = document.getElementById("mesa_epo_num");
 mesa_epo_num.innerHTML = mesa_epo.value;
+const originalMesaEpoValue = mesa_epo.value;
 
 mesa_epo.oninput = function() {
   mesa_epo_num.innerHTML = this.value;
@@ -945,6 +998,7 @@ mesa_epo.oninput = function() {
 var mesa_alpha = document.getElementById("mesa_alpha");
 var mesa_alpha_num = document.getElementById("mesa_alpha_num");
 mesa_alpha_num.innerHTML = mesa_alpha.value;
+const originalMesaAlphaValue = mesa_alpha.value;
 
 mesa_alpha.oninput = function() {
   mesa_alpha_num.innerHTML = this.value;
@@ -953,9 +1007,20 @@ mesa_alpha.oninput = function() {
 var mesa_beta = document.getElementById("mesa_beta");
 var mesa_beta_num = document.getElementById("mesa_beta_num");
 mesa_beta_num.innerHTML = mesa_beta.value;
+const originalMesaBetaValue = mesa_beta.value;
 
 mesa_beta.oninput = function() {
   mesa_beta_num.innerHTML = this.value;
+}
+
+var mesa_resetBtn = document.getElementById("mesa_resetBtn");
+mesa_resetBtn.onclick = function() {
+  mesa_epo_num.innerHTML = originalMesaEpoValue;
+  mesa_alpha_num.innerHTML = originalMesaAlphaValue;
+  mesa_beta_num.innerHTML = originalMesaBetaValue;
+  mesa_epo.value = "";
+  mesa_alpha = "";
+  mesa_beta = "";
 }
 
 var re_lr = document.getElementById("re_lr");
