@@ -563,6 +563,48 @@ def project():
 
             elif (database == "PUBFIG" and model == "vgg16"):
                 training_PUBFIG.main("Attack/configs/pubfig_params.yaml", "pubfig")
+            # 攻击结束后，将Attack中的runs复制到外面的runs中，只保留最新的文件
+            source_dir = 'Attack/runs'
+            target_dir = 'attack_runs'# 目标文件夹路径
+
+            # 如果目标文件夹已经存在，删除它
+            try:
+                shutil.rmtree(target_dir)
+            except FileNotFoundError:
+                pass
+            # 复制源文件夹到目标文件夹
+            shutil.copytree(source_dir, target_dir)
+
+            target_folder = "attack_runs"
+            # 获取目标文件夹中所有子文件夹的名称和修改时间
+            subfolders = []
+            for dirpath, dirnames, filenames in os.walk(target_folder):
+                for dirname in dirnames:
+                    full_path = os.path.join(dirpath, dirname)
+                    mod_time = os.path.getmtime(full_path)
+                    subfolders.append((full_path, mod_time))
+
+            # 按照修改时间对子文件夹进行排序，保留最新的一个文件夹名称，删除其余文件夹
+            if subfolders:
+                subfolders.sort(key=lambda x: x[1], reverse=True)
+                latest_subfolder = subfolders[0][0]
+                for folder_path, _ in subfolders[1:]:
+                    shutil.rmtree(folder_path)
+
+                # 进入最新的子文件夹，获取该文件夹中所有文件的名称和修改时间
+                latest_files = []
+                for dirpath, dirnames, filenames in os.walk(latest_subfolder):
+                    for filename in filenames:
+                        full_path = os.path.join(dirpath, filename)
+                        mod_time = os.path.getmtime(full_path)
+                        latest_files.append((full_path, mod_time))
+
+                # 按照修改时间对文件进行排序，保留最新的一个文件，删除其余文件
+                if latest_files:
+                    latest_files.sort(key=lambda x: x[1], reverse=True)
+                    latest_file = latest_files[0][0]
+                    for file_path, _ in latest_files[1:]:
+                        os.remove(file_path)
 
         # flash(m)
     return render_template('project.html')
