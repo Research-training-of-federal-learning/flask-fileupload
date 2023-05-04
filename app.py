@@ -509,8 +509,11 @@ def project():
                 train_PUBFIG.reverse_engineer(param)
             with open('NeuralCleanse/BackdoorLabel/' + database + '_sorted_labels.txt', 'r') as f:
                 content = f.read().splitlines()
-                nc_sorted_labels = list(map(int, content))
-            return render_template('project.html', flask_nc_labels=nc_sorted_labels)
+                nc_sorted_labels = list(map(int, content)) # 将 content 列表中的每个元素转换为整数类型
+            with open('NeuralCleanse/BackdoorLabel/' + database + '_sorted_norms.txt', 'r') as f:
+                content = f.read().splitlines()
+                nc_sorted_norms = list(map(float, content)) # 将 content 列表中的每个元素转换为浮点数类型
+            return render_template('project.html', flask_nc_labels=nc_sorted_labels , flask_nc_norms=nc_sorted_norms)
 
         elif (m == '9'):  # MESA
             mesa_epo = int(request.form.get('mesa_epo')) # 传入三个参数 epo,alpha,beta
@@ -545,7 +548,10 @@ def project():
             with open('MESA/BackdoorLabel/' + database + '_sorted_labels.txt', 'r') as f:
                 content = f.read().splitlines()
                 mesa_sorted_labels = list(map(int, content))
-            return render_template('project.html', flask_mesa_labels=mesa_sorted_labels)
+            with open('MESA/BackdoorLabel/' + database + '_sorted_asrs.txt', 'r') as f:
+                content = f.read().splitlines()
+                mesa_sorted_asrs = list(map(float, content))
+            return render_template('project.html', flask_mesa_labels=mesa_sorted_labels, flask_mesa_asrs=mesa_sorted_asrs)
 
         elif (m == '10'):  # 后门攻击
 

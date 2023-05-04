@@ -489,6 +489,12 @@ def search(alpha,beta,target,loader,G,M,B,device,num_epochs,bs,trigger):
         for label in sorted_labels:
             f.write(str(label) + '\n')
 
+    asrs = [num for i, num in enumerate(y) if num >= threshold]
+    sorted_asrs = sorted(asrs, reverse=True)
+    with open('MESA/BackdoorLabel/MNIST_sorted_asrs.txt', 'w') as f:
+        for asr1 in sorted_asrs:
+            f.write(str(asr1) + '\n')
+
     for i in range(len(target)):
         if y[i] >= threshold:
             plt.bar(name_list[i], y[i], color='red', width=0.35)

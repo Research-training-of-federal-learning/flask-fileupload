@@ -218,6 +218,12 @@ def reverse_engineer(param):
         for label in sorted_labels:
             f.write(str(label) + '\n')
 
+    norms = [num for i, num in enumerate(norm_list) if num < threshold]
+    sorted_norms = sorted(norms)
+    with open('NeuralCleanse/BackdoorLabel/MNIST_sorted_norms.txt', 'w') as f:
+        for norm in sorted_norms:
+            f.write(str(norm) + '\n')
+
     for i in range(len(y)):
         if y[i] >= threshold:
             plt.bar(name_list[i], y[i], color='blue', width=0.35)
