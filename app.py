@@ -482,6 +482,7 @@ def project():
                 print(param)
                 train_MNIST.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
                 train_MNIST.reverse_engineer(param)
+
             elif (database == "GTSRB" and model == "6Conv+2Dense"):
                 param = {
                     "dataset": "GTSRB",
@@ -506,8 +507,10 @@ def project():
                 print(param)
                 train_PUBFIG.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
                 train_PUBFIG.reverse_engineer(param)
-            # return render_template('project.html', flask_database=database, flask_model=model, flask_pre=pre,
-            #                            flask_acc=acc, flask_model_download=addr, result1_text="")
+            with open('NeuralCleanse/BackdoorLabel/' + database + '_sorted_labels.txt', 'r') as f:
+                content = f.read().splitlines()
+                nc_sorted_labels = list(map(int, content))
+            return render_template('project.html', flask_nc_labels=nc_sorted_labels)
 
         elif (m == '9'):  # MESA
             mesa_epo = int(request.form.get('mesa_epo')) # 传入三个参数 epo,alpha,beta
@@ -539,6 +542,10 @@ def project():
                 }
                 print(param)
                 mymain_pubfig.mydataload(param, use_cuda=True, pretrained_model="MESA/PUBFIG_model_last.pt.tar")
+            with open('MESA/BackdoorLabel/' + database + '_sorted_labels.txt', 'r') as f:
+                content = f.read().splitlines()
+                mesa_sorted_labels = list(map(int, content))
+            return render_template('project.html', flask_mesa_labels=mesa_sorted_labels)
 
         elif (m == '10'):  # 后门攻击
 

@@ -143,6 +143,13 @@ def reverse_engineer(param):
     sorted_y = sorted(y)
     threshold = sorted_y[int(param["num_classes"] * 0.1)]
 
+    labels = [i for i, num in enumerate(norm_list) if num < threshold]
+    sorted_labels = sorted(labels, key=lambda i: norm_list[i])
+    # 将sorted_labels存储到txt文件中
+    with open('NeuralCleanse/BackdoorLabel/PUBFIG_sorted_labels.txt', 'w') as f:
+        for label in sorted_labels:
+            f.write(str(label) + '\n')
+
     for i in range(len(y)):
         if y[i] >= threshold:
             plt.bar(name_list[i], y[i], color='blue', width=0.35)

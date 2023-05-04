@@ -436,7 +436,14 @@ def search(alpha,beta,target,loader,G,M,B,device,num_epochs,bs,trigger):
     name_list = target_plot_list  # x轴标签
     # 计算前10%大的值
     sorted_y = sorted(y)
-    threshold = sorted_y[int(len(target) * 0.9)]
+    threshold = sorted_y[len(target) - int(len(target) * 0.1)]
+
+    labels = [i for i, num in enumerate(y) if num >= threshold]
+    sorted_labels = sorted(labels, key=lambda i: -y[i])  # 取反 从大到小排序
+    # 将sorted_labels存储到txt文件中
+    with open('MESA/BackdoorLabel/PUBFIG_sorted_labels.txt', 'w') as f:
+        for label in sorted_labels:
+            f.write(str(label) + '\n')
 
     for i in range(len(target)):
         if y[i] >= threshold:
