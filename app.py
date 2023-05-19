@@ -141,6 +141,15 @@ def download1():
     return send_from_directory(file_path, file_name, as_attachment=True)#as_attachment=True则表示文件将以附件的形式下载
 
 
+
+@app.route("/pic_view", methods=['GET', 'POST'])
+def pic_view():
+    return render_template('pic_view.html')
+
+@app.route("/view1", methods=['GET', 'POST'])
+def view1():
+    return render_template('view1.html')
+
 @app.route("/result1", methods=['GET', 'POST'])
 def result1():
     return render_template('result1.html')

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* 设置外部容器的样式 */
+    .scrolling-container {
+      white-space: nowrap;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    /* 设置每个图片及其标题的样式 */
+    .scrolling-item {
+      display: inline-block;
+      text-align: center;
+      margin-right: 20px;
+      animation: scroll 20s linear infinite;
+    }
+    /* 设置图片的尺寸 */
+    .scrolling-item img {
+      width: 200px; /* 设置图片宽度 */
+      height: 150px; /* 设置图片高度 */
+    }
+
+    /* 设置标题的样式 */
+    .scrolling-item p {
+      margin: 0;
+    }
+
+
+    /* 定义滚动动画 */
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scrolling-container">
+    <!-- 添加图片和标题元素 -->
+    <div class="scrolling-item">
+      <img src="figure/caltech101.png" alt="caltech101.png">
+      <p>caltech101</p>
+    </div>
+    <div class="scrolling-item">
+      <img src="figure/caltech256.png" alt="caltech256.png">
+      <p>caltech256</p>
+    </div>
+    <div class="scrolling-item">
+      <img src="figure/CelebA.png" alt="CelebA.png">
+      <p>CelebA</p>
+    </div>
+    <div class="scrolling-item">
+      <img src="figure/CIFAR10.png" alt="CIFAR10.png">
+      <p>CIFAR10</p>
+    </div>
+    <div class="scrolling-item">
+      <img src="figure/CIFAR100.png" alt="CIFAR100.png">
+      <p>CIFAR100</p>
+    </div>
+    <div class="scrolling-item">
+      <img src="figure/Country211.png" alt="Country211.png">
+      <p>Country211.png</p>
+    </div>
+    <div class="scrolling-item">
+      <img src="figure/EMNIST.png" alt="EMNIST.png">
+      <p>EMNIST</p>
+    </div>
+    <div class="scrolling-item">
+      <img src="figure/FashionMNIST.png" alt="FashionMNIST.png">
+      <p>FashionMNIST</p>
+    </div>
+    <div class="scrolling-item">
+      <img src="figure/fer2013.png" alt="fer2013.png">
+      <p>fer2013.png</p>
+    </div>
+    <div class="scrolling-item">
+      <img src="figure/FGVCAircraft.png" alt="FGVCAircraft.png">
+      <p>FGVCAircraft</p>
+    </div>
+    <div class="scrolling-item">
+      <img src="figure/GTSRB.png" alt="GTSRB.png">
+      <p>GTSRB</p>
+    </div>
+    <div class="scrolling-item">
+      <img src="figure/ImageNet.png" alt="ImageNet.png">
+      <p>ImageNet.png</p>
+    </div>
+    <!-- 添加更多的图片和标题元素 -->
+    <div class="scrolling-item">
+      <img src="figure/PubFig.png" alt="PubFig.png">
+      <p>PubFig.png</p>
+    </div>
+  </div>
+</body>
+</html>
