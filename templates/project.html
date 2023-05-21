@@ -214,19 +214,141 @@
                         <div class="form-group">
                             <label for="train_database" style="text-align:center">数据集</label>
                             <select class="form-control" id="train_database" name="database" placeholder="选择数据集" autofocus required>
+                                <option>自定义</option>
                                 <option>mnist</option>
                                 <option>GTSRB</option>
                                 <option>PUBFIG</option>
-                                <option>4</option>
+                                <option>Caltech101</option>
+								<option>Caltech256</option>
+								<option>CelebA</option>
+								<option>CIFAR10</option>
+								<option>CIFAR100</option>
+								<option>Country211</option>
+								<option>DTD</option>
+								<option>EMNIST</option>
+								<option>EuroSAT</option>
+								<option>FakeData</option>
+								<option>FashionMNIST</option>
+								<option>FER2013</option>
+								<option>FGVCAircraft</option>
+								<option>Flickr8k</option>
+								<option>Flickr30k</option>
+								<option>Flowers102</option>
+								<option>Food101</option>
+								<option>GTSRB</option>
+								<option>INaturalist</option>
+								<option>ImageNet</option>
+								<option>KMNIST</option>
+								<option>LFWPeople</option>
+								<option>LSUN</option>
+								<option>MNIST</option>
+								<option>Omniglot</option>
+								<option>OxfordIIITPet</option>
+								<option>Places365</option>
+								<option>PCAM</option>
+								<option>QMNIST</option>
+								<option>RenderedSST2</option>
+								<option>SEMEION</option>
+								<option>SBU</option>
+								<option>StanfordCars</option>
+								<option>STL10</option>
+								<option>SUN397</option>
+								<option>SVHN</option>
+								<option>USPS</option>
                             </select>
                         </div>
-                        <div class="form-group" style="text-align:center">
+                        <div class="form-group">
                             <label for="train_model">模型结构</label>
                             <select class="form-control" id="train_model" name="model">
+                            	<option>自定义</option>
                                 <option>simplenet</option>
                                 <option>6Conv+2Dense</option>
                                 <option>vgg16</option>
-                                <option>4</option>
+                                <option>AlexNet</option>
+                                <option>convnext_tiny</option>
+                                <option>convnext_small</option>
+                                <option>convnext_base</option>
+                                <option>convnext_large</option>
+                                <option>densenet121</option>
+                                <option>densenet161</option>
+                                <option>densenet169</option>
+                                <option>densenet201</option>
+                                <option>efficientnet_b0</option>
+                                <option>efficientnet_b1</option>
+                                <option>efficientnet_b2</option>
+                                <option>efficientnet_b3</option>
+                                <option>efficientnet_b4</option>
+                                <option>efficientnet_b5</option>
+                                <option>efficientnet_b6</option>
+                                <option>efficientnet_b7</option>
+                                <option>efficientnet_v2_s</option>
+                                <option>efficientnet_v2_m</option>
+                                <option>efficientnet_v2_l</option>
+                                <option>googlenet</option>
+                                <option>inception_v3</option>
+                                <option>maxvit_t</option>
+                                <option>mnasnet0_5</option>
+                                <option>mnasnet0_75</option>
+                                <option>mnasnet1_0</option>
+                                <option>mnasnet1_3</option>
+                                <option>mobilenet_v2</option>
+                                <option>mobilenet_v3_large</option>
+                                <option>mobilenet_v3_small</option>
+                                <option>regnet_y_400mf</option>
+                                <option>regnet_y_800mf</option>
+                                <option>regnet_y_1_6gf</option>
+                                <option>regnet_y_3_2gf</option>
+                                <option>regnet_y_8gf</option>
+                                <option>regnet_y_16gf</option>
+                                <option>regnet_y_32gf</option>
+                                <option>regnet_y_128gf</option>
+                                <option>regnet_x_400mf</option>
+                                <option>regnet_x_800mf</option>
+                                <option>regnet_x_1_6gf</option>
+                                <option>regnet_x_3_2gf</option>
+                                <option>regnet_x_8gf</option>
+                                <option>regnet_x_16gf</option>
+                                <option>regnet_x_32gf</option>
+                                <option>resnet18</option>
+                                <option>resnet34</option>
+                                <option>resnet50</option>
+                                <option>resnet101</option>
+                                <option>resnet152</option>
+                                <option>resnext50_32x4d</option>
+                                <option>resnext101_32x8d</option>
+                                <option>resnext101_64x4d</option>
+                                <option>shufflenet_v2_x0_5</option>
+                                <option>shufflenet_v2_x1_0</option>
+                                <option>shufflenet_v2_x1_5</option>
+                                <option>shufflenet_v2_x2_0</option>
+                                <option>squeezenet1_0</option>
+                                <option>squeezenet1_1</option>
+                                <option>swin_t</option>
+                                <option>swin_s</option>
+                                <option>swin_b</option>
+                                <option>swin_v2_t</option>
+                                <option>swin_v2_s</option>
+                                <option>swin_v2_b</option>
+                                <option>vgg11</option>
+                                <option>vgg11_bn</option>
+                                <option>vgg13</option>
+                                <option>vgg13_bn</option>
+                                <option>vgg16</option>
+                                <option>vgg16_bn</option>
+                                <option>vgg19</option>
+                                <option>vgg19_bn</option>
+                                <option>vit_b_16</option>
+                                <option>vit_b_32</option>
+                                <option>vit_l_16</option>
+                                <option>vit_l_32</option>
+                                <option>vit_h_14</option>
+                                <option>vit_b_16</option>
+                                <option>vit_b_32</option>
+                                <option>vit_l_16</option>
+                                <option>vit_l_32</option>
+                                <option>vit_h_14</option>
+                                <option>wide_resnet50_2</option>
+                                <option>wide_resnet101_2</option>
                              </select>
                         </div>
                         <div class="form-group">
@@ -238,6 +360,36 @@
                             <br></br>
                         </div>
                     </form>
+                    <form action="/download2" method="post" class="form-project">
+                        <div class="form-group">
+                                    <input name="database"  value="{{flask_database}}" hidden>
+                                    <input name="model"  value="{{flask_model}}" hidden>
+                                </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary pull-right">下载通用自定义脚本</button>
+                        </div>
+                        </form>
+                        <br>
+                    	<div align="center">
+                            <form id="upload-form" action="uploadajax" method="post" enctype="multipart/form-data" >
+                                　　　<input type="file" id="upload" name="upload"><input type="submit" value="上传数据集脚本" >
+                            </form>
+                        </div>
+                        <div align="center">
+                            <form id="upload-form" action="uploadajax" method="post" enctype="multipart/form-data" >
+                                　　　<input type="file" id="upload" name="upload"><input type="submit" value="上传数据集" >
+                            </form>
+                        </div>
+                        <div align="center">
+                            <form id="upload-form" action="uploadajax" method="post" enctype="multipart/form-data" >
+                                　　　<input type="file" id="upload" name="upload"><input type="submit" value="上传模型脚本" >
+                            </form>
+                        </div>
+                        <div align="center">
+                            <form id="upload-form" action="uploadajax" method="post" enctype="multipart/form-data" >
+                                　　　<input type="file" id="upload" name="upload"><input type="submit" value="上传预训练模型（可选）" >
+                            </form>
+                        </div>
                 </div>
 <!--            </div>-->
             </div>
