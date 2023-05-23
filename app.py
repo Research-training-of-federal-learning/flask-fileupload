@@ -162,6 +162,10 @@ def result2():
 def result3():
     return send_from_directory('templates', 're.png')
 
+@app.route("/result4", methods=['GET', 'POST'])
+def result4():
+    return render_template('result4.html')
+
 @app.route("/resultNCtrigger", methods=['GET', 'POST'])
 def resultNCtrigger():
     return send_from_directory('NeuralCleanse/output', 'trigger.png')

@@ -37,7 +37,7 @@
                         <li class="active">
                             <a href="#">
                                 <i class="glyphicon glyphicon-th-large"></i>
-                                首页演示demo
+                                首页
                             </a>
                         </li>
                         <li>
@@ -1004,7 +1004,56 @@
 
 
 
+                    
 
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+ <div class="row">
+            <div id="contentCluster" class="col-md-11 col-md-push-1">
+                    <h1>态势感知</h1>
+                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                    <div align="center">
+                            <form id="upload-form" action="uploadajax" method="post" enctype="multipart/form-data" >
+                                　　　<input type="file" id="upload" name="upload"><input type="submit" value="上传样本" >
+                            </form>
+                        </div>
+                    <div class="form-group">
+                        <br></br>
+                        <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
+                        <form action="/project" method="post" class="form-project">     
+                            
+<!--                             <div class="form-group">
+                                <label for="train_model">模型结构</label>
+                                    <select class="form-control" id="train_model" name="model">
+                                        <option>simplenet</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                            </div> -->
+                            <div class="form-group">
+                                <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
+                                <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
+                                <input name="m" style="width: 310px;height:30px;" value="7" hidden>
+                            </div>
+                            <div class="form-group">
+                                <button type="reset" class="btn btn-default pull-left">重置</button>
+                                <button type="submit" class="btn btn-primary pull-right">开始预测</button>
+                            </div>
+                            <br></br>
+                        </form>
+                    </div>
+
+                    <div class="form-group">
+                        <font face="黑体" size="3">预测结果：</font>
+                        <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result4" frameborder=0></iframe>
+                    </form>
 
                     </div>
                 </div>
