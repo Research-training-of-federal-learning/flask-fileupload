@@ -580,6 +580,57 @@
                     </div>
                 </div>
 
+                <div class="row">
+                <div  id="contentDistribution" class="col-md-11 col-md-push-1">
+                    <h1 >测试后门效果</h1>
+                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                    <div class="form-group">
+                        <br></br>
+                        <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
+                        <form action="/project" method="post" class="form-project">
+
+                        <div align="center">
+                            <form id="upload-form" action="uploadajax" method="post" enctype="multipart/form-data" >
+                                　　　<input type="file" id="upload" name="upload"><input type="submit" value="上传测试模型" >
+                            </form>
+                        </div>
+<!--                             <div class="form-group">
+                                <label for="train_model">模型结构</label>
+                                    <select class="form-control" id="train_model" name="model">
+                                        <option>simplenet</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                            </div> -->
+                            <div class="form-group">
+                                <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
+                                <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
+                                <input name="m" style="width: 310px;height:30px;" value="2" hidden>
+                            </div>
+                            <div class="form-group">
+                                <button type="reset" class="btn btn-default pull-left">重置</button>
+                                <button type="submit" class="btn btn-primary pull-right">开始测试</button>
+                            </div>
+                            <br></br>
+                        </form>
+                    </div>
+                    <div class="form-group">
+                        <font face="黑体" size="3">正常数据集正确率：{{flask_acc}}%|后门攻击正确率：{{flask_acc}}%</font>{{flask_model_download}}
+                        <form action="/download1" method="post" class="form-project">
+                        <div class="form-group">
+                                    <input name="database"  value="{{flask_database}}" hidden>
+                                    <input name="model"  value="{{flask_model}}" hidden>
+                                </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary pull-right">下载</button>
+                        </div>
+                        </form>
+<!--                    </div>-->
+                    </div>
+<!--            </div>-->
+            </div>
+
 
 
 <!--            上传-->
@@ -1003,6 +1054,60 @@
 
                     </div>
                 </div>
+            </div>
+
+            <div class="row">
+                <div  id="contentDistribution" class="col-md-11 col-md-push-1">
+                    <h1 >节点修复</h1>
+                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                    <div class="form-group">
+                        <br></br>
+                        <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
+                        <form action="/project" method="post" class="form-project">
+
+                            <div class="form-group">
+                                <label for="train_pretrain">请选择修复方式：</label>
+                                    <select class="form-control" id="train_pretrain" name="pretrain" placeholder="请选择" autofocus required>
+                                        <option>节点修剪</option>
+                                        <option>节点翻转</option>
+                                        <option>节点补丁</option>
+                                    </select>
+                            </div>
+<!--                             <div class="form-group">
+                                <label for="train_model">模型结构</label>
+                                    <select class="form-control" id="train_model" name="model">
+                                        <option>simplenet</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                            </div> -->
+                            <div class="form-group">
+                                <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
+                                <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
+                                <input name="m" style="width: 310px;height:30px;" value="2" hidden>
+                            </div>
+                            <div class="form-group">
+                                <button type="reset" class="btn btn-default pull-left">重置</button>
+                                <button type="submit" class="btn btn-primary pull-right">开始修复</button>
+                            </div>
+                            <br></br>
+                        </form>
+                    </div>
+                    <div class="form-group">
+                        <font face="黑体" size="3">模型权重下载：</font>{{flask_model_download}}
+                        <form action="/download1" method="post" class="form-project">
+                        <div class="form-group">
+                                    <input name="database"  value="{{flask_database}}" hidden>
+                                    <input name="model"  value="{{flask_model}}" hidden>
+                                </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary pull-right">下载</button>
+                        </div>
+                        </form>
+<!--                    </div>-->
+                    </div>
+<!--            </div>-->
             </div>
 
 <!--            安全聚类-->
