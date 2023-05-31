@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* 设置外部容器的样式 */
+    .scrolling-container {
+      white-space: nowrap;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    /* 设置每个图片及其标题的样式 */
+    .scrolling-item {
+      display: inline-block;
+      text-align: center;
+      margin-right: 20px;
+      animation: scroll 20s linear infinite;
+    }
+    /* 设置图片的尺寸 */
+    .scrolling-item img {
+      width: 400px; /* 设置图片宽度 */
+      height: 300px; /* 设置图片高度 */
+    }
+
+    /* 设置标题的样式 */
+    .scrolling-item p {
+      margin: 0;
+    }
+
+
+    /* 定义滚动动画 */
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scrolling-container">
+    <!-- 添加图片和标题元素 -->
+    <div class="scrolling-item">
+      <img src="{{ url_for('static', filename='figure/1.png') }}" alt="1.png">
+    </div>
+    <div class="scrolling-item">
+      <img src="{{ url_for('static', filename='figure/2.png') }}" alt="2.png">
+    </div>
+    <div class="scrolling-item">
+      <img src="{{ url_for('static', filename='figure/3.png') }}" alt="3.png">
+    </div>
+    <div class="scrolling-item">
+      <img src="{{ url_for('static', filename='figure/4.png') }}" alt="4.png">
+    </div>
+    <div class="scrolling-item">
+      <img src="{{ url_for('static', filename='figure/5.png') }}" alt="5.png">
+    </div>
+  </div>
+</body>
+</html>

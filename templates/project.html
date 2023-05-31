@@ -161,9 +161,9 @@
 <!--				<div class="col-sm-10" id="right"></div>-->
                 <div class="col-md-11 col-md-push-1">
                     <div class="jumbotron" id="contentDemo">
-                      <h1>你好!</h1>
-                      <p>欢迎使用联邦学习场景下的后门攻击检测平台</p>
-                      <iframe name="content_frame" marginwidth=0 marginheight=0 width=120% height=600 src="/view1" frameborder=0></iframe>
+                      <h2>联邦学习后门入侵检测平台</h2>
+                      <p></p>
+                      <iframe name="content_frame" marginwidth=0 marginheight=0 width=120% height=470 src="/pic_view1" frameborder=0></iframe>
                       <iframe name="content_frame" marginwidth=0 marginheight=0 width=120% height=600 src="/pic_view" frameborder=0></iframe>
                       
                       <p><a class="btn btn-primary btn-lg" href="#" role="button">了解更多</a></p>
@@ -763,8 +763,13 @@
 <!--                        <h1 style="text-align:center">逆向</h1>-->
 <!--                    </a>-->
 <!--                </div>-->
-<div class="row">
-<div id="contentReverse3">
+
+
+                <div  class="col-md-11 col-md-push-1">
+                    <h1>逆向</h1>
+                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                    <div class="row">
+<div id="contentReverse">
     <div class="form-group">
         <h3>互信息熵快速检测</h3>
         <hr style=" height:5px;border:none;border-top:5px ridge green;"/>
@@ -858,10 +863,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div  class="col-md-11 col-md-push-1">
-                    <h1>逆向</h1>
-                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
                     <div id="contentReverse">
                        <div class="form-group">
                             <h3>精确逆向</h3>
@@ -907,7 +908,7 @@
                             <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result3" frameborder=0></iframe>
                         </div>
                     </div>
-                    <div id="contentReverse1">
+                    <div id="contentReverse">
                        <div class="form-group">
                             <h3>静态精准逆向(Neaural Cleanse)</h3>
                             <hr style=" height:5px;border:none;border-top:5px ridge green;"/>
@@ -1048,11 +1049,20 @@
                             <br></br>
                         </form>
                     </div>
-
                     <div class="form-group">
-                        <font face="黑体" size="3">逆向结果：</font>
-                        <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result3" frameborder=0></iframe>
-                    </form>
+                        <font face="黑体" size="3">模型权重下载：</font>{{flask_model_download}}
+                        <form action="/download1" method="post" class="form-project">
+                        <div class="form-group">
+                                    <input name="database"  value="{{flask_database}}" hidden>
+                                    <input name="model"  value="{{flask_model}}" hidden>
+                                </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary pull-right">下载</button>
+                        </div>
+                        </form>
+<!--                    </div>-->
+                    </div>
+
 
 
 
@@ -1165,8 +1175,20 @@
 
                     <div class="form-group">
                         <br><br>
-                        <font face="黑体" size="3">模型不信任度：</font><br>
-                        <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result3" frameborder=0></iframe><br>
+                        <div class="form-group">
+                        <font face="黑体" size="3">模型权重下载：</font>{{flask_model_download}}
+                        <form action="/download1" method="post" class="form-project">
+                        <div class="form-group">
+                                    <input name="database"  value="{{flask_database}}" hidden>
+                                    <input name="model"  value="{{flask_model}}" hidden>
+                                </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary pull-right">下载</button>
+                        </div>
+                        </form>
+<!--                    </div>-->
+                    </div><br>
+                        <br>
                         <br><br>
                         <font face="黑体" size="3">不信任度：</font><br>
                         <img src="{{ url_for('static', filename='nodepic/Trust_degree.png') }}" alt="trust_degree.png" height="600" width="600"><br>
