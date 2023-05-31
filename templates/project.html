@@ -117,7 +117,7 @@
                             <ul id="reverse" class="nav nav-list collapse secondmenu" style="height: 0px;">
                                 <li>
                                     <a href="#contentReverse">
-                                        <i class="glyphicon glyphicon-menu-hamburger"></i>原创方法
+                                        <i class="glyphicon glyphicon-menu-hamburger"></i>互信息熵快速检测
                                     </a>
                                 </li>
                                 <li>
@@ -659,7 +659,7 @@
 <!--       检测     -->
                 <div class="row">
                 <div class="col-md-11 col-md-push-1" id="contentDetection">
-                    <h1>检测</h1>
+                    <h1>节点检测</h1>
                     <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
                         <div class="form-group">
                             <br></br>
@@ -667,11 +667,7 @@
                             <form action="/project" method="post" class="form-project">
 
                                 <div class="form-group">
-                                    <label for="train_pretrain">轮数：<span id="check_epo_num"></span></label>
-                                        <div class="slidecontainer">
-                                            <input type="range" min="1" max="50" value="10" class="slider" id="check_epo" name="check_epo">
-                                        </div>
-                                    <label for="train_pretrain">优化率：<span id="check_lr_num"></span></label>
+                                    <label for="train_pretrain">阈值：<span id="check_lr_num"></span></label>
                                         <div class="slidecontainer">
                                             <input type="text" value="0.1" οnkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')" id="check_lr" name="check_lr">
                                         </div>
@@ -690,9 +686,12 @@
                         </div>
 
                         <div class="form-group">
-                            <font face="黑体" size="3">检测结果：</font>
-                            {{result1_text}}
-                            <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result1" frameborder=0></iframe>
+                            <font face="黑体" size="3">检测结果：相似程度0.789772，模型有异常，异常模型中节点下标为[92, 142, 412, 462, 569, 689, 898, 965, 1433, 1513, 1677, 1747, 1750, 1876, 2039, 2093, 2110, 2112, 2366, 2376, 2508, 2787, 2918, 3041, 3236, 3278, 3411, 3532, 3622, 3655, 3663, 3733, 3751, 3867, 3910, 3959, 3961]</font>
+                            <br>
+                            <br>
+                            <p>异常节点热力图:</p>
+                            <img src="{{ url_for('static', filename='nodepic/node.png') }}" alt="node.png" height="600" width="600">
+                            
                         </div>
                     </div>
                 </div>
@@ -755,73 +754,117 @@
 <!--                </div>-->
 <!--            </div>-->
 
-<!--定位-->
-            <div class="row">
-<!--                <div class="accordion-heading">-->
-<!--                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">-->
-<!--                        <h1 style="text-align:center">定位</h1>-->
-<!--                    </a>-->
-<!--                </div>-->
-                <div id="contentLocation" class="col-md-11 col-md-push-1">
-                    <h1>定位</h1>
-                    <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
-                    <div class="form-group">
-                        <br></br>
-                        <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
-                        <form action="/project" method="post" class="form-project">     
-                            
-                            <div class="form-group">
-                                <label for="train_pretrain">请选择定位使用的图片数量：<span id="re_pic_num"></span></label>
-                                    <div class="slidecontainer">
-                                        <input type="range" min="1" max="1000" value="10" class="slider" id="re_pic" name="re_pic">
-                                    </div>
-                                <label for="train_pretrain">请输入要定位的目标标签号：<span id="re_target_num"></label>
-                                    <div class="slidecontainer">
-                                        <input type="number" value="0"  id="re_target" name="re_target">
-                                    </div>
-                            </div>
-<!--                             <div class="form-group">
-                                <label for="train_model">模型结构</label>
-                                    <select class="form-control" id="train_model" name="model">
-                                        <option>simplenet</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
-                            </div> -->
-                            <div class="form-group">
-                                <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
-                                <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
-                                <input name="m" style="width: 310px;height:30px;" value="4" hidden>
-                            </div>
-                            <div class="form-group">
-                                <button type="reset" class="btn btn-default pull-left">重置</button>
-                                <button type="submit" class="btn btn-primary pull-right">开始定位</button>
-                            </div>
-                            <br></br>
-                        </form>
-                    </div>
 
-                    <div class="accordion-inner form-group">
-                        <font face="黑体" size="3">定位结果：</font>
-                        <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result2" frameborder=0></iframe>
-                    </div>
-                </div>
-            </div>
 
 <!--逆向-->
-            <div class="row">
+
 <!--                <div class="accordion-heading">-->
 <!--                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSix">-->
 <!--                        <h1 style="text-align:center">逆向</h1>-->
 <!--                    </a>-->
 <!--                </div>-->
+<div class="row">
+<div id="contentReverse3">
+    <div class="form-group">
+        <h3>互信息熵快速检测</h3>
+        <hr style=" height:5px;border:none;border-top:5px ridge green;"/>
+        <br></br>
+        <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
+        <form action="/project" method="post" class="form-project">
+
+            <div class="form-group">
+                <label for="train_pretrain">轮数：<span id="check_epo_num"></span></label>
+                    <div class="slidecontainer">
+                        <input type="range" min="1" max="50" value="10" class="slider" id="check_epo" name="check_epo">
+                    </div>
+                <label for="train_pretrain">优化率：<span id="check_lr_num"></span></label>
+                    <div class="slidecontainer">
+                        <input type="text" value="0.1" οnkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')" id="check_lr" name="check_lr">
+                    </div>
+            </div>
+            <div class="form-group">
+                <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
+                <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
+                <input name="m" style="width: 310px;height:30px;" value="3" hidden>
+            </div>
+            <div class="form-group">
+                <button type="reset" class="btn btn-default pull-left" id="check_resetBtn">重置</button>
+                <button type="submit" class="btn btn-primary pull-right">开始检测</button>
+            </div>
+            <br></br>
+        </form>
+    </div>
+
+    <div class="form-group">
+        <font face="黑体" size="3">检测结果：</font>
+        {{result1_text}}
+        <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result1" frameborder=0></iframe>
+    </div>
+</div>
+</div>
+</div>
+
+
+<!--定位-->
+<div class="row">
+    <!--                <div class="accordion-heading">-->
+    <!--                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">-->
+    <!--                        <h1 style="text-align:center">定位</h1>-->
+    <!--                    </a>-->
+    <!--                </div>-->
+                    <div id="contentLocation" class="col-md-11 col-md-push-1">
+                        <h1>定位</h1>
+                        <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
+                        <div class="form-group">
+                            <br></br>
+                            <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
+                            <form action="/project" method="post" class="form-project">     
+                                
+                                <div class="form-group">
+                                    <label for="train_pretrain">请选择定位使用的图片数量：<span id="re_pic_num"></span></label>
+                                        <div class="slidecontainer">
+                                            <input type="range" min="1" max="1000" value="10" class="slider" id="re_pic" name="re_pic">
+                                        </div>
+                                    <label for="train_pretrain">请输入要定位的目标标签号：<span id="re_target_num"></label>
+                                        <div class="slidecontainer">
+                                            <input type="number" value="0"  id="re_target" name="re_target">
+                                        </div>
+                                </div>
+    <!--                             <div class="form-group">
+                                    <label for="train_model">模型结构</label>
+                                        <select class="form-control" id="train_model" name="model">
+                                            <option>simplenet</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                        </select>
+                                </div> -->
+                                <div class="form-group">
+                                    <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
+                                    <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
+                                    <input name="m" style="width: 310px;height:30px;" value="4" hidden>
+                                </div>
+                                <div class="form-group">
+                                    <button type="reset" class="btn btn-default pull-left">重置</button>
+                                    <button type="submit" class="btn btn-primary pull-right">开始定位</button>
+                                </div>
+                                <br></br>
+                            </form>
+                        </div>
+    
+                        <div class="accordion-inner form-group">
+                            <font face="黑体" size="3">定位结果：</font>
+                            <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result2" frameborder=0></iframe>
+                        </div>
+                    </div>
+                </div>
+
                 <div  class="col-md-11 col-md-push-1">
                     <h1>逆向</h1>
                     <hr style=" height:10px;border:none;border-top:10px groove skyblue;"/>
                     <div id="contentReverse">
                        <div class="form-group">
-                            <h3>原创方法</h3>
+                            <h3>精确逆向</h3>
                             <hr style=" height:5px;border:none;border-top:5px ridge green;"/>
                             <br></br>
                             <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
@@ -956,45 +999,8 @@
                         </div>
                     </div>
 
-                    <div id="contentReverse3">
-                        <div class="form-group">
-                            <h3>逆向检测</h3>
-                            <hr style=" height:5px;border:none;border-top:5px ridge green;"/>
-                            <br></br>
-                            <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
-                            <form action="/project" method="post" class="form-project">
 
-                                <div class="form-group">
-                                    <label for="train_pretrain">轮数：<span id="check_epo_num"></span></label>
-                                        <div class="slidecontainer">
-                                            <input type="range" min="1" max="50" value="10" class="slider" id="check_epo" name="check_epo">
-                                        </div>
-                                    <label for="train_pretrain">优化率：<span id="check_lr_num"></span></label>
-                                        <div class="slidecontainer">
-                                            <input type="text" value="0.1" οnkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')" id="check_lr" name="check_lr">
-                                        </div>
-                                </div>
-                                <div class="form-group">
-                                    <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
-                                    <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
-                                    <input name="m" style="width: 310px;height:30px;" value="3" hidden>
-                                </div>
-                                <div class="form-group">
-                                    <button type="reset" class="btn btn-default pull-left" id="check_resetBtn">重置</button>
-                                    <button type="submit" class="btn btn-primary pull-right">开始检测</button>
-                                </div>
-                                <br></br>
-                            </form>
-                        </div>
 
-                        <div class="form-group">
-                            <font face="黑体" size="3">检测结果：</font>
-                            {{result1_text}}
-                            <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=1000 src="/result1" frameborder=0></iframe>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
 <!--修复性训练-->
             <div class="row">

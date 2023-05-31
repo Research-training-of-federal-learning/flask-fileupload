@@ -25,7 +25,7 @@ from file import file_read
 from file import del_file
 
 from train import train  # 正确率
-from training import training  # 训练
+from training import training  # 训练三
 from fixtraining import fixtraining  # 训练
 
 from reverse.MNIST import find_lead
