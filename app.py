@@ -52,9 +52,9 @@ from NeuralCleanse import train_MNIST
 from NeuralCleanse import train_PUBFIG
 
 #新增 MESA
-from MESA import mymain
-from MESA import mymain_MNIST
-from MESA import mymain_pubfig
+#from MESA import mymain
+#from MESA import mymain_MNIST
+#from MESA import mymain_pubfig
 
 #新增后门攻击
 from Attack import training_MNIST
@@ -474,6 +474,9 @@ def project():
             G0_file_path="FLAME_models\\"+ database + "/" + model+"\\G0.pt"
             fmodle = FLAME.FLAME(n, size, models, G0_file_path)
             fmodle.update()
+            fmodle.draw_sinlevel()
+            fmodle.draw_sinlevel2()
+            fmodle.draw_sinlevel3()
             G0 = fmodle.get_G()  # 重新保存G0
             torch.save(G0, G0_file_path)
 

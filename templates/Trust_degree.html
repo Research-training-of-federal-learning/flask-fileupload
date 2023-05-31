@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>The degree of trust of the model in the aggregation</title>
+            <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+        </head>
+        <body>
+            <div id="main" style="width: 800px;height:600px;"></div>
+            <script type="text/javascript">
+                var chartDom = document.getElementById('main');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        option = {
+          title: {
+            text: 'Model trust ratio',
+            subtext: 'present',
+            left: 'center'
+          },
+          tooltip: {
+            trigger: 'item'
+          },
+          legend: {
+            orient: 'vertical',
+            left: 'left'
+          },
+          series: [
+            {
+              name: 'Access From',
+              type: 'pie',
+              radius: '50%',
+              data: [ 
+        	{ value: 1.000000, name: 'model1' },
+	{ value: 1.000000, name: 'model10' },
+	{ value: 1.000000, name: 'model11' },
+	{ value: 0.999703, name: 'model12' },
+	{ value: 1.000000, name: 'model13' },
+	{ value: 1.000000, name: 'model14' },
+	{ value: 1.000000, name: 'model15' },
+	{ value: 1.000000, name: 'model2' },
+	{ value: 1.000000, name: 'model3' },
+	{ value: 1.000000, name: 'model4' },
+	{ value: 1.000000, name: 'model5' },
+	{ value: 1.000000, name: 'model6' },
+	{ value: 0.999850, name: 'model7' },
+	{ value: 0.999150, name: 'model8' },
+	{ value: 1.000000, name: 'model9' },
+	{ value: 0.000000, name: 'wrong1' },
+	{ value: 0.000000, name: 'wrong2' },
+	{ value: 0.000000, name: 'wrong3' },
+	{ value: 0.000000, name: 'wrong4' },
+
+              ],
+              emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              }
+            }
+          ]
+        };
+        option && myChart.setOption(option);
+            </script>
+        </body>
+        </html>
