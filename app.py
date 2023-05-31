@@ -166,6 +166,10 @@ def result3():
 def result4():
     return render_template('result4.html')
 
+@app.route("/Trust_degree", methods=['GET', 'POST'])
+def Trust_degree():
+    return render_template('Trust_degree.html')
+
 @app.route("/resultNCtrigger", methods=['GET', 'POST'])
 def resultNCtrigger():
     return send_from_directory('NeuralCleanse/output', 'trigger.png')
