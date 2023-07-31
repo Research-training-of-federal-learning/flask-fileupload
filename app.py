@@ -141,6 +141,17 @@ def download1():
     # file_path = request.form.get('file_path')#不同模式
     return send_from_directory(file_path, file_name, as_attachment=True)#as_attachment=True则表示文件将以附件的形式下载
 
+@app.route("/download2", methods=['GET', 'POST'])
+def download2():
+    # database = request.form.get('database')
+    # model = request.form.get('model')
+    # file_name = "pre_model.pth"
+    # file_path = "pre_models/" + database + "/" + model
+    # file_name = request.form.get('file_name')#不同模式
+    # file_path = request.form.get('file_path')#不同模式
+    return send_from_directory("choose_dataset_model/", "自定义脚本.zip", as_attachment=True)#as_attachment=True则表示文件将以附件的形式下载
+
+
 
 @app.route("/pic_view1", methods=['GET', 'POST'])
 def pic_view1():
