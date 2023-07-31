@@ -1,3 +1,4 @@
+# coding=UTF8
 from flask import (
     Flask,
     request,
@@ -63,7 +64,7 @@ from Attack import training_PUBFIG
 
 basedir = os.path.abspath(os.path.dirname(__file__))#__file__是Python内置的变量，它包含当前模块的路径和文件名
 
-app = Flask(__name__)#__name__是一个特殊变量，用于表示当前模块的名称。如果一个模块被直接执行，那么它的__name__值为__main__；如果一个模块被导入到其他模块中使用，那么它的__name__值为该模块的名称
+app = Flask(__name__,static_folder= os.getcwd() + '/static',template_folder=os.getcwd() + '/templates')#__name__是一个特殊变量，用于表示当前模块的名称。如果一个模块被直接执行，那么它的__name__值为__main__；如果一个模块被导入到其他模块中使用，那么它的__name__值为该模块的名称
 app.config["SECRET_KEY"] = 'TPmi4aLWRbyVq8zu9v82dWYW1'
 bootstrap = Bootstrap(app)
 
