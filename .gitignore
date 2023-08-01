@@ -1,6 +1,8 @@
 log.txt
 FLAME_models/G0.pt
 .data/MNIST
+.data/gtsrb
+.data/PUBFIG
 train/runs
 reverse/PUBFIG/lenet_mnist_model.pth
 reverse/PUBFIG/safe_mnist_model.pth

@@ -27,6 +27,9 @@ from file import del_file
 
 from train import train  # 正确率
 from training import training  # 训练三
+from training_GTSRB import training_GTSRB
+#from training_PUBFIG import training_PUBFIG
+from training_freestyle import training_freestyle
 from fixtraining import fixtraining  # 训练
 
 from reverse.MNIST import find_lead
@@ -58,9 +61,14 @@ from NeuralCleanse import train_PUBFIG
 #from MESA import mymain_pubfig
 
 #新增后门攻击
-from Attack import training_MNIST
-from Attack import training_GTSRB
-from Attack import training_PUBFIG
+from Attack import attack_training_MNIST
+from Attack import attack_training_GTSRB
+from Attack import attack_training_PUBFIG
+
+from choose_dataset_model import choose_datasets
+from choose_dataset_model import choose_models
+from choose_dataset_model import freestyle_dataset
+from choose_dataset_model import freestyle_model
 
 basedir = os.path.abspath(os.path.dirname(__file__))#__file__是Python内置的变量，它包含当前模块的路径和文件名
 
@@ -232,6 +240,14 @@ def project():
 
 
             else:
+                if(os.path.exists("pre_models/" + database)):
+                    pass
+                else:
+                    os.mkdir("pre_models/" + database)
+                if(os.path.exists("pre_models/" + database + "/" + model)):
+                    pass
+                else:
+                    os.mkdir("pre_models/" + database + "/" + model)
                 pre = "未检测到历史训练数据,"
                 return render_template('project.html', flask_database=database, flask_model=model, flask_pre=pre,
                                        result1_text="")
@@ -240,7 +256,20 @@ def project():
                 # acc = train.main("train/configs/mnist_params.yaml","mnist")
                 acc, model_name = training.main("train/configs/mnist_params.yaml", "mnist")
             elif (database == "GTSRB" and model == "6Conv+2Dense"):
-                acc, model_name = training.main("train/configs/mnist_params.yaml", "GTSRB")
+                acc, model_name = training.main("training/configs/gtsrb_params.yaml", "GTSRB")
+            elif (database == "PUBFIG" and model == "vgg16"):
+                acc, model_name = training.main("training/configs/pubfig_params.yaml", "PUBFIG")
+            else:
+                if(database == "自定义"):
+                    train_dataset, test_dataset=freestyle_dataset.freestyledataset()
+                else:
+                    train_dataset, test_dataset=choose_datasets.choosedatasets(database,".data")
+                if(model == "自定义"):
+                    model=freestyle_model.freestylemodel()
+                else:
+                    model=choose_models(model)
+                acc, model_name = training_freestyle.main("training/configs/pubfig_params.yaml", database,train_dataset, test_dataset,model)
+
 
             shutil.move(model_name, "pre_models/" + database + "/" + model)
             if (file_exists.file_exists("pre_models/" + database + "/" + model + "/pre_model.pth")):
