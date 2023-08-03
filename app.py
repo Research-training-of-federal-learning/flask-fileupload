@@ -620,13 +620,13 @@ def project():
         elif (m == '10'):  # 后门攻击
 
             if (database == "mnist" and model == "simplenet"):#simplenet:backdoor101自带的mnist模型 绑定mnist
-                training_MNIST.main("Attack/configs/mnist_params.yaml", "mnist")
+                attack_training_MNIST.main("Attack/configs/mnist_params.yaml", "mnist")
 
             elif (database == "GTSRB" and model == "6Conv+2Dense"):
-                training_GTSRB.main("Attack/configs/gtsrb_params.yaml", "gtsrb")
+                attack_training_GTSRB.main("Attack/configs/gtsrb_params.yaml", "gtsrb")
 
             elif (database == "PUBFIG" and model == "vgg16"):
-                training_PUBFIG.main("Attack/configs/pubfig_params.yaml", "pubfig")
+                attack_training_PUBFIG.main("Attack/configs/pubfig_params.yaml", "pubfig")
             # 攻击结束后，将Attack中的runs复制到外面的runs中，只保留最新的文件
             source_dir = 'Attack/runs'
             target_dir = 'attack_runs'# 目标文件夹路径

@@ -36,7 +36,7 @@ class Params:
     scheduler_milestones: List[int] = None
     freeze: bool = False
     # data
-    data_path: str = '../data/'
+    data_path: str = '.data/'
     batch_size: int = 64
     test_batch_size: int = 100
     transform_train: bool = True
