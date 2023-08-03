@@ -236,7 +236,7 @@ def project():
                 acc = file_read.file_read("pre_models/" + database + "/" + model + "/acc.txt")
                 addr = ""
                 return render_template('project.html', flask_database=database, flask_model=model, flask_pre=pre,
-                                       flask_acc=acc, flask_model_download=addr, result1_text="")#这些参数将在模板中被使用，用于动态地生成 HTML 页面
+                                    flask_acc=acc, flask_model_download=addr, result1_text="")#这些参数将在模板中被使用，用于动态地生成 HTML 页面
 
 
             else:
@@ -250,7 +250,7 @@ def project():
                     os.mkdir("pre_models/" + database + "/" + model)
                 pre = "未检测到历史训练数据,"
                 return render_template('project.html', flask_database=database, flask_model=model, flask_pre=pre,
-                                       result1_text="")
+                                    result1_text="")
         elif (m == '2'):  # 进行正常训练
             if (database == "mnist" and model == "simplenet"):
                 # acc = train.main("train/configs/mnist_params.yaml","mnist")
@@ -277,12 +277,12 @@ def project():
             # shutil.rmtree("training/saved_models")
             # os.mkdir("training/saved_models")
             os.rename("pre_models/" + database + "/" + model + "/model_last.pt.tar",
-                      "pre_models/" + database + "/" + model + "/pre_model.pth")
+                    "pre_models/" + database + "/" + model + "/pre_model.pth")
             f = open("pre_models/" + database + "/" + model + "/acc.txt", "w")
             f.write(acc)
             f.close()
             return render_template('project.html', flask_database=database, flask_model=model, flask_acc=acc,
-                                   result1_text="")
+                                result1_text="")
         elif (m == '3'):  # 进行逆向检测（输出可能性表单）（疑似嫌犯）（回1）
             # 接收两个参数：轮数，优化率,文件位置
             if (database == "mnist" and model == "simplenet"):
@@ -332,7 +332,7 @@ def project():
                                 int(statistics_result_t5[i][j])) + "%|"
 
                 return render_template('project.html', flask_database=database, flask_model=model,
-                                       result1_text=result1_text)
+                                    result1_text=result1_text)
             elif (database == "PUBFIG" and model == "vgg16"):
                 check_epo = int(request.form.get('check_epo'))
                 # check_epo=10
@@ -356,7 +356,7 @@ def project():
                                 int(statistics_result_t5[i][j])) + "%|"
 
                 return render_template('project.html', flask_database=database, flask_model=model,
-                                       result1_text=result1_text)
+                                    result1_text=result1_text)
 
 
 
@@ -501,12 +501,12 @@ def project():
             # shutil.rmtree("training/saved_models")
             # os.mkdir("training/saved_models")
                 os.rename("fix_models/" + database + "/" + model + "/model_last.pt.tar",
-                      "fix_models/" + database + "/" + model + "/fix_model.pth")
+                    "fix_models/" + database + "/" + model + "/fix_model.pth")
                 f = open("fix_models/" + database + "/" + model + "/acc.txt", "w")
                 f.write(acc)
                 f.close()
                 return render_template('project.html', flask_database=database, flask_model=model, flask_acc=acc,
-                                   result1_text="")
+                                result1_text="")
             pass
 
         elif (m == '7'):  # 安全聚类
@@ -669,7 +669,8 @@ def project():
                     latest_file = latest_files[0][0]
                     for file_path, _ in latest_files[1:]:
                         os.remove(file_path)
-
+        elif (m == '12'):  # 节点检测
+            
         # flash(m)
     return render_template('project.html')
 

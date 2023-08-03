@@ -6,3 +6,5 @@
 
 tensorboard --logdir=attack_runs/
 tensorboard --logdir=D:/AAAAA_code/Backdoor/github/attack_runs/
+
+向后端发送一个m的值。主要需要调整的地方有三个：1.project.html里发送的m的值；2.project.html按钮的js代码；3.app.py里创建一个m的if，测试能激活
