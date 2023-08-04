@@ -65,6 +65,11 @@ from Attack import attack_training_MNIST
 from Attack import attack_training_GTSRB
 from Attack import attack_training_PUBFIG
 
+#后门攻击效果测试
+from Attack_test import attack_test_MNIST
+from Attack_test import attack_test_GTSRB
+from Attack_test import attack_test_PUBFIG
+
 from choose_dataset_model import choose_datasets
 from choose_dataset_model import choose_models
 from choose_dataset_model import freestyle_dataset
@@ -670,6 +675,19 @@ def project():
                     for file_path, _ in latest_files[1:]:
                         os.remove(file_path)
         elif (m == '12'):  # 节点检测
+            #print(1)
+            pass
+        elif (m == '13'):  # 后门攻击效果
+
+            if (database == "mnist" and model == "simplenet"):#simplenet:backdoor101自带的mnist模型 绑定mnist
+                acc,acc_b = attack_test_MNIST.main("Attack_test/configs/mnist_params.yaml", "mnist")
+
+            elif (database == "GTSRB" and model == "6Conv+2Dense"):
+                acc,acc_b = attack_test_GTSRB.main("Attack_test/configs/gtsrb_params.yaml", "gtsrb")
+
+            elif (database == "PUBFIG" and model == "vgg16"):
+                acc,acc_b = attack_test_PUBFIG.main("Attack_test/configs/pubfig_params.yaml", "pubfig")
+            return render_template('project.html', flask_database=database, flask_model=model, backdoor_acc=acc, backdoor_acc_b=acc_b)
             
         # flash(m)
     return render_template('project.html')
