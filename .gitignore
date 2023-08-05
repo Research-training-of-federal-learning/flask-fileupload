@@ -6,3 +6,4 @@ FLAME_models/G0.pt
 train/runs
 reverse/PUBFIG/lenet_mnist_model.pth
 reverse/PUBFIG/safe_mnist_model.pth
+static_detection/PUBFIG/PUBFIG.pt

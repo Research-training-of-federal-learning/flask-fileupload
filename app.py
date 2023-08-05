@@ -75,6 +75,8 @@ from choose_dataset_model import choose_models
 from choose_dataset_model import freestyle_dataset
 from choose_dataset_model import freestyle_model
 
+from static_detection.PUBFIG import PUBFIG_static_detection
+
 basedir = os.path.abspath(os.path.dirname(__file__))#__file__是Python内置的变量，它包含当前模块的路径和文件名
 
 app = Flask(__name__,static_folder= os.getcwd() + '/static',template_folder=os.getcwd() + '/templates')#__name__是一个特殊变量，用于表示当前模块的名称。如果一个模块被直接执行，那么它的__name__值为__main__；如果一个模块被导入到其他模块中使用，那么它的__name__值为该模块的名称
@@ -194,6 +196,10 @@ def result3():
 @app.route("/result4", methods=['GET', 'POST'])
 def result4():
     return render_template('result4.html')
+
+@app.route("/static_result", methods=['GET', 'POST'])
+def static_result():
+    return render_template('static_result.html')
 
 @app.route("/Trust_degree", methods=['GET', 'POST'])
 def Trust_degree():
@@ -688,7 +694,31 @@ def project():
             elif (database == "PUBFIG" and model == "vgg16"):
                 acc,acc_b = attack_test_PUBFIG.main("Attack_test/configs/pubfig_params.yaml", "pubfig")
             return render_template('project.html', flask_database=database, flask_model=model, backdoor_acc=acc, backdoor_acc_b=acc_b)
-            
+        
+        elif (m == '14'):  # 态势感知
+            #激活值检测
+
+            #静态检测
+            static_result=PUBFIG_static_detection.find("static_detection/PUBFIG/PUBFIG.pt",True)
+            # print(result[0])
+            # print(static_result[1])
+            if(static_result[1]>=100 or static_result[1]==0):
+                backdoorname="Trigger Square"
+                with open("templates/static_result.html", 'w',encoding ='utf-8') as file:
+                    file.write("""<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+静态检测结果：<br>
+发现后门，推测类型为"""+ backdoorname +"""<br>
+<br>
+后门展示如下：<br>
+<img src="{{ url_for('static', filename='backdoor/pic.jpg') }}" alt="pic.png" width="100" height="100"><br>
+"""+backdoorname+"""<br>
+<br>
+</body>
+</html>""")
         # flash(m)
     return render_template('project.html')
 
