@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import torch
+import os
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -209,14 +210,14 @@ class FLAME:
     def median(self):
         self.S = 0
         for i in range(self.L):
-            self.S += self.e[self.b[i]]
+            self.S += self.e[i]
         self.S = self.S / self.L
 
     # 裁剪
     def clipping(self):
         self.newW = []
         for i in range(self.L):
-            k = min(1, self.S / self.e[self.b[i]])
+            k = min(1, self.S / self.e[i])
             self.newW.append(self.G0 + (self.W[self.b[i]] - self.G0) * k)
             self.sinlevel[self.b[i]] = k
 
@@ -297,7 +298,6 @@ class FLAME:
             name = self.database[i][k + 1:]
             filedata += drawdata % (self.sinlevel[i], name)
         filedata += drawfile2
-        print(1111)
         f = open("templates\\Trust_degree.html", "w")
         f.write(filedata)
         f.close()
@@ -319,6 +319,7 @@ class FLAME:
         plt.xlabel("models")
         plt.ylabel("Model trust ratio")
         plt.savefig('templates/Trust_degree.png')
+        os.replace('templates/Trust_degree.png','static/nodepic/Trust_degree.png')
         plt.close()
 
     def draw_level3(self):
@@ -370,8 +371,9 @@ class FLAME:
         ax.set_xlim(left=0, right=number_of_point)  # x 轴显示范围
         ax.set_ylim(bottom=0, top=len(labels))  # y 轴显示范围
         plt.tick_params(labelsize=13)  # 刻度字体大小
-        # plt.savefig('student_score.pdf')
-        plt.show()
+        plt.savefig('templates/degree_way.png')
+        os.replace('templates/degree_way.png', 'static/nodepic/degree_way.png')
+        #plt.show()
 
     def draw_level4(self):
         y_data = []

@@ -529,14 +529,17 @@ def project():
             models = FLAME.data_needed(file_path)
             for i in range(len(models)):
                 models[i] = file_path+'\\' + models[i]
-            n = len(models)  # 参与训练的客户端数量
-            size = 10742334  # 模型的参数个数（pubfig就是145002878，可以不用改）
+            n = len(models)  #
+            if model=="vgg16":
+                size = 10742334  # 模型的参数个数（pubfig就是145002878，可以不用改）
+            elif model=="6Conv+2Dense":
+                size=22059
             G0_file_path="FLAME_models\\"+ database + "/" + model+"\\G0.pt"
             fmodle = FLAME.FLAME(n, size, models, G0_file_path)
             fmodle.update()
             fmodle.draw_sinlevel()
             fmodle.draw_sinlevel2()
-            fmodle.draw_sinlevel3()
+            fmodle.draw_level3()
             G0 = fmodle.get_G()  # 重新保存G0
             torch.save(G0, G0_file_path)
 
