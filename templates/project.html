@@ -1120,7 +1120,7 @@
                             <div class="form-group">
                                 <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
                                 <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
-                                <input name="m" style="width: 310px;height:30px;" value="2" hidden>
+                                <input name="m" style="width: 310px;height:30px;" value="12" hidden>
                             </div>
                             <div class="form-group">
                                 <button type="reset" class="btn btn-default pull-left">重置</button>
@@ -1142,6 +1142,10 @@
                         </form>
 <!--                    </div>-->
                     </div>
+					<div class="form-group">
+						<br></br>
+						<font face="黑体" size="3">逆转后新模型准确率：</font>
+					</div>
 <!--            </div>-->
             </div>
 
@@ -1211,13 +1215,13 @@
                         <br>
                         <br><br>
                         <font face="黑体" size="3">不信任度：</font><br>
-                        <img src="{{ url_for('static', filename='nodepic/Trust_degree.png') }}" alt="trust_degree.png" height="600" width="600"><br>
+                        <img src="{{ url_for('static', filename='nodepic/Trust_degree.png') }}" alt="/trust_degree.png" height="600" width="600"><br>
                         <br><br>
                         <font face="黑体" size="3">模型聚合占比：</font><br>
                         <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=600 src="/Trust_degree" frameborder=0></iframe><br>
                         <br><br>
                         <font face="黑体" size="3">模型节点分布：</font><br>
-                        <img src="{{ url_for('static', filename='nodepic/degree_way.png') }}" alt="degree_way.png" height="600" width="600"><br>
+                        <img src="{{ url_for('static', filename='nodepic/degree_way.png') }}" alt="/degree_way.png" height="600" width="600"><br>
                     </form>
 
 

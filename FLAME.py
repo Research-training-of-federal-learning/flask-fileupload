@@ -433,7 +433,7 @@ class FLAME:
 
 
 # 节点修复功能
-def fix_model(model_path, model_G0_path, matrix, way):
+def fix_model_vgg16(model_path, model_G0_path, matrix, way):
     base_model = torch.load(model_path, map_location=torch.device("cpu"))
     model_matrix = torchfile2np(model_path)[0:10739712]
 
@@ -456,5 +456,30 @@ def fix_model(model_path, model_G0_path, matrix, way):
         model_matrix = model_matrix + model_G0
 
     base_model['state_dict']['fc.fc8.weight'] = torch.tensor(model_matrix).view([2622, 4096])
+    return base_model
+
+def fix_model_62(model_path, model_G0_path, matrix, way):
+    base_model = torch.load(model_path, map_location=torch.device("cpu"))
+    model_matrix = torchfile2np(model_path)[0:22016]
+
+    if way == 1:
+        matrix = matrix * (-1) + 1
+        model_matrix = model_matrix * matrix
+
+    elif way == 2:
+        matrix1 = matrix * (-1) + 1
+        model_matrix1 = model_matrix * matrix1
+        matrix2 = matrix * (-1)
+        model_matrix2 = model_matrix * matrix2
+        model_matrix = model_matrix1 + model_matrix2
+
+    elif way == 3:
+        model_G0 = torchfile2np(model_G0_path)[0:22016]
+        model_G0 = model_G0 * matrix
+        matrix = matrix * (-1) + 1
+        model_matrix = model_matrix * matrix
+        model_matrix = model_matrix + model_G0
+
+    base_model['state_dict']['fc2.weight'] = torch.tensor(model_matrix).view([43, 512])
     return base_model
 

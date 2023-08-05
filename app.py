@@ -684,7 +684,6 @@ def project():
                     for file_path, _ in latest_files[1:]:
                         os.remove(file_path)
         elif (m == '12'):  # 节点检测
-            #print(1)
             pass
         elif (m == '13'):  # 后门攻击效果
 
@@ -722,6 +721,22 @@ def project():
 <br>
 </body>
 </html>""")
+        elif (m=='15'):  # 节点修复
+            database = request.form.get('database')
+            model = request.form.get('model')
+            type = request.form.get('pretrain')
+            model_G0_path = "FLAME_models\\" + database + "/" + model + "\\G0.pt"
+            if type == "节点修剪":
+                way=1
+            elif type == "节点翻转":
+                way=2
+            elif type == "节点补丁":
+                way=3
+            if (database == "GTSRB" and model == "6Conv+2Dense"):
+                new_model = FLAME.fix_model_62(model_path, model_G0_path, matrix, way)
+            elif (database == "PUBFIG" and model == "vgg16"):
+                new_model = FLAME.fix_model_vgg16(model_path, model_G0_path, matrix, way)
+
         # flash(m)
     return render_template('project.html')
 
