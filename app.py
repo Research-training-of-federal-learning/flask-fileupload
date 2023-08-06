@@ -11,6 +11,7 @@ from flask import (
     session,
     send_file
 )
+import numpy as np
 import sqlite3
 from function import hash_code
 from werkzeug.utils import secure_filename
@@ -85,6 +86,7 @@ from torch.utils.data import DataLoader
 from LLX.ff1 import main as LLXmain
 from LLX.ff2train import main as KDEmain
 
+global changepointlist
 basedir = os.path.abspath(os.path.dirname(__file__))#__file__是Python内置的变量，它包含当前模块的路径和文件名
 
 app = Flask(__name__,static_folder= os.getcwd() + '/static',template_folder=os.getcwd() + '/templates')#__name__是一个特殊变量，用于表示当前模块的名称。如果一个模块被直接执行，那么它的__name__值为__main__；如果一个模块被导入到其他模块中使用，那么它的__name__值为该模块的名称
@@ -700,6 +702,7 @@ def project():
                 model2 = load_model(poisonmodel).eval()
                 dataset = findmap(dataset_path)
                 data = DataLoader(dataset, batch_size=1, shuffle=True)
+                global changepointlist
                 pl1,pl2,changepointlist,simirate = get_similarty(model1,model2,data)
                 savepath = "./static/nodepic/node.png"
                 save(pl1,pl2,savepath)
@@ -757,22 +760,19 @@ def project():
 </html>""")
             return render_template('project',LLX = LLX,KDE = KDE,isLLXback = isLLXback,isKDEback = isKDEback)
         elif (m=='15'):  # 节点修复
-            database = request.form.get('database')
-            model = request.form.get('model')
             type = request.form.get('pretrain')
             poisonmodel = "./pre_models/PUBFIG/vgg16/test.pth"
-            print(changepointlist)
-            model_G0_path = "FLAME_models\\" + database + "/" + model + "\\G0.pt"
+            model_G0_path = "FLAME_models/PUBFIG/vgg16/G0.pt"
             if type == "节点修剪":
                 way=1
             elif type == "节点翻转":
                 way=2
             elif type == "节点补丁":
                 way=3
-            if (database == "GTSRB" and model == "6Conv+2Dense"):
-                new_model = FLAME.fix_model_62(poisonmodel, model_G0_path, changepointlist, way)
-            elif (database == "PUBFIG" and model == "vgg16"):
-                new_model = FLAME.fix_model_vgg16(poisonmodel, model_G0_path, changepointlist, way)
+            pointlist = np.zeros(10739712)
+            for i in changepointlist:
+                pointlist[i] = 1
+            new_model = FLAME.fix_model_vgg16(poisonmodel, model_G0_path, pointlist, way)
             torch.save(new_model, poisonmodel)
 
         # flash(m)

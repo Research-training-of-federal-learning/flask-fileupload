@@ -706,7 +706,7 @@
                             <br>
                             <br>
                             <p>异常节点热力图:</p>
-                            <img src="{{ url_for('static', filename=savepath) }}" alt="node.png" height="600" width="600">
+                            <img src="{{ url_for('static', filename='nodepic/node.png') }}" alt="node.png" height="600" width="600">
                             
                         </div>
                     </div>
@@ -1120,9 +1120,9 @@
                                     </select>
                             </div> -->
                             <div class="form-group">
-                                <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
-                                <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
-                                <input name="m" style="width: 310px;height:30px;" value="12" hidden>
+                                <input name="database" value="{{flask_database}}" hidden>
+                                <input name="model" value="{{flask_model}}" hidden>
+                                <input name="m" value="15" hidden>
                             </div>
                             <div class="form-group">
                                 <button type="reset" class="btn btn-default pull-left">重置</button>
@@ -1144,10 +1144,6 @@
                         </form>
 <!--                    </div>-->
                     </div>
-					<div class="form-group">
-						<br></br>
-						<font face="黑体" size="3">逆转后新模型准确率：</font>
-					</div>
 <!--            </div>-->
             </div>
 
