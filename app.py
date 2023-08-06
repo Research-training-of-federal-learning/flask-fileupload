@@ -760,19 +760,28 @@ def project():
 </html>""")
             return render_template('project',LLX = LLX,KDE = KDE,isLLXback = isLLXback,isKDEback = isKDEback)
         elif (m=='15'):  # 节点修复
+            database = request.form.get('database')
+            model = request.form.get('model')
             type = request.form.get('pretrain')
-            poisonmodel = "./pre_models/PUBFIG/vgg16/test.pth"
-            model_G0_path = "FLAME_models/PUBFIG/vgg16/G0.pt"
+
+            poisonmodel = "./pre_models/" + database + "/" + model+"/test.pth"
+            model_G0_path = "FLAME_models/" + database + "/" + model+'/G0.pt'
             if type == "节点修剪":
                 way=1
             elif type == "节点翻转":
                 way=2
             elif type == "节点补丁":
                 way=3
-            pointlist = np.zeros(10739712)
-            for i in changepointlist:
-                pointlist[i] = 1
-            new_model = FLAME.fix_model_vgg16(poisonmodel, model_G0_path, pointlist, way)
+            if (database == "GTSRB" and model == "6Conv+2Dense"):
+                pointlist = np.zeros(22016)
+                for i in changepointlist:
+                    pointlist[i] = 1
+                new_model = FLAME.fix_model_62(poisonmodel, model_G0_path, pointlist, way)
+            elif (database == "PUBFIG" and model == "vgg16"):
+                pointlist = np.zeros(10739712)
+                for i in changepointlist:
+                    pointlist[i] = 1
+                new_model = FLAME.fix_model_vgg16(poisonmodel, model_G0_path, pointlist, way)
             torch.save(new_model, poisonmodel)
 
         # flash(m)
