@@ -77,6 +77,14 @@ from choose_dataset_model import freestyle_model
 
 from static_detection.PUBFIG import PUBFIG_static_detection
 
+#节点检测
+from node_detect.Task2 import load_model,get_similarty,findmap,save
+from torch.utils.data import DataLoader
+
+#静态检测
+from LLX.ff1 import main as LLXmain
+from LLX.ff2train import main as KDEmain
+
 basedir = os.path.abspath(os.path.dirname(__file__))#__file__是Python内置的变量，它包含当前模块的路径和文件名
 
 app = Flask(__name__,static_folder= os.getcwd() + '/static',template_folder=os.getcwd() + '/templates')#__name__是一个特殊变量，用于表示当前模块的名称。如果一个模块被直接执行，那么它的__name__值为__main__；如果一个模块被导入到其他模块中使用，那么它的__name__值为该模块的名称
@@ -683,7 +691,23 @@ def project():
                     latest_file = latest_files[0][0]
                     for file_path, _ in latest_files[1:]:
                         os.remove(file_path)
-        elif (m == '12'):  # 节点检测
+        elif (m == '12'):  # 节点检测 只能用PUBFIG和vgg16
+            if (database == "PUBFIG" and model == "vgg16"):
+                healthymodel = "./pre_models/MNIST/simplenet/pre_model.pth"
+                poisonmodel = "./pre_models/MNIST/simplenet/test.pth"#上传的未知模型一律叫test.pth
+                dataset_path = "image/PUBFIG/pubfig83"
+                model1 = load_model(healthymodel).eval()
+                model2 = load_model(poisonmodel).eval()
+                dataset = findmap(dataset_path)
+                data = DataLoader(dataset, batch_size=1, shuffle=True)
+                pl1,pl2,changepointlist,simirate = get_similarty(model1,model2,data)
+                savepath = "./static/nodepic/node.png"
+                save(pl1,pl2,savepath)
+                #pl2为未知模型中的有问题的特征值位置下标
+                return render_template('project.html',flasknode = pl2,flaskpath = savepath,simrate = simirate)
+            # elif (database == "GTSRB" and model == "6Conv+2Dense"):#GTSRB数据集没找到
+            #     healthymodel = "./pre_models/GTSRB/6Conv+2Dense/pre_model.pth"
+            #     poisonmodel = "./pre_models/GTSRB/6Conv+2Dense/test.pth"
             pass
         elif (m == '13'):  # 后门攻击效果
 
@@ -699,7 +723,17 @@ def project():
         
         elif (m == '14'):  # 态势感知
             #激活值检测
-
+            if (database == "GTSRB" and model == "6Conv+2Dense"):
+                LLX = LLXmain()#检测的是对应文件夹里面的test.pth
+                KDE = KDEmain()
+                if(LLX<45.0766785):
+                    isLLXback = "后门"
+                else:
+                    isLLXback = "正常"
+                if(KDE > 0.0334302):
+                    isKDEback = "正常"
+                else:
+                    isKDEback = "后门"
             #静态检测
             static_result=PUBFIG_static_detection.find("static_detection/PUBFIG/PUBFIG.pt",True)
             # print(result[0])
@@ -721,6 +755,7 @@ def project():
 <br>
 </body>
 </html>""")
+            return render_template('project',LLX = LLX,KDE = KDE,isLLXback = isLLXback,isKDEback = isKDEback)
         elif (m=='15'):  # 节点修复
             database = request.form.get('database')
             model = request.form.get('model')
@@ -780,6 +815,8 @@ def login():
 @app.route('/uploadajax', methods=['POST'])
 def upldfile():
     if request.method == 'POST':
+        model = request.get('model')
+        database = request.get('database')
         try:
             uploadfiles = request.files['upload']
         except KeyError:
@@ -789,7 +826,8 @@ def upldfile():
             if uploadfiles and allowed_file(uploadfiles.filename):
                 filename = secure_filename(uploadfiles.filename)
                 app.logger.info('FileName: ' + filename)
-                updir = os.path.join(basedir, 'upload/')
+                # "./pre_models/" + database + "/" + model"
+                updir = os.path.join(basedir, "pre_models/" + database + "/" + model)
                 uploadfiles.save(os.path.join(updir, filename))
                 file_size = os.path.getsize(os.path.join(updir, filename))
                 return jsonify(name=filename, size=file_size)
