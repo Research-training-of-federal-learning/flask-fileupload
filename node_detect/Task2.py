@@ -3,7 +3,7 @@ from torchvision import datasets, transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader,DataLoader,Subset
 import torch
-from vggface import VGGFace
+from node_detect.vggface import VGGFace
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -99,7 +99,7 @@ def get_similarty(model1,model2,data,similarweight = 0.8):#认为相似度低于
         print("有问题")
     else:
         print("没问题")
-    return pointlist1,pointlist2,changepointlist#pl2为未知模型中的有问题的特征值位置下标
+    return pointlist1,pointlist2,changepointlist,similarrate#pl2为未知模型中的有问题的特征值位置下标
 
 def save(pl1,pl2,path):
     x = np.random.rand(4096).reshape(64,64)
