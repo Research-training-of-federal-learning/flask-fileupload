@@ -136,12 +136,12 @@
                                 </li>
                                 <li>
                                     <a href="#contentReverse2">
-                                        <i class="glyphicon glyphicon-menu-hamburger"></i>动态后门逆向
+                                        <i class="glyphicon glyphicon-menu-hamburger"></i>大范围后门逆向
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#contentReverse3">
-                                        <i class="glyphicon glyphicon-menu-hamburger"></i>逆向检测
+                                        <i class="glyphicon glyphicon-menu-hamburger"></i>动态后门逆向
                                     </a>
                                 </li>
                             </ul>
@@ -973,7 +973,7 @@
                     <!---->
                     <div id="contentReverse2">
                        <div class="form-group">
-                            <h3>动态后门防御(MESA)</h3>
+                            <h3>大范围后门防御(MESA)</h3>
                             <hr style=" height:5px;border:none;border-top:5px ridge green;"/>
                             <br></br>
                             <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
@@ -1017,6 +1017,51 @@
                         <div class="form-group">
                             <font face="黑体" size="3">各标签ASR柱状图：</font>
                             <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=500 src="/resultMESAASR" frameborder=0></iframe>
+                        </div>
+                    </div>
+
+                    <div id="contentReverse2">
+                       <div class="form-group">
+                            <h3>动态后门防御(BTIO)</h3>
+                            <hr style=" height:5px;border:none;border-top:5px ridge green;"/>
+                            <br></br>
+                            <font face="黑体" size="3">配置的数据集：{{flask_database}}|模型结构：{{flask_model}}</font>
+                            <form action="/project" method="post" class="form-project">
+                                <div class="form-group">
+                                    <label for="train_pretrain">请选择要训练的轮数：<span id="mesa_epo_num"></span></label>
+                                        <div class="slidecontainer">
+                                            <input type="range" min="1" max="50" value="10" class="slider" id="mesa_epo" name="mesa_epo">
+                                        </div>
+                                    <label for="train_pretrain">请输入要设定的超参数alpha：<span id="mesa_alpha_num"></span></label>
+                                        <div class="slidecontainer">
+                                            <input type="text" value="0.1" οnkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')" id="mesa_alpha" name="mesa_alpha">
+                                        </div>
+                                    <label for="train_pretrain">请输入要设定的超参数beta：<span id="mesa_beta_num"></span></label>
+                                        <div class="slidecontainer">
+                                            <input type="text" value="0.8" οnkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')" id="mesa_beta" name="mesa_beta">
+                                        </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <input name="database" style="width: 310px;height:30px;" value="{{flask_database}}" hidden>
+                                    <input name="model" style="width: 310px;height:30px;" value="{{flask_model}}" hidden>
+                                    <input name="m" style="width: 310px;height:30px;" value="16" hidden>
+                                </div>
+                                <div class="form-group">
+                                    <button type="reset" class="btn btn-default pull-left" id="mesa_resetBtn">重置</button>
+                                    <button type="submit" class="btn btn-primary pull-right">开始逆向</button>
+                                    <!-- m==9 -->
+                                </div>
+                                <br></br>
+                            </form>
+                        </div>
+
+                        <div class="form-group">
+                            <font face="黑体" size="3">嫌疑后门标签：{{flask_mesa_labels}}|相应标签ASR：{{flask_mesa_asrs}}</font>
+                        </div>
+                        <div class="form-group">
+                            <font face="黑体" size="3">嫌疑程度最高标签的逆向触发器结果：</font>
+                            <iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=500 src="/resultBTIOtrigger" frameborder=0></iframe>
                         </div>
                     </div>
 

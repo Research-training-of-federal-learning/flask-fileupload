@@ -86,6 +86,9 @@ from torch.utils.data import DataLoader
 from LLX.ff1 import main as LLXmain
 from LLX.ff2train import main as KDEmain
 
+#BTIO
+from BTIO.src import main_torch
+
 global changepointlist
 basedir = os.path.abspath(os.path.dirname(__file__))#__file__是Python内置的变量，它包含当前模块的路径和文件名
 
@@ -230,6 +233,10 @@ def resultNCnorm():
 @app.route("/resultMESAtrigger", methods=['GET', 'POST'])
 def resultMESAtrigger():
     return send_from_directory('MESA/output', 'trigger.png')
+
+@app.route("/resultBTIOtrigger", methods=['GET', 'POST'])
+def resultBTIOtrigger():
+    return send_from_directory('BTIO/output', 'trigger.png')
 
 @app.route("/resultMESAASR", methods=['GET', 'POST'])
 def resultMESAASR():
@@ -783,6 +790,9 @@ def project():
                     pointlist[i] = 1
                 new_model = FLAME.fix_model_vgg16(poisonmodel, model_G0_path, pointlist, way)
             torch.save(new_model, poisonmodel)
+        elif (m=='16'):  # BTIO
+            main_torch.BTIO_main()
+
 
         # flash(m)
     return render_template('project.html')
