@@ -693,8 +693,8 @@ def project():
                         os.remove(file_path)
         elif (m == '12'):  # 节点检测 只能用PUBFIG和vgg16
             if (database == "PUBFIG" and model == "vgg16"):
-                healthymodel = "./pre_models/MNIST/simplenet/pre_model.pth"
-                poisonmodel = "./pre_models/MNIST/simplenet/test.pth"#上传的未知模型一律叫test.pth
+                healthymodel = "./pre_models/PUBFIG/vgg16/pre_model.pth"
+                poisonmodel = "./pre_models/PUBFIG/vgg16/test.pth"#上传的未知模型一律叫test.pth
                 dataset_path = "image/PUBFIG/pubfig83"
                 model1 = load_model(healthymodel).eval()
                 model2 = load_model(poisonmodel).eval()
@@ -760,6 +760,8 @@ def project():
             database = request.form.get('database')
             model = request.form.get('model')
             type = request.form.get('pretrain')
+            poisonmodel = "./pre_models/PUBFIG/vgg16/test.pth"
+            print(changepointlist)
             model_G0_path = "FLAME_models\\" + database + "/" + model + "\\G0.pt"
             if type == "节点修剪":
                 way=1
@@ -768,9 +770,10 @@ def project():
             elif type == "节点补丁":
                 way=3
             if (database == "GTSRB" and model == "6Conv+2Dense"):
-                new_model = FLAME.fix_model_62(model_path, model_G0_path, matrix, way)
+                new_model = FLAME.fix_model_62(poisonmodel, model_G0_path, changepointlist, way)
             elif (database == "PUBFIG" and model == "vgg16"):
-                new_model = FLAME.fix_model_vgg16(model_path, model_G0_path, matrix, way)
+                new_model = FLAME.fix_model_vgg16(poisonmodel, model_G0_path, changepointlist, way)
+            torch.save(new_model, poisonmodel)
 
         # flash(m)
     return render_template('project.html')
